@@ -60,7 +60,7 @@ export function Hero() {
               <Button href="#free-chapters" color="blue">
                 How it Works
               </Button>
-              <Button href="#pricing" variant="outline" color="blue">
+              <Button href="/app" variant="outline" color="blue">
                 Get Started
               </Button>
             </div>
