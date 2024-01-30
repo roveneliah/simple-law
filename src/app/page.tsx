@@ -37,7 +37,7 @@ export default function Home() {
         }}
       >
         <p>
-          "Hiring a lawyer was guesswork before SimpleLaw. How could anyone
+          "Hiring a lawyer was guesswork before IMPOSSIBLELaw. How could anyone
           leave the most important matters up to luck? Great resource!”
         </p>
       </Testimonial>
@@ -51,8 +51,8 @@ export default function Home() {
         }}
       >
         <p>
-          "Legal stuff used to freak me out. SimpleLaw helped me get confident
-          in using it to my advantage.”
+          "Legal stuff used to freak me out. IMPOSSIBLELaw helped me get
+          confident in using it to my advantage.”
         </p>
       </Testimonial>
       {/* <FreeChapters /> */}

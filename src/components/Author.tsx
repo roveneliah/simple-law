@@ -39,14 +39,14 @@ export function Author() {
             </SectionHeading>
             <p className="mt-8 font-display text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl">
               <span className="block text-blue-600">Law is a Superpower –</span>{' '}
-              Hey there, I’m the founder of SimpleLaw.
+              Hey there, I’m the founder of IMPOSSIBLELaw.
             </p>
             <p className="mt-4 text-lg tracking-tight text-slate-700">
-              I started SimpleLaw because I was frustrated with how hard it was
-              to navigate the legal system. I had to learn things the hard way,
-              but I set out to make sure you don’t have to. People said it can't
-              be done, but I'm on a mission to help empower people to see the
-              legal system as a tool.
+              I started IMPOSSIBLELaw because I was frustrated with how hard it
+              was to navigate the legal system. I had to learn things the hard
+              way, but I set out to make sure you don’t have to. People said it
+              can't be done, but I'm on a mission to help empower people to see
+              the legal system as a tool.
             </p>
             <p className="mt-8">
               <Link

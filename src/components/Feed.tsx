@@ -4,19 +4,19 @@ export const feed = [
   {
     id: 5,
     name: 'Tell us more about your case.',
-    from: 'SimpleLaw',
+    from: 'IMPOSSIBLELaw',
     href: '#',
   },
   {
     id: 5,
     name: 'We found 4 lawyers you might like.',
-    from: 'SimpleLaw',
+    from: 'IMPOSSIBLELaw',
     href: '#',
   },
   {
     id: 5,
     name: 'Flip through some lawyers that might be a fit.',
-    from: 'SimpleLaw',
+    from: 'IMPOSSIBLELaw',
     href: '#',
   },
 ]

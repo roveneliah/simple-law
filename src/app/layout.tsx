@@ -11,7 +11,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'SimpleLaw - The Everything App for Law',
+  title: 'IMPOSSIBLELaw - The Everything App for Law',
   description:
     'A book and video course that teaches you how to design your own icons from scratch.',
 }

@@ -116,11 +116,11 @@ export function Pricing() {
           Pricing
         </SectionHeading>
         <p className="mt-8 font-display text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl">
-          SimpleLaw is free.
+          IMPOSSIBLELaw is free.
         </p>
         <p className="mt-4 max-w-xl text-lg tracking-tight text-slate-600">
           We work for you. Lawyers pay us a small fee when they get hired
-          through our platform, so you can use SimpleLaw for free.
+          through our platform, so you can use IMPOSSIBLELaw for free.
         </p>
       </Container>
       <div className="mx-auto mt-16 max-w-5xl lg:px-6">
