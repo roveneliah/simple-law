@@ -4,11 +4,11 @@ import { Files } from '@/components/CaseViews/Files'
 import AppLayout from '@/components/Layout/AppLayout'
 import { withCaseData } from '@/components/withCaseData'
 
-function DocumentsView() {
+function DocumentsView({ caseData }) {
   return (
     <AppLayout>
-      <CaseLayout viewName="Documents">
-        <Files />
+      <CaseLayout viewName="Case Info">
+        <Files caseData={caseData} />
       </CaseLayout>
     </AppLayout>
   )

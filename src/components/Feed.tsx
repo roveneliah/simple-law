@@ -1,3 +1,5 @@
+import { Dropdown } from './Dropdown'
+
 export const feed = [
   {
     id: 5,
@@ -22,16 +24,30 @@ export const feed = [
 export function Feed() {
   return (
     <>
-      <div className="col-span-full mx-4 mt-8">
-        <label
+      <div className="col-span-full">
+        {/* <label
           htmlFor="cover-photo"
           className="block text-xl font-semibold leading-6 text-gray-900"
         >
-          Feed
-        </label>
-        <p className="mt-4 font-medium text-gray-900/75">Hi, Eli.</p>
+          Home
+        </label> */}
+        <p className="text-xl font-medium text-gray-900/75">Hey Eli,</p>
+        <p className="mt-4 w-2/3">
+          We're working to get you paired with a lawyer. You'll receive an email
+          in under 48 hours with our top picks, and an explanation why.
+        </p>
+        <p className="mt-4 w-2/3">
+          If there's any addition information or documents to share, do so{' '}
+          <a
+            href="#"
+            className="text-purple-400 transition-all hover:font-medium hover:text-purple-500"
+          >
+            here
+          </a>
+          .
+        </p>
       </div>
-      <div className="col-span-full mx-4 mt-4">
+      <div className="col-span-full mt-4 mt-80">
         {feed.map((file) => (
           <div
             key={file.id}

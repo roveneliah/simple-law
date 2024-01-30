@@ -34,25 +34,23 @@ export function Author() {
             />
           </div>
           <div className="px-4 py-10 sm:px-10 sm:py-16 md:py-20 lg:px-20 lg:py-32">
-            <SectionHeading number="5" id="author-title">
-              Author
+            <SectionHeading number="" id="author-title">
+              Our Story
             </SectionHeading>
             <p className="mt-8 font-display text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl">
-              <span className="block text-blue-600">Mira Lindehoff –</span> Hey
-              there, I’m the founder of SimpleLaw.
+              <span className="block text-blue-600">Law is a Superpower –</span>{' '}
+              Hey there, I’m the founder of SimpleLaw.
             </p>
             <p className="mt-4 text-lg tracking-tight text-slate-700">
-              I’ve been designing icons professionally for over a decade and
-              have worked with dozens of the biggest brands to create custom
-              sets for their products. I’m an accomplished conference speaker,
-              and have been teaching icon design workshops every month for the
-              last three years. I’ve worked with designers of all skill levels
-              and honed my way of teaching to really click for anyone who has
-              the itch to start designing their own icons.
+              I started SimpleLaw because I was frustrated with how hard it was
+              to navigate the legal system. I had to learn things the hard way,
+              but I set out to make sure you don’t have to. People said it can't
+              be done, but I'm on a mission to help empower people to see the
+              legal system as a tool.
             </p>
             <p className="mt-8">
               <Link
-                href="#"
+                href="https://twitter.com/roveneliah"
                 className="inline-flex items-center text-base font-medium tracking-tight text-slate-900"
               >
                 <XIcon className="h-10 w-10 fill-current" />

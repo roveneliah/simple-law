@@ -41,6 +41,26 @@ export const FILES = [
   },
 ]
 
+const parseCaseData = (caseData) => {
+  const { id, name, description } = caseData || {
+    id: null,
+    name: null,
+    description: null,
+  }
+  return {
+    name,
+    description,
+    budget: 20000,
+    value: 1000000,
+    location: 'New York, NY',
+    type: 'Personal Injury',
+    client: 'John Smith',
+    clientType: 'Individual',
+    clientLocation: 'New York, NY',
+    complexity: 'Medium',
+  }
+}
+
 function UploadView({ addFile }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0]
@@ -96,7 +116,7 @@ function UploadView({ addFile }) {
   )
 }
 
-export function Files() {
+export function Files({ caseData }) {
   const [files, setFiles] = useState(FILES)
 
   const addFile = (file) => {
@@ -201,6 +221,39 @@ export function Files() {
           ))}
         </div>
       )}
+      <div className="mt-16 rounded-lg border border-black px-8 pb-16 pt-8 ">
+        <p>DEV: Output Case Info for AI</p>
+        <p>{JSON.stringify(parseCaseData(caseData))}</p>
+      </div>
+      <div className="mt-16 rounded-lg border border-black px-8 pb-16 pt-8 ">
+        <p>DEV: Output Letter</p>
+        <p>Hey Jason,</p>
+        <p>We found a new case we think you might be a fit for.</p>
+        <p className="border-l-2 px-4 py-2">
+          Personal Injury Case - Auto Accident: San Diego, California Client
+          injured in a multi-car collision. Alleged negligence by the other
+          driver. Individual driver, mid-30s, seeking compensation for injuries
+          and vehicle damage. Estimated claim is around $150,000. Complexity:
+          Moderate, involving negotiation with insurance companies. Urgency:
+          Response needed by February 15th for timely filing. Conflict Check: No
+          known conflicts identified at this stage.
+        </p>
+        {/* 
+        <p className="border-l-2 px-4 py-2">
+          Commercial Contract Dispute: Austin, Texas Summary: Local electronics
+          retailer seeking legal advice on a breach of contract with a supplier,
+          involving delayed deliveries and quality issues. Value: Dispute
+          involves approximately $75,000. Complexity: Low to moderate; potential
+          for quick settlement. Timeline: Interested lawyers should express
+          interest within the next two weeks.
+        </p> */}
+        <p className="py-2">
+          To explore these cases further, including detailed case information
+          and client profiles, please log in to your dashboard.
+        </p>
+        <p className="pt-2">Cheers,</p>
+        <p>Team Simple</p>
+      </div>
     </div>
   )
 }
