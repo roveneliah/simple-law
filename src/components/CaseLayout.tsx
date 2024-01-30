@@ -25,9 +25,11 @@ function CaseMenuBar(props) {
   return (
     <div className="border-b border-gray-200">
       <div className="sm:flex sm:flex-row sm:items-baseline sm:justify-between">
-        <h3 className="mt-0 text-base font-semibold leading-6 text-gray-900">
-          {props.caseData?.name}
-        </h3>
+        <Link href={`/app/cases/status/${props.caseData.id}`}>
+          <h3 className="mt-0 text-base font-semibold leading-6 text-gray-900">
+            {props.caseData?.name}
+          </h3>
+        </Link>
         <div className="mt-4 sm:mt-0">
           <nav className="-mb-px flex flex-row items-baseline justify-start space-x-8">
             {tabs(props.caseData.id).map((tab) => (

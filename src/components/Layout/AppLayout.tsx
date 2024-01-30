@@ -114,7 +114,7 @@ export default function AppLayout({ children, pageProps }: any) {
                       tom@example.com
                     </p>
                   </div>
-                  <div className="py-1">
+                  {/* <div className="py-1">
                     <Menu.Item>
                       {({ active }) => (
                         <Link
@@ -156,12 +156,27 @@ export default function AppLayout({ children, pageProps }: any) {
                             'block px-4 py-2 text-sm',
                           )}
                         >
-                          👕 Free T-Shirt!
+                          👕 Merch
                         </a>
                       )}
                     </Menu.Item>
-                  </div>
+                  </div> */}
                   <div className="py-1">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <Link
+                          href="/app/cases"
+                          className={classNames(
+                            active
+                              ? 'bg-gray-100 text-gray-900'
+                              : 'text-gray-700',
+                            'block px-4 py-2 text-sm',
+                          )}
+                        >
+                          🚀 Cases
+                        </Link>
+                      )}
+                    </Menu.Item>
                     <Menu.Item>
                       {({ active }) => (
                         <Link

@@ -20,9 +20,9 @@ function CaseView({ caseData }) {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'ArrowLeft') {
-        setStateIndex((stateIndex) => (stateIndex + 1) % 2)
+        setStateIndex((stateIndex) => (stateIndex + 1) % 3)
       } else if (e.key === 'ArrowRight') {
-        setStateIndex((stateIndex) => (stateIndex + 1) % 2)
+        setStateIndex((stateIndex) => (stateIndex + 1) % 3)
       }
     }
     window.addEventListener('keydown', handleKeyDown)
@@ -113,6 +113,27 @@ function CaseView({ caseData }) {
               </Link>
               .
             </li>
+            <p className="mt-4 text-lg font-medium">Cheers,</p>
+            <p className="text-lg font-extrabold">
+              IMPOSSIBLE<span className="font-light">Law</span>
+            </p>
+          </div>
+        )}
+        {stateIndex == 2 && (
+          <div className="col-span-full">
+            <p className="text-xl font-medium text-gray-900/75">
+              Hey {clientFirst},
+            </p>
+            <p className="mt-4 w-2/3">
+              We conducted 5 interviews for you. Go to the{' '}
+              <Link
+                href={`/app/cases/lawyers/${id}`}
+                className="text-purple-400 transition-all hover:font-medium hover:text-purple-500"
+              >
+                Lawyers
+              </Link>{' '}
+              tab to see our top picks.
+            </p>
             <p className="mt-4 text-lg font-medium">Cheers,</p>
             <p className="text-lg font-extrabold">
               IMPOSSIBLE<span className="font-light">Law</span>
