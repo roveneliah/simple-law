@@ -13,6 +13,12 @@ import Link from 'next/link'
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import CaseProgress from '../CaseProgress'
+import { CaseSwitcherDropdown } from './CaseSwitcherDropdown'
+import { SequencePanels } from '../SequencePanels'
+import { useUser } from '../../lib/useUser'
+import { supabase } from '@/lib/supabaseClient'
+import { useRouter } from 'next/navigation'
 
 const navigation = [
   {
@@ -57,12 +63,25 @@ function classNames(...classes: any[]) {
 }
 
 export default function AppLayout({ children, pageProps }: any) {
+  const user = useUser()
+  const router = useRouter()
+
+  if (!user) {
+    return <div>Loading...</div>
+  }
+
+  const handleSignOut = async (e) => {
+    e.preventDefault()
+    supabase.auth.signOut()
+    router.push('/login')
+  }
+
   return (
     <div className="flex h-screen flex-row">
       {/* <Sidebar /> */}
       <div className=" flex w-full flex-col items-center overflow-auto py-4">
         <div className="flex w-full max-w-xl flex-col px-8 lg:px-0">
-          {/* <SequencePanels /> */}
+          {/* <CaseProgress stageIndex={0} /> */}
           <div className="mb-4 mt-8 flex w-full flex-row items-center justify-between pb-4">
             <div className="w-1/3">
               <p className="text-xl font-extrabold">
@@ -71,26 +90,11 @@ export default function AppLayout({ children, pageProps }: any) {
               </p>
             </div>
             {/* <CaseSwitcherDropdown /> */}
-            {/* <div className="yarn devflex-row flex w-full items-baseline justify-end gap-x-4">
-              <button className="flex flex-row items-center gap-x-4 whitespace-nowrap rounded-md border py-3 text-sm font-semibold leading-6 text-gray-600 hover:bg-gray-50">
-                <div className="-mr-6 flex w-full flex-row items-center justify-center space-x-4 px-8">
-                  <span className="" aria-hidden="true">
-                    Tom Cook
-                  </span>
-                  <img
-                    className="h-8 w-8 rounded-full bg-gray-800"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    alt=""
-                  />
-                  <span className="sr-only">Your profile</span>
-                </div>
-              </button>
-            </div> */}
 
             <Menu as="div" className="relative inline-block text-left">
               <div>
                 <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                  Menu
+                  Account
                   <ChevronDownIcon
                     className="-mr-1 h-5 w-5 text-gray-400"
                     aria-hidden="true"
@@ -111,7 +115,7 @@ export default function AppLayout({ children, pageProps }: any) {
                   <div className="px-4 py-3">
                     <p className="text-sm">Signed in as</p>
                     <p className="truncate text-sm font-medium text-gray-900">
-                      tom@example.com
+                      {user.email}
                     </p>
                   </div>
                   {/* <div className="py-1">
@@ -196,7 +200,7 @@ export default function AppLayout({ children, pageProps }: any) {
                       <Menu.Item>
                         {({ active }) => (
                           <button
-                            type="submit"
+                            onClick={handleSignOut}
                             className={classNames(
                               active
                                 ? 'bg-gray-100 text-gray-900'
@@ -214,6 +218,7 @@ export default function AppLayout({ children, pageProps }: any) {
               </Transition>
             </Menu>
           </div>
+
           {children}
         </div>
       </div>

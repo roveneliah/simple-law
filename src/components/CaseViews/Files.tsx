@@ -1,5 +1,5 @@
 'use client'
-import { DocumentIcon } from '@heroicons/react/24/outline'
+import { DocumentIcon, PaperClipIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 
 export const FILES = [
@@ -123,6 +123,29 @@ export function Files({ caseData }) {
     setFiles([...files, file])
   }
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      console.log(file)
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        // const content = e.target.result
+        // Process the content here
+        addFile({
+          id: Math.random(),
+          name: file.name,
+          description: file.description,
+          href: '#',
+          size: file.size,
+          lastModified: file.lastModified,
+          // content,
+          blob: file,
+        })
+      }
+      reader.readAsText(file) // Read the file as text
+    }
+  }
+
   const viewFile = (file) => {
     // For text files, you can simply alert or display in a modal/dialog
 
@@ -155,7 +178,7 @@ export function Files({ caseData }) {
 
   return (
     <div>
-      <div className="col-span-full mt-8">
+      {/* <div className="col-span-full mt-8">
         <label
           htmlFor="cover-photo"
           className="block text-xl font-semibold leading-6 text-gray-900"
@@ -163,62 +186,79 @@ export function Files({ caseData }) {
           Upload Documents
         </label>
         <UploadView addFile={addFile} />
-      </div>
+      </div> */}
       {files.length > 0 && (
         <div className="col-span-full mt-4">
-          <p className="block text-lg font-semibold leading-6 text-gray-900">
-            Files
-          </p>
-          {files.map((file) => (
-            <div
-              key={file.id}
-              className="flex items-center justify-between border-b border-gray-200/10 py-3"
+          <div className="flex flex-row justify-between">
+            <p className="block text-lg font-semibold leading-6 text-gray-900">
+              Upload any relevant documents.
+            </p>
+            <label
+              htmlFor="file-upload"
+              className="relative cursor-pointer rounded-md font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
             >
-              <div className="flex items-center gap-x-3">
-                {/* <DocumentIcon
-                      className="h-6 w-6 text-gray-400"
-                      aria-hidden="true"
-                    /> */}
-                <span className="text-sm font-medium text-gray-900/75">
-                  {file.name}
-                </span>
-                {file?.description && (
-                  <span className="text-sm font-medium text-gray-900/50">
-                    {file.description}
+              <span>Upload a file</span>
+              <input
+                id="file-upload"
+                name="file-upload"
+                type="file"
+                className="sr-only"
+                onChange={handleFileChange}
+              />
+            </label>
+          </div>
+          <div className="mt-4 rounded-md border px-3 py-2">
+            {files.map((file) => (
+              <div
+                key={file.id}
+                className="flex items-center justify-between border-b border-gray-200/10 py-2"
+              >
+                <div className="flex items-center gap-x-3">
+                  <PaperClipIcon
+                    className="h-5 w-5 flex-shrink-0 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  <span className="text-sm font-medium text-gray-900/75">
+                    {file.name}
                   </span>
-                )}
-              </div>
-              <div className="flex gap-x-3">
-                {file.content && (
+                  {file?.description && (
+                    <span className="text-sm font-medium text-gray-900/50">
+                      {file.description}
+                    </span>
+                  )}
+                </div>
+                <div className="flex gap-x-3">
+                  {file.content && (
+                    <button
+                      type="button"
+                      className="font-medium text-indigo-600 hover:text-indigo-500"
+                      onClick={() => viewFile(file)}
+                    >
+                      View
+                    </button>
+                  )}
+                  {file.blob && (
+                    <button
+                      type="button"
+                      className="font-medium text-indigo-600 hover:text-indigo-500"
+                      onClick={() => downloadFile(file)}
+                    >
+                      Download
+                    </button>
+                  )}
                   <button
                     type="button"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                    onClick={() => viewFile(file)}
+                    className="text-sm font-normal text-indigo-600 hover:text-indigo-500"
+                    onClick={() => {
+                      setFiles(files.filter((f) => f.id !== file.id))
+                    }}
                   >
-                    View
+                    Delete
                   </button>
-                )}
-                {file.blob && (
-                  <button
-                    type="button"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                    onClick={() => downloadFile(file)}
-                  >
-                    Download
-                  </button>
-                )}
-                <button
-                  type="button"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
-                  onClick={() => {
-                    setFiles(files.filter((f) => f.id !== file.id))
-                  }}
-                >
-                  Delete
-                </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
       <div className="mt-16 rounded-lg border border-black px-8 pb-16 pt-8 ">
