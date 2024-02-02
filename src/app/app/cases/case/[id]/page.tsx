@@ -3,10 +3,12 @@ import CaseLayout from '@/components/CaseLayout'
 import { Files } from '@/components/CaseViews/Files'
 import AppLayout from '@/components/Layout/AppLayout'
 import { withCaseData } from '@/components/withCaseData'
-
-import { PaperClipIcon } from '@heroicons/react/20/solid'
+import { PaperClipIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
 
 function InfoForm({ caseData }) {
+  const [files, setFiles] = useState(caseData.files)
+
   return (
     <>
       <div className="flex flex-row items-center justify-between">
@@ -40,13 +42,13 @@ function InfoForm({ caseData }) {
                 id="about"
                 name="about"
                 rows={3}
-                className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                defaultValue={''}
+                className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                defaultValue={caseData?.whatsUp}
               />
             </div>
-            <p className="mt-3 text-sm leading-6 text-gray-600">
+            {/* <p className="mt-3 text-sm leading-6 text-gray-600">
               Write a few sentences about yourself.
-            </p>
+            </p> */}
           </div>
 
           <div className="col-span-full py-8">
@@ -61,13 +63,13 @@ function InfoForm({ caseData }) {
                 id="about"
                 name="about"
                 rows={3}
-                className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                defaultValue={''}
+                className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                defaultValue={caseData?.goals}
               />
             </div>
-            <p className="mt-3 text-sm leading-6 text-gray-600">
+            {/* <p className="mt-3 text-sm leading-6 text-gray-600">
               Write a few sentences about yourself.
-            </p>
+            </p> */}
           </div>
 
           <div className="col-span-full py-8">
@@ -82,15 +84,15 @@ function InfoForm({ caseData }) {
                 id="about"
                 name="about"
                 rows={3}
-                className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                defaultValue={''}
+                className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                defaultValue={caseData?.dates}
               />
             </div>
-            <p className="mt-3 text-sm leading-6 text-gray-600">
+            {/* <p className="mt-3 text-sm leading-6 text-gray-600">
               Write a few sentences about yourself.
-            </p>
+            </p> */}
           </div>
-
+          <Files files={files} setFiles={setFiles} />
           <div className="mt-6 flex items-center justify-end gap-x-6">
             <button
               type="button"
@@ -105,64 +107,6 @@ function InfoForm({ caseData }) {
               Save
             </button>
           </div>
-
-          {/* <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              Attachments
-            </dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <ul
-                role="list"
-                className="divide-y divide-gray-100 rounded-md border border-gray-200"
-              >
-                <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                  <div className="flex w-0 flex-1 items-center">
-                    <PaperClipIcon
-                      className="h-5 w-5 flex-shrink-0 text-gray-400"
-                      aria-hidden="true"
-                    />
-                    <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                      <span className="truncate font-medium">
-                        resume_back_end_developer.pdf
-                      </span>
-                      <span className="flex-shrink-0 text-gray-400">2.4mb</span>
-                    </div>
-                  </div>
-                  <div className="ml-4 flex flex-shrink-0 space-x-4">
-                    <button
-                      type="button"
-                      className="rounded-md bg-white font-medium text-gray-900 hover:text-gray-800"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </li>
-                <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                  <div className="flex w-0 flex-1 items-center">
-                    <PaperClipIcon
-                      className="h-5 w-5 flex-shrink-0 text-gray-400"
-                      aria-hidden="true"
-                    />
-                    <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                      <span className="truncate font-medium">
-                        coverletter_back_end_developer.pdf
-                      </span>
-                      <span className="flex-shrink-0 text-gray-400">4.5mb</span>
-                    </div>
-                  </div>
-                  <div className="ml-4 flex flex-shrink-0 space-x-4">
-                    <button
-                      type="button"
-                      className="rounded-md bg-white font-medium text-gray-900 hover:text-gray-800"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </li>
-              </ul>
-            </dd>
-          </div> */}
-          <Files caseData={caseData} />
         </dl>
       </div>
     </>

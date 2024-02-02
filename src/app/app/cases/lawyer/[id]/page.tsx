@@ -7,7 +7,7 @@ import { CANDIDATES, FALLBACK_AVATAR } from '@/data/dummy'
 import { BookmarkIcon, StarIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 function Steps({ step, totalSteps }) {
   const steps = useMemo(() => {
@@ -93,27 +93,27 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
             <div className="flex w-full flex-col">
               {/* <Steps step={step} totalSteps={3} /> */}
               {/* <div className="flex w-full flex-row justify-between">
-                  <div className="flex w-full flex-row justify-start">
-                    <Steps
-                      step={step}
-                      totalSteps={candidate.interview.length + 3}
+                <div className="flex w-full flex-row justify-start">
+                  <Steps
+                    step={step}
+                    totalSteps={candidate.interview.length + 3}
+                  />
+                </div>
+                <div className="flex flex-row items-center justify-evenly gap-4">
+                  <button>
+                    <StarIcon
+                      className={'h-5 w-5 shrink-0 text-black'}
+                      aria-hidden="true"
                     />
-                  </div>
-                  <div className="flex flex-row items-center justify-evenly gap-4">
-                    <button>
-                      <StarIcon
-                        className={'h-5 w-5 shrink-0 text-black'}
-                        aria-hidden="true"
-                      />
-                    </button>
-                    <button>
-                      <XMarkIcon
-                        className={'h-6 w-6 shrink-0 text-black'}
-                        aria-hidden="true"
-                      />
-                    </button>
-                  </div>
-                </div> */}
+                  </button>
+                  <button>
+                    <XMarkIcon
+                      className={'h-6 w-6 shrink-0 text-black'}
+                      aria-hidden="true"
+                    />
+                  </button>
+                </div>
+              </div> */}
               <AutoFlipComponent
                 currentIndex={step}
                 setCurrentIndex={setStep}
@@ -168,60 +168,118 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
                       <p>{candidate.note}</p>
                     </div>
                   </div> */}
-                {candidate.interview.map(({ question, answer }, i) => (
-                  <div>
-                    <div className="flex w-full  flex-row items-center justify-between">
-                      <div className="mb-4">
-                        <label className="text-base font-semibold text-gray-900">
-                          Interview
-                        </label>
-                        <p className="text-sm text-gray-500">
-                          Jot down a few thoughts to help you narrow down.
-                        </p>
-                      </div>
-                      <div className="flex flex-row gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setStep(step - 1)}
-                          className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                        >
-                          Back
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setStep(step + 1)}
-                          className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                        >
-                          Next
-                        </button>
-                      </div>
-                    </div>
-                    <div className="mt-4 flex flex-col gap-4" key={i}>
-                      <div className="flex flex-row gap-4">
-                        <img
-                          src={candidate.avatar || FALLBACK_AVATAR}
-                          className="h-10 w-10 rounded-full bg-gray-800"
-                          alt="avatar"
-                        />
-                        <div>
-                          <p className="mb-2 font-semibold">{question}</p>
-                          <p>{answer}</p>
+                {candidate.interview.map(
+                  ({ question, answer, notes = '' }, i) => {
+                    const [questionLive, setQuestionLive] = useState('')
+                    useEffect(() => {
+                      const interval = setInterval(() => {
+                        setQuestionLive(
+                          question.slice(0, questionLive.length + 1),
+                        )
+                      }, 15)
+                      return () => clearInterval(interval)
+                    }, [questionLive, question])
+
+                    const [answerLive, setAnswerLive] = useState('')
+                    useEffect(() => {
+                      if (questionLive.length !== question.length) return
+
+                      const interval2 = setInterval(() => {
+                        setAnswerLive(answer.slice(0, answerLive.length + 1))
+                      }, 15)
+                      return () => clearInterval(interval2)
+                    }, [answerLive, answer, questionLive, question])
+
+                    const [notesLive, setNotesLive] = useState('')
+                    useEffect(() => {
+                      if (answerLive.length !== answer.length) return
+
+                      const interval3 = setInterval(() => {
+                        setNotesLive(notes.slice(0, notesLive.length + 1))
+                      }, 15)
+                      return () => clearInterval(interval3)
+                    }, [notesLive, notes, answerLive, answer])
+
+                    // reset on step change
+                    useEffect(() => {
+                      setAnswerLive('')
+                      setQuestionLive('')
+                      setNotesLive('')
+                    }, [step])
+
+                    return (
+                      <div>
+                        <div className="flex w-full  flex-row items-center justify-between">
+                          <div className="mb-4">
+                            <label className="text-base font-semibold text-gray-900">
+                              Interview
+                            </label>
+                            <p className="text-sm text-gray-500">
+                              Jot down a few thoughts to help you narrow down.
+                            </p>
+                          </div>
+                          <div className="flex flex-row gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setStep(step - 1)}
+                              className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                            >
+                              Back
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setStep(step + 1)}
+                              className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                            >
+                              Next
+                            </button>
+                          </div>
+                        </div>
+                        <div className="mt-4 flex flex-col gap-8" key={i}>
+                          <div className="flex flex-row gap-4">
+                            <img
+                              src={FALLBACK_AVATAR}
+                              className="h-10 w-10 rounded-full bg-gray-800"
+                              alt="avatar"
+                            />
+                            <div className="flex flex-col">
+                              <p className="font-medium">IMPOSSIBLE</p>
+                              <p className="">{questionLive}</p>
+                            </div>
+                          </div>
+                          {answerLive && (
+                            <div className="flex flex-row gap-4">
+                              <img
+                                src={candidate.avatar || FALLBACK_AVATAR}
+                                className="h-10 w-10 rounded-full bg-gray-800"
+                                alt="avatar"
+                              />
+                              <div>
+                                <p className="font-medium">{candidate.first}</p>
+                                <p>{answerLive}</p>
+                              </div>
+                            </div>
+                          )}
+                          {notesLive && (
+                            <div className="flex flex-row gap-4">
+                              <img
+                                src={FALLBACK_AVATAR}
+                                className="h-10 w-10 rounded-full bg-gray-800"
+                                alt="avatar"
+                              />
+                              <div>
+                                <p className="font-medium">
+                                  Our Perspective 🧠
+                                </p>
+                                <p>{notesLive}</p>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
-                      <div className="flex flex-row gap-4">
-                        {/* <img
-                          src={candidate.avatar || FALLBACK_AVATAR}
-                          className="h-10 w-10 rounded-full bg-gray-800"
-                          alt="avatar"
-                        /> */}
-                        <div>
-                          <p className="mb-2 font-semibold">Our Perspective</p>
-                          <p>{answer}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                    )
+                  },
+                )}
                 <div>
                   <div>
                     <div className="mb-8">

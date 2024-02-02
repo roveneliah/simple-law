@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id       String   @id @default(uuid())
+  email    String   @unique
+  phone    String   @unique
+  first    String
+  last     String
+  cases    Case[]
+  savedLawyers Lawyer[]
+} 
+
+model Lawyer {
+  id       String   @id @default(uuid())
+  email    String   @unique
+  phone    String   @unique
+  first    String
+  last     String
+  description String
+  firm     String
+  cases    Case[]
+  savedBy  User[]
+}
+
+model Case {
+  // state
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // user input
+  whatsUp     String
+  goals       String
+  dates       String
+  documents   Document[]
+
+  // ai generated
+  title       String
+  description String
+
+  // invitations
+  
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  case      Case     @relation(fields: [caseId], references: [id])
+  caseId    String
+  title     String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

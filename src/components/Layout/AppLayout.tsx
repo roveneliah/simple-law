@@ -84,10 +84,12 @@ export default function AppLayout({ children, pageProps }: any) {
           {/* <CaseProgress stageIndex={0} /> */}
           <div className="mb-4 mt-8 flex w-full flex-row items-center justify-between pb-4">
             <div className="w-1/3">
-              <p className="text-xl font-extrabold">
-                IMPOSSIBLE
-                <span className="font-light text-gray-600">Law</span>
-              </p>
+              <Link href="/app">
+                <p className="text-xl font-extrabold">
+                  IMPOSSIBLE
+                  <span className="font-light text-gray-600">Law</span>
+                </p>
+              </Link>
             </div>
             {/* <CaseSwitcherDropdown /> */}
 
@@ -169,7 +171,7 @@ export default function AppLayout({ children, pageProps }: any) {
                     <Menu.Item>
                       {({ active }) => (
                         <Link
-                          href="/app/cases"
+                          href="/app"
                           className={classNames(
                             active
                               ? 'bg-gray-100 text-gray-900'
