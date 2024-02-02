@@ -184,7 +184,7 @@ export default function AppLayout({ children, pageProps }: any) {
                     <Menu.Item>
                       {({ active }) => (
                         <Link
-                          href="/app/account"
+                          href="/account"
                           className={classNames(
                             active
                               ? 'bg-gray-100 text-gray-900'

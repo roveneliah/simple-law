@@ -6,6 +6,7 @@ import { withCaseData } from '@/components/withCaseData'
 import { CANDIDATES, FALLBACK_AVATAR } from '@/data/dummy'
 import { BookmarkIcon, StarIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
 function Steps({ step, totalSteps }) {
@@ -78,17 +79,19 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
 
   const [step, setStep] = useState(0)
 
+  const router = useRouter()
+  const handleSaveFeedback = () => {
+    console.log('feedback saved')
+    router.push('/app/cases/lawyers/' + id)
+  }
+
   return (
     <AppLayout>
       <CaseLayout viewName="Lawyers" id={id}>
-        {/* <p>{name}</p>
-        <p className="transition-all hover:animate-pulse hover:cursor-pointer hover:text-orange-500">
-          {description}
-        </p> */}
         <div className="flex flex-col">
           <div className="flex flex-row gap-x-4">
             <div className="flex w-full flex-col">
-              <Steps step={step} totalSteps={3} />
+              {/* <Steps step={step} totalSteps={3} /> */}
               {/* <div className="flex w-full flex-row justify-between">
                   <div className="flex w-full flex-row justify-start">
                     <Steps
@@ -111,11 +114,10 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
                     </button>
                   </div>
                 </div> */}
-              {/* <p>{candidate.description}</p> */}
               <AutoFlipComponent
                 currentIndex={step}
                 setCurrentIndex={setStep}
-                className="mt-8 flex flex-col gap-8"
+                className="mt-0 flex flex-col gap-8"
               >
                 <div>
                   <p>Hey Eli,</p>
@@ -138,12 +140,49 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
                     Check out the interview we conducted to see if she's a good
                     fit.
                   </p>
-                  <p className="mt-4">Cheers,</p>
-                  <p className="text-lg font-extrabold">
-                    IMPOSSIBLE<span className="font-light">Law</span>
-                  </p>
+                  <div className="flex w-1/2 flex-row items-end justify-between">
+                    <div>
+                      <p className="mt-4">Cheers,</p>
+                      <p className="text-lg font-extrabold">
+                        IMPOSSIBLE<span className="font-light">Law</span>
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setStep(step + 1)}
+                      className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
                 <div className="flex flex-col gap-4">
+                  <div className="flex w-full  flex-row items-center justify-between">
+                    <div className="mb-4">
+                      <label className="text-base font-semibold text-gray-900">
+                        Interview
+                      </label>
+                      <p className="text-sm text-gray-500">
+                        Jot down a few thoughts to help you narrow down.
+                      </p>
+                    </div>
+                    <div className="flex flex-row gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setStep(step - 1)}
+                        className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      >
+                        Back
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setStep(step + 1)}
+                        className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-row justify-start gap-2">
                       <p className="font-medium">
@@ -152,11 +191,6 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
                       <p className="text-gray-600">{candidate.firm}</p>
                     </div>
                     <div className="flex flex-row justify-start gap-4">
-                      <img
-                        src={candidate.avatar || FALLBACK_AVATAR}
-                        className="h-10 w-10 rounded-full bg-gray-800"
-                        alt="avatar"
-                      />
                       <p>{candidate.note}</p>
                     </div>
                   </div>
@@ -176,13 +210,15 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
                 </div>
                 <div>
                   <div>
-                    <label className="text-base font-semibold text-gray-900">
-                      Thoughts?
-                    </label>
-                    <p className="text-sm text-gray-500">
-                      Jot down a few thoughts to help you narrow down.
-                    </p>
-                    <fieldset className="mt-4">
+                    <div className="mb-8">
+                      <label className="text-base font-semibold text-gray-900">
+                        Thoughts?
+                      </label>
+                      <p className="text-sm text-gray-500">
+                        Jot down a few thoughts to help you narrow down.
+                      </p>
+                    </div>
+                    <fieldset className="">
                       <legend className="sr-only">Notification method</legend>
                       <div className="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
                         {[
@@ -228,6 +264,7 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
                     <div className="mt-4">
                       <button
                         type="button"
+                        onClick={handleSaveFeedback}
                         className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                       >
                         Save
