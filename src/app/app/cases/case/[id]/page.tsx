@@ -18,58 +18,94 @@ function InfoForm({ caseData }) {
             We will use this to interview lawyers on your behalf.
           </p>
         </div>
-        <button
+        {/* <button
           type="button"
           className="h-fit rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Save
-        </button>
+        </button> */}
       </div>
 
       <div className="mt-6 border-t border-gray-100">
-        <dl className="divide-y divide-gray-100">
-          {/* <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              Full name
-            </dt>
-            <dd className="mt-1 flex text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <span className="flex-grow">Margot Foster</span>
-            </dd>
-          </div> */}
-          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              What are your goals?
-            </dt>
-          </div>
-          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              What's going on? Tell us in your own words.
-            </dt>
-            <dd className="mt-1 flex text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <span className="flex-grow">
-                Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim
-                incididunt cillum culpa consequat. Excepteur qui ipsum aliquip
-                consequat sint. Sit id mollit nulla mollit nostrud in ea officia
-                proident. Irure nostrud pariatur mollit ad adipisicing
-                reprehenderit deserunt qui eu.
-              </span>
-            </dd>
+        <dl className="">
+          <div className="col-span-full py-4">
+            <label
+              htmlFor="about"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Tell us what's going on in your own words.
+            </label>
+            <div className="mt-2">
+              <textarea
+                id="about"
+                name="about"
+                rows={3}
+                className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                defaultValue={''}
+              />
+            </div>
+            <p className="mt-3 text-sm leading-6 text-gray-600">
+              Write a few sentences about yourself.
+            </p>
           </div>
 
-          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              Any Dates or Deadlines we should know about?
-            </dt>
-            <dd className="mt-1 flex text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <span className="flex-grow">
-                Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim
-                incididunt cillum culpa consequat. Excepteur qui ipsum aliquip
-                consequat sint. Sit id mollit nulla mollit nostrud in ea officia
-                proident. Irure nostrud pariatur mollit ad adipisicing
-                reprehenderit deserunt qui eu.
-              </span>
-            </dd>
+          <div className="col-span-full py-8">
+            <label
+              htmlFor="about"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              What are your goals?
+            </label>
+            <div className="mt-2">
+              <textarea
+                id="about"
+                name="about"
+                rows={3}
+                className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                defaultValue={''}
+              />
+            </div>
+            <p className="mt-3 text-sm leading-6 text-gray-600">
+              Write a few sentences about yourself.
+            </p>
           </div>
+
+          <div className="col-span-full py-8">
+            <label
+              htmlFor="about"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Any dates or deadlines we should know about?
+            </label>
+            <div className="mt-2">
+              <textarea
+                id="about"
+                name="about"
+                rows={3}
+                className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                defaultValue={''}
+              />
+            </div>
+            <p className="mt-3 text-sm leading-6 text-gray-600">
+              Write a few sentences about yourself.
+            </p>
+          </div>
+
+          <div className="mt-6 flex items-center justify-end gap-x-6">
+            <button
+              type="button"
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Save
+            </button>
+          </div>
+
           {/* <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt className="text-sm font-medium leading-6 text-gray-900">
               Attachments

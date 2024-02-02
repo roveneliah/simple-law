@@ -156,34 +156,8 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
                     </button>
                   </div>
                 </div>
-                <div className="flex flex-col gap-4">
-                  <div className="flex w-full  flex-row items-center justify-between">
-                    <div className="mb-4">
-                      <label className="text-base font-semibold text-gray-900">
-                        Interview
-                      </label>
-                      <p className="text-sm text-gray-500">
-                        Jot down a few thoughts to help you narrow down.
-                      </p>
-                    </div>
-                    <div className="flex flex-row gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setStep(step - 1)}
-                        className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                      >
-                        Back
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setStep(step + 1)}
-                        className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-4">
+
+                {/* <div className="flex flex-col gap-4">
                     <div className="flex flex-row justify-start gap-2">
                       <p className="font-medium">
                         {candidate.first} {candidate.last}
@@ -193,21 +167,61 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
                     <div className="flex flex-row justify-start gap-4">
                       <p>{candidate.note}</p>
                     </div>
-                  </div>
-                  {candidate.interview.map(({ question, answer }, i) => (
-                    <div className="flex flex-col gap-4" key={i}>
-                      <p className="font-semibold">{question}</p>
+                  </div> */}
+                {candidate.interview.map(({ question, answer }, i) => (
+                  <div>
+                    <div className="flex w-full  flex-row items-center justify-between">
+                      <div className="mb-4">
+                        <label className="text-base font-semibold text-gray-900">
+                          Interview
+                        </label>
+                        <p className="text-sm text-gray-500">
+                          Jot down a few thoughts to help you narrow down.
+                        </p>
+                      </div>
+                      <div className="flex flex-row gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setStep(step - 1)}
+                          className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                        >
+                          Back
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setStep(step + 1)}
+                          className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-4 flex flex-col gap-4" key={i}>
                       <div className="flex flex-row gap-4">
                         <img
                           src={candidate.avatar || FALLBACK_AVATAR}
                           className="h-10 w-10 rounded-full bg-gray-800"
                           alt="avatar"
                         />
-                        <p>{answer}</p>
+                        <div>
+                          <p className="mb-2 font-semibold">{question}</p>
+                          <p>{answer}</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-row gap-4">
+                        {/* <img
+                          src={candidate.avatar || FALLBACK_AVATAR}
+                          className="h-10 w-10 rounded-full bg-gray-800"
+                          alt="avatar"
+                        /> */}
+                        <div>
+                          <p className="mb-2 font-semibold">Our Perspective</p>
+                          <p>{answer}</p>
+                        </div>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
                 <div>
                   <div>
                     <div className="mb-8">
