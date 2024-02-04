@@ -7,16 +7,32 @@ export function useUser() {
   const [user, setUser] = useState(null)
   const router = useRouter()
   useEffect(() => {
-    const session = supabase.auth.getSession()
-    setUser(session?.user || null)
+    supabase.auth.getSession().then(({ data, error }) => {
+      const session = data?.session
+      if (!session) {
+        router.push('/account/login')
+      }
 
-    if (!session) {
-      // Redirect to login if not logged in
-      router.push('/login')
-    }
+      // get the user from db given id
+      console.log(session?.user.id)
+      supabase
+        .from('User')
+        .select('*')
+        .eq('id', session?.user?.id)
+        .single()
+        .then(({ data, error }) => {
+          console.log('user', data)
+          console.log('error', error)
+          setUser(data || null)
+        })
+    })
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
+        console.log('auth state change', session)
+        if (!session) {
+          router.push('/account/login')
+        }
         setUser(session?.user || null)
       },
     )
@@ -26,5 +42,27 @@ export function useUser() {
     }
   }, [router])
 
-  return user
+  return {
+    first: '',
+    last: '',
+    ...user,
+  }
+}
+
+export function useRedirectIfSignedIn() {
+  const router = useRouter()
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        console.log(session)
+        if (session?.user?.aud === 'authenticated') {
+          router.push('/app')
+        }
+      },
+    )
+
+    return () => {
+      authListener?.subscription.unsubscribe()
+    }
+  }, [router])
 }

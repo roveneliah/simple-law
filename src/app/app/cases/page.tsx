@@ -1,8 +1,14 @@
 import AppLayout from '@/components/Layout/AppLayout'
 import { CASES } from '@/data/dummy'
+import { supabase } from '@/lib/supabaseClient'
+import { useUser } from '@/lib/useUser'
+
 import Link from 'next/link'
 
 export function CaseList() {
+  // get cases from supabase db
+  // const user = useUser()
+
   return (
     <div className="flex flex-col space-y-2">
       {CASES.map((c, i) => (
@@ -16,7 +22,7 @@ export function CaseList() {
           <p className="text-zinc-500">{c.access}</p>
         </Link>
       ))}
-      <Link href={'cases/new'}>New Case +</Link>
+      <Link href={'/app/cases/new'}>New Case +</Link>
     </div>
   )
 }

@@ -1,11 +1,17 @@
 'use client'
 import { supabase } from '@/lib/supabaseClient'
+import { useRedirectIfSignedIn } from '@/lib/useUser'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Login() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  // if session, redirect to app
+  useRedirectIfSignedIn()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -15,8 +21,6 @@ export default function Login() {
     const email = formData.get('email')
     const password = formData.get('password')
 
-    console.log(email, password)
-
     // Here you'd add logic to handle the sign-up, e.g., calling your auth API
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -24,14 +28,47 @@ export default function Login() {
     })
 
     if (data.user?.aud === 'authenticated') {
-      router.push('/app')
+      // make sure user has db profile
+      const { data: profileData, error: profileError } = await supabase
+        .from('User')
+        .select('*')
+        .eq('id', data.user.id)
+        .single()
+
+      // if not user profile, create one
+      if (profileError) {
+        console.log('Trying to create user profile for ', data.user.id)
+        const { data: newProfileData, error: newProfileError } = await supabase
+          .from('User')
+          .insert({
+            id: data.user.id,
+            email: data.user.email,
+            // createdAt: new Date(),
+            // updatedAt: new Date(),
+          })
+          .single()
+
+        console.log(newProfileData, newProfileError)
+
+        if (newProfileError) {
+          setError(newProfileError.message)
+          setLoading(false)
+          return
+        }
+      }
+
+      console.log(profileData, profileError)
+      // if (profileError) {
+      //   setError(profileError.message)
+      //   setLoading(false)
+      //   return
+      // }
     }
 
     setLoading(false)
 
     if (error) {
-      // Return error to be displayed by the form
-      return { error: error }
+      setError(error.message)
     }
   }
 
@@ -49,15 +86,16 @@ export default function Login() {
               <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
                 Sign in to your account
               </h2>
-              <p className="mt-2 text-sm leading-6 text-gray-500">
-                Not a member?{' '}
-                <a
-                  href="#"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
-                >
-                  Start a 14 day free trial
-                </a>
-              </p>
+              <div className="flex flex-row items-baseline gap-1">
+                <p className="mt-2 text-sm leading-6 text-gray-500">
+                  Not a member?{' '}
+                </p>
+                <Link href="/account/signup">
+                  <p className="text-sm font-semibold text-indigo-600 hover:text-indigo-500">
+                    Create an account
+                  </p>
+                </Link>
+              </div>
             </div>
 
             <div className="mt-10">
@@ -77,7 +115,7 @@ export default function Login() {
                         type="email"
                         autoComplete="email"
                         required
-                        className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 px-3 py-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -96,7 +134,7 @@ export default function Login() {
                         type="password"
                         autoComplete="current-password"
                         required
-                        className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 px-3 py-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -128,6 +166,7 @@ export default function Login() {
                   </div>
 
                   <div>
+                    <p className="mb-2 text-sm text-red-600">{error}</p>
                     <button
                       disabled={loading}
                       type="submit"

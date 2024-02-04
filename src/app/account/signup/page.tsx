@@ -1,23 +1,54 @@
 'use client'
 import { supabase } from '@/lib/supabaseClient'
+import { useState } from 'react'
+
+const signUp = async ({ email, password }) => {
+  const { data: dataAuth, error: authError } = await supabase.auth.signUp({
+    email,
+    password,
+  })
+
+  if (authError) {
+    return { error: authError }
+  }
+
+  const { data: dataDb, error: dbError } = await supabase
+    .from('User')
+    .insert([
+      {
+        // generate id
+        id: dataAuth.user.id,
+        email,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ])
+    .select()
+
+  if (dbError?.code === '23505') {
+    console.error('User already exists')
+    return { data: dataDb, error: dbError }
+  }
+
+  if (dbError) {
+    console.error('Error inserting user', dbError)
+    return { data: dataDb, error: dbError }
+  }
+
+  return { data: dataDb }
+}
 
 export default function Signup() {
-  const handleSubmit = async (e) => {
+  const [error, setError] = useState(null)
+  const handleSignUp = (e) => {
     e.preventDefault()
     const { email, password } = e.target.elements
 
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email: email.value,
-        password: password.value,
-      })
-
-      console.log(data, error)
-
-      if (error) throw error
-    } catch (error) {
-      alert(error.error_description || error.message)
-    }
+    signUp({ email: email.value, password: password.value }).then(
+      ({ data, error }) => {
+        if (error) setError(error.message)
+      },
+    )
   }
 
   return (
@@ -35,19 +66,19 @@ export default function Signup() {
                 Create an account
               </h2>
               <p className="mt-2 text-sm leading-6 text-gray-500">
-                Not a member?{' '}
+                Already have an account?{' '}
                 <a
-                  href="#"
+                  href="/account/login"
                   className="font-semibold text-indigo-600 hover:text-indigo-500"
                 >
-                  Start a 14 day free trial
+                  Login here
                 </a>
               </p>
             </div>
 
             <div className="mt-10">
               <div>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSignUp} className="space-y-6">
                   <div>
                     <label
                       htmlFor="email"
@@ -62,7 +93,7 @@ export default function Signup() {
                         type="email"
                         autoComplete="email"
                         required
-                        className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 px-3 py-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -81,7 +112,7 @@ export default function Signup() {
                         type="password"
                         autoComplete="current-password"
                         required
-                        className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 px-3 py-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -113,6 +144,8 @@ export default function Signup() {
                   </div>
 
                   <div>
+                    <p className="mb-2 text-sm text-red-600">{error}</p>
+
                     <button
                       type="submit"
                       className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

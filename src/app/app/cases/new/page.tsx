@@ -2,11 +2,47 @@
 import AutoFlipComponent from '@/components/AutoFlip'
 import { Files } from '@/components/CaseViews/Files'
 import AppLayout from '@/components/Layout/AppLayout'
+import prisma from '@/lib/prismaClient'
+import { supabase } from '@/lib/supabaseClient'
+import { useUser } from '@/lib/useUser'
+import { v4 as uuidv4 } from 'uuid'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+const uploadDocuments = async (files) => {
+  const uploadedDocs = await Promise.all(
+    files.map(async (file) => {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json()
+      return data
+    }),
+  )
+  return uploadedDocs
+}
+
+const createDocumentEntries = async (uploadedDocs) => {
+  const documentEntries = await Promise.all(
+    uploadedDocs.map(async (doc) => {
+      const document = await prisma.document.create({
+        data: {
+          name: doc.name,
+          url: doc.url,
+        },
+      })
+      return document.id
+    }),
+  )
+  return documentEntries
+}
+
 function NewCaseForm() {
   const router = useRouter()
+  const user = useUser()
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const [whatsUp, setWhatsUp] = useState('')
@@ -14,16 +50,38 @@ function NewCaseForm() {
   const [dates, setDates] = useState('')
   const [files, setFiles] = useState([])
 
+  // make sure there is userid??
   const handleCreateCase = () => {
     console.log('Create case')
-    const caseInfo = {
-      whatsUp,
-      goals,
-      dates,
-      files,
-    }
-    console.log(caseInfo)
-    router.push('/app/cases')
+
+    // supabase.from('Case').upsert({ some_column: 'someValue' }).select()
+
+    supabase
+      .from('Case')
+      .insert([
+        {
+          // generate id
+          id: uuidv4(),
+          userId: user.id,
+          status: 'new',
+          whatsUp,
+          goals,
+          dates,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ])
+      .select()
+      .then(({ data, error }) => {
+        if (error?.code === '23503') {
+          console.error('User not found')
+          return { data, error }
+        }
+
+        console.log(data, error)
+      })
+
+    // then upload docs
   }
 
   return (

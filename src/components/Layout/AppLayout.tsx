@@ -1,7 +1,6 @@
 'use client'
-
 // import { MenubarDemo } from '@/components/MenubarDemo'
-import CaseLayout from '@/components/CaseLayout'
+
 import {
   DocumentDuplicateIcon,
   FolderIcon,
@@ -10,14 +9,11 @@ import {
   ChatBubbleOvalLeftEllipsisIcon,
 } from '@heroicons/react/24/outline'
 import Link from 'next/link'
-import { Fragment } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import CaseProgress from '../CaseProgress'
-import { CaseSwitcherDropdown } from './CaseSwitcherDropdown'
-import { SequencePanels } from '../SequencePanels'
-import { useUser } from '../../lib/useUser'
 import { supabase } from '@/lib/supabaseClient'
+import { useRedirectIfNotSignedIn, useUser } from '@/lib/useUser'
+import { Menu, Transition } from '@headlessui/react'
+import { Fragment, useEffect, useState } from 'react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useRouter } from 'next/navigation'
 
 const navigation = [
@@ -62,18 +58,18 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function AppLayout({ children, pageProps }: any) {
+export default function AppLayout({ children }: any) {
+  // useRedirectIfNotSignedIn()
   const user = useUser()
-  const router = useRouter()
 
   if (!user) {
+    // direct to login
     return <div>Loading...</div>
   }
 
   const handleSignOut = async (e) => {
     e.preventDefault()
     supabase.auth.signOut()
-    router.push('/login')
   }
 
   return (
@@ -120,53 +116,6 @@ export default function AppLayout({ children, pageProps }: any) {
                       {user.email}
                     </p>
                   </div>
-                  {/* <div className="py-1">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <Link
-                          href="/app/cases"
-                          className={classNames(
-                            active
-                              ? 'bg-gray-100 text-gray-900'
-                              : 'text-gray-700',
-                            'block px-4 py-2 text-sm',
-                          )}
-                        >
-                          🚀 Cases
-                        </Link>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <Link
-                          href="/app/cases"
-                          className={classNames(
-                            active
-                              ? 'bg-gray-100 text-gray-900'
-                              : 'text-gray-700',
-                            'block px-4 py-2 text-sm',
-                          )}
-                        >
-                          🔎 Search Lawyers
-                        </Link>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a
-                          href="#"
-                          className={classNames(
-                            active
-                              ? 'bg-gray-100 text-gray-900'
-                              : 'text-gray-700',
-                            'block px-4 py-2 text-sm',
-                          )}
-                        >
-                          👕 Merch
-                        </a>
-                      )}
-                    </Menu.Item>
-                  </div> */}
                   <div className="py-1">
                     <Menu.Item>
                       {({ active }) => (

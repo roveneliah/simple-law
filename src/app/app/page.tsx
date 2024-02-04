@@ -1,22 +1,13 @@
 'use client'
 import AppLayout from '@/components/Layout/AppLayout'
-import { useUser } from '@/lib/useUser'
 import Link from 'next/link'
 import { CaseList } from './cases/page'
+import { useUser } from '@/lib/useUser'
 
 export default function App() {
-  const user = useUser()
-
-  console.log(user)
-
   return (
     <AppLayout>
-      {/* <video width="750" controls>
-        <source src="/path/to/your-video.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video> */}
       <div>
-        <p className="mb-4 text-xl font-medium">Welcome {user?.first},</p>
         <div
           style={{
             overflow: 'hidden',

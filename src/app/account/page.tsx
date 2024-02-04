@@ -1,24 +1,51 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
+'use client'
 import AppLayout from '@/components/Layout/AppLayout'
+import { supabase } from '@/lib/supabaseClient'
+import { useUser } from '@/lib/useUser'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import { useState } from 'react'
 
-export default function Example() {
+export default function Account() {
+  const user = useUser()
+
+  const [loading, setLoading] = useState(false)
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setLoading(true)
+
+    // Gather data from the form
+    const formData = new FormData(event.target)
+    const updatedData = {
+      first: formData.get('first-name'),
+      last: formData.get('last-name'),
+      phone: formData.get('phone'),
+      // street_address: formData.get('street-address'),
+      // city: formData.get('city'),
+      // region: formData.get('region'),
+      // postal_code: formData.get('postal-code'),
+      // Add more fields as necessary
+    }
+
+    // Update the user profile db entry in Supabase
+    const { data, error } = await supabase
+      .from('User')
+      .update(updatedData)
+      .eq('id', user.id)
+
+    console.log(data, error)
+
+    setLoading(false)
+
+    if (error) {
+      alert('Failed to update profile: ' + error.message)
+    } else {
+      alert('Profile updated successfully!')
+    }
+  }
+
   return (
     <AppLayout>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
             <h2 className="text-base font-semibold leading-7 text-gray-900">
@@ -42,7 +69,9 @@ export default function Example() {
                     name="first-name"
                     id="first-name"
                     autoComplete="given-name"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    disabled={!user?.first}
+                    defaultValue={user?.first}
                   />
                 </div>
               </div>
@@ -60,35 +89,19 @@ export default function Example() {
                     name="last-name"
                     id="last-name"
                     autoComplete="family-name"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    defaultValue={user?.last}
+                    disabled={!user?.last}
                   />
                 </div>
               </div>
 
-              <div className="sm:col-span-4">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Email address
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-
-              <div className="sm:col-span-3">
+              {/* <div className="sm:col-span-3">
                 <label
                   htmlFor="country"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Country
+                  Legal Experience
                 </label>
                 <div className="mt-2">
                   <select
@@ -97,12 +110,12 @@ export default function Example() {
                     autoComplete="country-name"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                   >
-                    <option>United States</option>
-                    <option>Canada</option>
-                    <option>Mexico</option>
+                    <option>None</option>
+                    <option>Basic Knowledge</option>
+                    <option>Veteran</option>
                   </select>
                 </div>
-              </div>
+              </div> */}
 
               <div className="col-span-full">
                 <label
