@@ -3,7 +3,7 @@ import LawyerViewLayout from '@/components/LawyerViewLayout'
 import AppLayout from '@/components/Layout/AppLayout'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 
-export default function Example() {
+export default function Profile() {
   return (
     <AppLayout>
       <LawyerViewLayout viewName="Profile">

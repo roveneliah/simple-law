@@ -83,11 +83,18 @@ function CaseView() {
                   The ability to switch lawyers at any time.
                 </MagicText>
               </li>
-
-              <p className="mt-4 text-lg font-medium">Cheers,</p>
+              <div className="mt-8 flex flex-row">
+                <Link
+                  href={`/app/cases/case/${caseId}`}
+                  className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+                >
+                  👍 Fill out Case Info
+                </Link>
+              </div>
+              {/* <p className="mt-4 text-lg font-medium">Cheers,</p>
               <p className="text-lg font-extrabold">
                 IMPOSSIBLE<span className="font-light">Law</span>
-              </p>
+              </p> */}
             </div>
           )}
           {stateIndex == 1 && (

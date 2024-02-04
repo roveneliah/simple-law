@@ -45,6 +45,10 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
     router.push('/app/cases/lawyers/' + caseId)
   }
 
+  const feedback =
+    lawyerData?.name +
+    " is a great fit for your case.  One common note is that they are very responsive and easy to work with.  They have a great track record and are very experienced.  Given that you're going to want help strategizing, it's important to have someone who's easy to work with and proactive."
+
   return (
     <AppLayout>
       <CaseLayout viewName="Lawyers" id={caseId}>
@@ -77,7 +81,15 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
                     Check out the interview we conducted to see if she's a good
                     fit.
                   </p>
-                  <div className="flex w-1/2 flex-row items-end justify-between">
+                  <div className="mt-8 flex w-full flex-row justify-center">
+                    <button
+                      onClick={() => setStep(step + 1)}
+                      className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+                    >
+                      👍 Start Interview
+                    </button>
+                  </div>
+                  {/* <div className="flex w-1/2 flex-row items-end justify-between">
                     <div>
                       <p className="mt-4">Cheers,</p>
                       <p className="text-lg font-extrabold">
@@ -91,7 +103,7 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
                     >
                       Next
                     </button>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* <div className="flex flex-col gap-4">
@@ -155,22 +167,6 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
                               Jot down a few thoughts to help you narrow down.
                             </p>
                           </div>
-                          <div className="flex flex-row gap-2">
-                            <button
-                              type="button"
-                              onClick={() => setStep(step - 1)}
-                              className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                            >
-                              Back
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setStep(step + 1)}
-                              className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                            >
-                              Next
-                            </button>
-                          </div>
                         </div>
                         <div className="mt-4 flex flex-col gap-8" key={i}>
                           <div className="flex flex-row gap-4">
@@ -214,6 +210,20 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
                             </div>
                           )}
                         </div>
+                        <div className="mt-8 flex w-full flex-row justify-center gap-4">
+                          <button
+                            onClick={() => setStep(step + 1)}
+                            className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+                          >
+                            Back
+                          </button>
+                          <button
+                            onClick={() => setStep(step + 1)}
+                            className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+                          >
+                            👍 Next
+                          </button>
+                        </div>
                       </div>
                     )
                   },
@@ -222,13 +232,26 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
                   <div>
                     <div className="mb-8">
                       <label className="text-base font-semibold text-gray-900">
-                        Thoughts?
+                        Our Feedback
                       </label>
-                      <p className="text-sm text-gray-500">
-                        Jot down a few thoughts to help you narrow down.
-                      </p>
+                      <p>{feedback}</p>
                     </div>
-                    <fieldset className="">
+
+                    <form>
+                      <div className="col-span-full">
+                        <div className="mt-4">
+                          <textarea
+                            id="about"
+                            name="about"
+                            rows={3}
+                            className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            defaultValue={''}
+                            placeholder="Jot down a few thoughts to help you narrow down."
+                          />
+                        </div>
+                      </div>
+                    </form>
+                    {/* <fieldset className="">
                       <legend className="sr-only">Notification method</legend>
                       <div className="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
                         {[
@@ -256,28 +279,25 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
                           </div>
                         ))}
                       </div>
-                    </fieldset>
-                    <form>
-                      <div className="col-span-full">
-                        <div className="mt-4">
-                          <textarea
-                            id="about"
-                            name="about"
-                            rows={3}
-                            className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            defaultValue={''}
-                            placeholder="Jot down a few thoughts to help you narrow down."
-                          />
-                        </div>
-                      </div>
-                    </form>
-                    <div className="mt-4">
+                    </fieldset> */}
+                    <div className="mt-8 flex w-full flex-row justify-center gap-4">
                       <button
-                        type="button"
                         onClick={handleSaveFeedback}
-                        className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                        className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
                       >
-                        Save
+                        Book Now
+                      </button>
+                      <button
+                        onClick={handleSaveFeedback}
+                        className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+                      >
+                        Save for Later
+                      </button>
+                      <button
+                        onClick={handleSaveFeedback}
+                        className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+                      >
+                        Decline Offer
                       </button>
                     </div>
                   </div>

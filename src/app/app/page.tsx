@@ -1,7 +1,7 @@
 'use client'
+import CaseList from '@/components/CaseList'
 import AppLayout from '@/components/Layout/AppLayout'
 import Link from 'next/link'
-import { CaseList } from './cases/page'
 
 export default function App() {
   return (
@@ -33,7 +33,11 @@ export default function App() {
           <Link href="/app/cases/new">Get Started</Link>
         </div> */}
       </div>
-      <CaseList />
+      <div className="flex w-full flex-row justify-center">
+        <div className="w-2/3">
+          <CaseList />
+        </div>
+      </div>
     </AppLayout>
   )
 }

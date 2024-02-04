@@ -23,9 +23,9 @@ function LawyerMenuBar(props) {
         </Link>
         <div className="mt-4 sm:mt-0">
           <nav className="-mb-px flex flex-row items-baseline justify-start space-x-8">
-            {tabs.map((tab) => (
+            {tabs.map((tab, i) => (
               <Link
-                key={tab.name}
+                key={i}
                 href={BASE_URL + '/' + tab.href}
                 className={classNames(
                   tab.name === props.viewName
@@ -44,13 +44,11 @@ function LawyerMenuBar(props) {
   )
 }
 
-function LawyerViewLayout({ children, viewName, caseData }: any) {
+export default function LawyerViewLayout({ children, viewName }: any) {
   return (
     <div className="mt-0">
-      <LawyerMenuBar viewName={viewName} caseData={caseData} />
+      <LawyerMenuBar viewName={viewName} />
       <div className="mt-8">{children}</div>
     </div>
   )
 }
-
-export default withCaseData(LawyerViewLayout)

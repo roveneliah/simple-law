@@ -6,7 +6,7 @@ import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 export default function Example() {
   return (
     <AppLayout>
-      <LawyerViewLayout></LawyerViewLayout>
+      <LawyerViewLayout />
     </AppLayout>
   )
 }
