@@ -1,6 +1,7 @@
 // 'use client'
 
 import { CASES } from '@/data/dummy'
+import { supabase } from '@/lib/supabaseClient'
 import { usePathname } from 'next/navigation'
 
 export const withCaseData = (WrappedComponent: any) => {
@@ -9,6 +10,6 @@ export const withCaseData = (WrappedComponent: any) => {
 
     const caseData = CASES.find((caseItem) => caseItem?.id?.toString() === id)
 
-    return <WrappedComponent {...props} caseData={caseData} />
+    return <WrappedComponent {...props} caseData={caseData} caseId={id} />
   }
 }

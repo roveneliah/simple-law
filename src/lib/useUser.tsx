@@ -14,22 +14,18 @@ export function useUser() {
       }
 
       // get the user from db given id
-      console.log(session?.user.id)
       supabase
         .from('User')
         .select('*')
         .eq('id', session?.user?.id)
         .single()
         .then(({ data, error }) => {
-          console.log('user', data)
-          console.log('error', error)
           setUser(data || null)
         })
     })
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        console.log('auth state change', session)
         if (!session) {
           router.push('/account/login')
         }

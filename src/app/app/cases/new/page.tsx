@@ -8,6 +8,7 @@ import { useUser } from '@/lib/useUser'
 import { v4 as uuidv4 } from 'uuid'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { POST } from '@/app/api/cases/refine/route'
 
 const uploadDocuments = async (files) => {
   const uploadedDocs = await Promise.all(
@@ -51,10 +52,27 @@ function NewCaseForm() {
   const [files, setFiles] = useState([])
 
   // make sure there is userid??
-  const handleCreateCase = () => {
+  const handleCreateCase = async () => {
     console.log('Create case')
 
-    // supabase.from('Case').upsert({ some_column: 'someValue' }).select()
+    // const refinedCase = refineCaseWithAI({ whatsUp, goals, dates, files })
+    // call POST /api/cases/refine with caseData to get refinedCase
+
+    // call endpoint
+    const refinedCase = await fetch('/api/cases/refine', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        refinedCase: {
+          whatsUp,
+          goals,
+          dates,
+          files,
+        },
+      }),
+    }).then((res) => res.json())
 
     supabase
       .from('Case')
@@ -64,6 +82,8 @@ function NewCaseForm() {
           id: uuidv4(),
           userId: user.id,
           status: 'new',
+          title: refinedCase?.title,
+          description: refinedCase?.description,
           whatsUp,
           goals,
           dates,
@@ -82,6 +102,7 @@ function NewCaseForm() {
       })
 
     // then upload docs
+    router.push('/app/cases')
   }
 
   return (

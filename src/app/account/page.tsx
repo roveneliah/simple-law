@@ -16,9 +16,9 @@ export default function Account() {
     // Gather data from the form
     const formData = new FormData(event.target)
     const updatedData = {
-      first: formData.get('first-name'),
-      last: formData.get('last-name'),
-      phone: formData.get('phone'),
+      first: formData.get('first-name')?.toString().trim(),
+      last: formData.get('last-name')?.toString().trim(),
+      phone: formData.get('phone')?.toString().trim(),
       // street_address: formData.get('street-address'),
       // city: formData.get('city'),
       // region: formData.get('region'),

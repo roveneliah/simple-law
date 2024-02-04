@@ -3,18 +3,31 @@ import CaseLayout from '@/components/CaseLayout'
 import AppLayout from '@/components/Layout/AppLayout'
 import MagicText from '@/components/vibes/MagicText'
 import { withCaseData } from '@/components/withCaseData'
+import { supabase } from '@/lib/supabaseClient'
 import { useUser } from '@/lib/useUser'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-function CaseView({ caseData }) {
+export const useCase = (id) => {
+  const [caseData, setCaseData] = useState(null)
+  useEffect(() => {
+    supabase
+      .from('Case')
+      .select('*')
+      .eq('id', id)
+      .single()
+      .then(({ data, error }) => {
+        setCaseData(data)
+      })
+  }, [id])
+  return caseData
+}
+
+function CaseView() {
+  const caseId = usePathname().split('/').pop()
+  const caseData = useCase(caseId)
   const [stateIndex, setStateIndex] = useState(caseData?.stateIndex || 0)
-  const { id, name, description, clientFirst } = caseData || {
-    id: null,
-    name: null,
-    description: null,
-    clientFirst: null,
-  }
 
   const user = useUser()
 
@@ -36,36 +49,36 @@ function CaseView({ caseData }) {
 
   return (
     <AppLayout>
-      <CaseLayout viewName="Status" id={id}>
+      <CaseLayout viewName="Status" id={caseId}>
         <div className="flex flex-row">
-          {stateIndex == 0 && (
+          {caseData?.status == 'new' && (
             <div className="col-span-full mb-16">
               <p className="text-xl font-medium text-gray-900/75">
-                Hey {user?.user_metadata?.first_name},
+                Hey {user?.first},
               </p>
-              <p className="mt-4 ">We're going to interview lawyers for you.</p>
-              <li className="mt-4">
+              <p className="mt-4 ">
+                We're going to interview lawyers for you, and send you our top
+                picks with an explanation why.
+              </p>
+              <p className="mt-4">
                 <MagicText>
-                  <Link href={`/app/cases/case/${id}`}>
-                    First, head to Case Info and give us the basic details.
+                  <Link href={`/app/cases/case/${caseId}`}>
+                    So we can get going, please head to Case Info and give us
+                    the basic details.
                   </Link>
                 </MagicText>
-              </li>
-
-              <p className="mt-4 ">
-                From there, we'll interview our trusted lawyers and send you our
-                top recommendations.
               </p>
+
               <p className="mt-4">Remember, booking with us you get:</p>
-              <li className="mt-2">
+              <li className="ml-2 mt-2">
                 <MagicText>First 2 hours free.</MagicText>
               </li>
-              <li className="mt-2">
+              <li className="ml-2 mt-2">
                 <MagicText>
                   Weekly updates from your attorney on your case's status.
                 </MagicText>
               </li>
-              <li className="mt-2">
+              <li className="ml-2 mt-2">
                 <MagicText>
                   The ability to switch lawyers at any time.
                 </MagicText>
@@ -80,7 +93,7 @@ function CaseView({ caseData }) {
           {stateIndex == 1 && (
             <div className="col-span-full">
               <p className="text-xl font-medium text-gray-900/75">
-                Hey {clientFirst},
+                Hey {user.first},
               </p>
               <p className="mt-4 ">
                 We're interviewing lawyers for you right now. You'll receive an

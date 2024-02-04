@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { withCaseData } from './withCaseData'
+import { useCase } from '@/app/app/cases/status/[id]/page'
+import { usePathname } from 'next/navigation'
 
 const BASE_URL = '/app/cases/'
 const tabs = (id: string | number) =>
@@ -22,17 +24,17 @@ function classNames(...classes: any[]) {
 }
 
 function CaseMenuBar(props) {
+  const caseId = usePathname().split('/').pop()
+  const caseData = useCase(caseId)
   return (
     <div className="border-b border-gray-200">
-      <div className="sm:flex sm:flex-row sm:items-baseline sm:justify-between">
-        <Link href={`/app/cases/status/${props.caseData.id}`}>
-          <h3 className="mt-0 text-base font-semibold leading-6 text-gray-900">
-            {props.caseData?.name}
-          </h3>
-        </Link>
+      <div className="sm:flex sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+        <h3 className="mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-base font-semibold leading-6 text-gray-900">
+          <Link href={`/app/cases/status/${caseId}`}>{caseData?.title}</Link>
+        </h3>
         <div className="mt-4 sm:mt-0">
           <nav className="-mb-px flex flex-row items-baseline justify-start space-x-8">
-            {tabs(props.caseData.id).map((tab) => (
+            {tabs(caseId).map((tab) => (
               <Link
                 key={tab.name}
                 href={tab.href}
@@ -53,10 +55,10 @@ function CaseMenuBar(props) {
   )
 }
 
-function CaseLayout({ children, viewName, caseData }: any) {
+function CaseLayout({ children, viewName, caseData, caseId }: any) {
   return (
     <div className="mt-0">
-      <CaseMenuBar viewName={viewName} caseData={caseData} />
+      <CaseMenuBar viewName={viewName} caseData={caseData} caseId={caseId} />
       <div className="mt-8">{children}</div>
     </div>
   )

@@ -3,117 +3,54 @@ import AutoFlipComponent from '@/components/AutoFlip'
 import CaseLayout from '@/components/CaseLayout'
 import AppLayout from '@/components/Layout/AppLayout'
 import { withCaseData } from '@/components/withCaseData'
-import { CANDIDATES, FALLBACK_AVATAR } from '@/data/dummy'
+import { CANDIDATES, FALLBACK_AVATAR, dummyLawyers } from '@/data/dummy'
 import { BookmarkIcon, StarIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+import { useCase } from '../../../status/[id]/page'
 
-function Steps({ step, totalSteps }) {
-  const steps = useMemo(() => {
-    return Array(totalSteps)
-      .fill()
-      .map((s, i) => {
-        if (i < step) {
-          return { name: `Step: ${i}`, href: '#', status: 'complete' }
-        } else if (i === step) {
-          return { name: `Step: ${i}`, href: '#', status: 'current' }
-        } else {
-          return { name: `Step: ${i}`, href: '#', status: 'upcoming' }
-        }
-      })
-  }, [step, totalSteps])
+const useLawyer = (id) => {
+  // find dummy lawyer with mathcing id
+  const lawyerData = dummyLawyers(0).find((lawyer) => {
+    return lawyer.id == id
+  })
 
-  return (
-    <nav className="flex items-center justify-center" aria-label="Progress">
-      {/* <p className="text-sm font-medium">
-        Step {steps.findIndex((step) => step.status === 'current') + 1} of{' '}
-        {steps.length}
-      </p> */}
-      <ol role="list" className="flex items-center space-x-5">
-        {steps.map((step, i) => (
-          <li key={i}>
-            {step.status === 'complete' ? (
-              <a
-                href={step.href}
-                className="block h-2.5 w-2.5 rounded-full bg-indigo-600 hover:bg-indigo-900"
-              >
-                <span className="sr-only">{step.name}</span>
-              </a>
-            ) : step.status === 'current' ? (
-              <a
-                href={step.href}
-                className="relative flex items-center justify-center"
-                aria-current="step"
-              >
-                <span className="absolute flex h-5 w-5 p-px" aria-hidden="true">
-                  <span className="h-full w-full rounded-full bg-indigo-200" />
-                </span>
-                <span
-                  className="relative block h-2.5 w-2.5 rounded-full bg-indigo-600"
-                  aria-hidden="true"
-                />
-                <span className="sr-only">{step.name}</span>
-              </a>
-            ) : (
-              <a
-                href={step.href}
-                className="block h-2.5 w-2.5 rounded-full bg-gray-200 hover:bg-gray-400"
-              >
-                <span className="sr-only">{step.name}</span>
-              </a>
-            )}
-          </li>
-        ))}
-      </ol>
-    </nav>
-  )
+  // const [lawyerData, setLawyerData] = useState(null)
+  // useEffect(() => {
+  //   supabase
+  //     .from('Lawyer')
+  //     .select('*')
+  //     .eq('id', id)
+  //     .single()
+  //     .then(({ data, error }) => {
+  //       setLawyerData(data)
+  //     })
+  // }, [id])
+  return lawyerData
 }
 
-function CaseView({ caseData, candidate = CANDIDATES[0] }) {
-  const { id, name, description } = caseData || {
-    id: null,
-    name: null,
-    description: null,
-  }
+function LawyerView({ candidate = CANDIDATES[0] }) {
+  const path = usePathname().split('/')
+  const caseId = path[path.length - 1]
+  const lawyerId = path[path.length - 2]
+  const caseData = useCase(caseId)
+  const lawyerData = useLawyer(lawyerId)
 
   const [step, setStep] = useState(0)
 
   const router = useRouter()
   const handleSaveFeedback = () => {
     console.log('feedback saved')
-    router.push('/app/cases/lawyers/' + id + '/')
+    router.push('/app/cases/lawyers/' + caseId)
   }
 
   return (
     <AppLayout>
-      <CaseLayout viewName="Lawyers" id={id}>
+      <CaseLayout viewName="Lawyers" id={caseId}>
         <div className="flex flex-col">
           <div className="flex flex-row gap-x-4">
             <div className="flex w-full flex-col">
-              {/* <Steps step={step} totalSteps={3} /> */}
-              {/* <div className="flex w-full flex-row justify-between">
-                <div className="flex w-full flex-row justify-start">
-                  <Steps
-                    step={step}
-                    totalSteps={candidate.interview.length + 3}
-                  />
-                </div>
-                <div className="flex flex-row items-center justify-evenly gap-4">
-                  <button>
-                    <StarIcon
-                      className={'h-5 w-5 shrink-0 text-black'}
-                      aria-hidden="true"
-                    />
-                  </button>
-                  <button>
-                    <XMarkIcon
-                      className={'h-6 w-6 shrink-0 text-black'}
-                      aria-hidden="true"
-                    />
-                  </button>
-                </div>
-              </div> */}
               <AutoFlipComponent
                 currentIndex={step}
                 setCurrentIndex={setStep}
@@ -122,13 +59,13 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
                 <div>
                   <p>Hey Eli,</p>
                   <p className="mt-4">
-                    {candidate.first} is a personal injury attorney with over
-                    100 wins. She's worked with 5 other clients on Impossible
+                    {lawyerData?.name} is a personal injury attorney with over
+                    100 wins. They've worked with 5 other clients on Impossible
                     thus far, and has no bad reviews.
                   </p>
                   <p className="mt-4">
-                    She's available to take your case, and her rate is $300/hr.
-                    This is typical of the industry.
+                    They're available to take your case, and their rate is
+                    $300/hr. This is typical of the industry.
                   </p>
                   <p className="mb-2 mt-4">
                     Booking with IMPOSSIBLELaw, you get:
@@ -250,27 +187,28 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
                           {answerLive && (
                             <div className="flex flex-row gap-4">
                               <img
-                                src={candidate.avatar || FALLBACK_AVATAR}
+                                src={lawyerData?.imageUrl || FALLBACK_AVATAR}
                                 className="h-10 w-10 rounded-full bg-gray-800"
                                 alt="avatar"
                               />
                               <div>
-                                <p className="font-medium">{candidate.first}</p>
+                                <p className="font-medium">{lawyerData.name}</p>
                                 <p>{answerLive}</p>
                               </div>
                             </div>
                           )}
                           {notesLive && (
-                            <div className="flex flex-row gap-4">
-                              <img
+                            <div className="flex flex-row gap-4 rounded-lg bg-gray-100 px-3 py-2">
+                              {/* <img
                                 src={FALLBACK_AVATAR}
                                 className="h-10 w-10 rounded-full bg-gray-800"
                                 alt="avatar"
-                              />
+                              /> */}
+                              <div className="rounded-full">
+                                <p className="px-1 text-4xl">👍</p>
+                              </div>
                               <div>
-                                <p className="font-medium">
-                                  Our Perspective 🧠
-                                </p>
+                                <p className="font-medium">Our Perspective</p>
                                 <p>{notesLive}</p>
                               </div>
                             </div>
@@ -353,4 +291,4 @@ function CaseView({ caseData, candidate = CANDIDATES[0] }) {
   )
 }
 
-export default withCaseData(CaseView)
+export default LawyerView

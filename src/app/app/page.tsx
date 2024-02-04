@@ -2,12 +2,11 @@
 import AppLayout from '@/components/Layout/AppLayout'
 import Link from 'next/link'
 import { CaseList } from './cases/page'
-import { useUser } from '@/lib/useUser'
 
 export default function App() {
   return (
     <AppLayout>
-      <div>
+      <div className="mb-8">
         <div
           style={{
             overflow: 'hidden',
@@ -30,9 +29,9 @@ export default function App() {
             allowFullScreen
           ></iframe>
         </div>
-        <div className="flex w-full flex-row justify-end">
+        {/* <div className="flex w-full flex-row justify-end">
           <Link href="/app/cases/new">Get Started</Link>
-        </div>
+        </div> */}
       </div>
       <CaseList />
     </AppLayout>

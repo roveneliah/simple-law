@@ -29,7 +29,7 @@ export default function MagicText({ children }) {
     <>
       <span
         onClick={openDialog}
-        className="cursor-pointer transition-all hover:animate-pulse hover:cursor-pointer hover:font-medium hover:text-purple-400"
+        className={`cursor-pointer transition-all hover:animate-pulse hover:cursor-pointer hover:font-medium hover:text-purple-400`}
       >
         {children}
       </span>

@@ -77,8 +77,6 @@ function CaseView({ caseData }) {
     description: null,
   }
 
-  const [step, setStep] = useState(0)
-
   return (
     <AppLayout>
       <CaseLayout viewName="Lawyers" id={id}>
