@@ -1,5 +1,5 @@
+import { StarIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link'
-import { withCaseData } from './withCaseData'
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
@@ -7,7 +7,7 @@ function classNames(...classes: any[]) {
 
 const BASE_URL = '/lawyers/'
 const tabs = [
-  { name: 'Leads', href: '#' },
+  { name: 'Invitations', href: 'invitations' },
   { name: 'Clients', href: '#' },
   { name: 'Profile', href: 'profile' },
 ]
@@ -16,10 +16,11 @@ function LawyerMenuBar(props) {
   return (
     <div className="border-b border-gray-200">
       <div className="sm:flex sm:flex-row sm:items-baseline sm:justify-between">
-        <Link href={`/lawyers`}>
+        <Link href={`/lawyers`} className="flex flex-row items-center gap-2 ">
           <h3 className="mt-0 text-base font-semibold leading-6 text-gray-900">
-            Hmmm
+            Jerri Kelman, Esq.
           </h3>
+          <StarIcon className="h-5 w-5 text-gray-600" />
         </Link>
         <div className="mt-4 sm:mt-0">
           <nav className="-mb-px flex flex-row items-baseline justify-start space-x-8">

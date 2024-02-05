@@ -14,6 +14,7 @@ export default function App() {
             position: 'relative',
             height: 0,
           }}
+          className="rounded-lg"
         >
           <iframe
             style={{
