@@ -5,8 +5,9 @@ import Link from 'next/link'
 import AutoFlipComponent from '@/components/AutoFlip'
 import { useState } from 'react'
 import { INVITATIONS } from './invitations/page'
+import { useRouter } from 'next/navigation'
 
-export default function Example() {
+export default function LawyersHome() {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   return (
@@ -60,7 +61,7 @@ export default function Example() {
           </p>
           <div className="mt-8 flex w-full flex-row justify-center gap-4">
             <Link
-              href="/lawyers/profile"
+              href="/lawyers/verification"
               className="h-fit text-nowrap rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
             >
               Get Started

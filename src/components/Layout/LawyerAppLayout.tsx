@@ -14,6 +14,7 @@ import { useLawyerUser } from '@/lib/useUser'
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { useRouter } from 'next/navigation'
 
 const navigation = [
   {
@@ -57,8 +58,14 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
 }
 
+const useRedirectIfNotVerified = (isVerified = false) => {
+  const router = useRouter()
+  if (!isVerified) router.push('/lawyers/verification')
+}
+
 export default function LawyerAppLayout({ children }: any) {
   const user = useLawyerUser()
+  useRedirectIfNotVerified(true)
 
   if (!user?.email) {
     // direct to login
