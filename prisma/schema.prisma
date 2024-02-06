@@ -24,11 +24,11 @@ model User {
 model Lawyer {
   id       String   @id @default(uuid())
   email    String   @unique
-  phone    String   @unique
-  first    String
-  last     String
-  description String
-  firm     String
+  phone    String?   @unique
+  first    String?
+  last     String?
+  description String?
+  firm     String?
   savedBy  User[]
   
   invitations Invitation[]
@@ -55,7 +55,7 @@ model Case {
   description String?
 
   // invitations
-  invitations     Invitation[]
+  invitations Invitation[]
   offers      Offer[]
 }
 
@@ -66,6 +66,7 @@ model Invitation {
   lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
   lawyerId  String
   status    String
+  comment   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

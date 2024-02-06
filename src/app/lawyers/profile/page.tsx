@@ -1,11 +1,11 @@
 'use client'
 import LawyerViewLayout from '@/components/LawyerViewLayout'
-import AppLayout from '@/components/Layout/AppLayout'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 
 export default function Profile() {
   return (
-    <AppLayout>
+    <LawyerAppLayout>
       <LawyerViewLayout viewName="Profile">
         <form>
           <div className="space-y-12">
@@ -592,6 +592,6 @@ export default function Profile() {
           </div>
         </form>
       </LawyerViewLayout>
-    </AppLayout>
+    </LawyerAppLayout>
   )
 }

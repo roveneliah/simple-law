@@ -34,6 +34,7 @@ export const dummyLawyers = (caseId) => [
     date: '1d ago',
     dateTime: '2023-03-04T15:54Z',
     rank: 'Top Choice',
+    tag: 'Shortlist',
     caseId,
   },
   {
@@ -46,6 +47,7 @@ export const dummyLawyers = (caseId) => [
     date: '2d ago',
     dateTime: '2023-03-03T14:02Z',
     rank: 'Top Choice',
+    tag: 'Declined',
     caseId,
   },
   {

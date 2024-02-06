@@ -40,7 +40,8 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
   const [step, setStep] = useState(0)
 
   const router = useRouter()
-  const handleSaveFeedback = () => {
+  const saveFeedback = (value: string) => {
+    // write status to invitation field in supabase
     console.log('feedback saved')
     router.push('/app/cases/lawyers/' + caseId)
   }
@@ -280,25 +281,26 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
                         ))}
                       </div>
                     </fieldset> */}
-                    <div className="mt-8 flex w-full flex-row justify-center gap-4">
+                    <div className="mt-8 flex w-full flex-row justify-evenly gap-4">
                       <button
-                        onClick={handleSaveFeedback}
-                        className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+                        onClick={() => saveFeedback('Shortlist')}
+                        className="w-full rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
                       >
-                        Book Now
+                        Shortlist
                       </button>
                       <button
-                        onClick={handleSaveFeedback}
-                        className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
-                      >
-                        Save for Later
-                      </button>
-                      <button
-                        onClick={handleSaveFeedback}
-                        className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+                        onClick={() => saveFeedback('Decline')}
+                        className="w-full rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
                       >
                         Decline Offer
                       </button>
+                      <div className="w-full">
+                        <Link href={`/app/cases/lawyers/${caseId}`}>
+                          <button className="w-full rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">
+                            Skip
+                          </button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>

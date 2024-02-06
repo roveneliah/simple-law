@@ -9,8 +9,8 @@ import {
   ChatBubbleOvalLeftEllipsisIcon,
 } from '@heroicons/react/24/outline'
 import Link from 'next/link'
-import { supabase } from '@/lib/supabaseClient'
-import { useUser } from '@/lib/useUser'
+import { supabase, supabaseLawyers } from '@/lib/supabaseClient'
+import { useLawyerUser } from '@/lib/useUser'
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
@@ -57,17 +57,17 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function AppLayout({ children }: any) {
-  const user = useUser()
+export default function LawyerAppLayout({ children }: any) {
+  const user = useLawyerUser()
 
-  if (!user) {
+  if (!user?.email) {
     // direct to login
     return <div>Loading...</div>
   }
 
   const handleSignOut = async (e) => {
     e.preventDefault()
-    supabase.auth.signOut()
+    supabaseLawyers.auth.signOut()
   }
 
   return (
@@ -78,7 +78,7 @@ export default function AppLayout({ children }: any) {
           {/* <CaseProgress stageIndex={0} /> */}
           <div className="mb-4 mt-8 flex w-full flex-row items-center justify-between pb-4">
             <div className="w-1/3">
-              <Link href="/app">
+              <Link href="/lawyers">
                 <p className="text-xl font-extrabold">
                   IMPOSSIBLE
                   <span className="font-light text-gray-600">Law</span>
@@ -113,10 +113,10 @@ export default function AppLayout({ children }: any) {
                     </p>
                   </div>
                   <div className="py-1">
-                    <Menu.Item>
+                    {/* <Menu.Item>
                       {({ active }) => (
                         <Link
-                          href="/app"
+                          href="/lawyers"
                           className={classNames(
                             active
                               ? 'bg-gray-100 text-gray-900'
@@ -127,11 +127,11 @@ export default function AppLayout({ children }: any) {
                           🚀 Cases
                         </Link>
                       )}
-                    </Menu.Item>
+                    </Menu.Item> */}
                     <Menu.Item>
                       {({ active }) => (
                         <Link
-                          href="app/account"
+                          href="/lawyers/account"
                           className={classNames(
                             active
                               ? 'bg-gray-100 text-gray-900'

@@ -26,10 +26,6 @@ function Steps({ step, totalSteps }) {
 
   return (
     <nav className="flex items-center justify-center" aria-label="Progress">
-      {/* <p className="text-sm font-medium">
-        Step {steps.findIndex((step) => step.status === 'current') + 1} of{' '}
-        {steps.length}
-      </p> */}
       <ol role="list" className="flex items-center space-x-5">
         {steps.map((step, i) => (
           <li key={i}>

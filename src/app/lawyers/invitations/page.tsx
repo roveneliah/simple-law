@@ -1,6 +1,8 @@
 'use client'
 import LawyerViewLayout from '@/components/LawyerViewLayout'
 import AppLayout from '@/components/Layout/AppLayout'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import { useState } from 'react'
 
 export const INVITATIONS = [
   {
@@ -9,18 +11,33 @@ export const INVITATIONS = [
     note: 'Hey John, client seeking $200000 damages, based in San Diego.  Client ready to start immediately.',
     interviewBy: new Date(),
   },
+  {
+    caseId: '1353424534',
+    nickname: 'Divorce, Chula Vista, CA',
+    note: 'Client looking for a divorce lawyer, based in Chula Vista.',
+  },
 ]
 
-function InvitationsList() {
+function InvitationsList({}) {
+  const [invitations, setInvitations] = useState(INVITATIONS)
+  const declineInvitation = (caseId) => {
+    setInvitations(
+      invitations.filter((i) => {
+        return caseId !== i.caseId
+      }),
+    )
+  }
   return (
-    <div>
-      {INVITATIONS.map((invitation) => (
-        <div>
+    <div className="flex flex-col gap-4">
+      {invitations.map((invitation, i) => (
+        <div key={i}>
           <div className="font-medium">{invitation.nickname}</div>
           <div>{invitation.note}</div>
-          <div className="flex w-full flex-row justify-end">
-            <button>Accept</button>
-            <button>Decline</button>
+          <div className="flex w-full flex-row justify-end gap-4">
+            <button>View Details</button>
+            <button onClick={() => declineInvitation(invitation.caseId)}>
+              Decline
+            </button>
           </div>
         </div>
       ))}
@@ -30,7 +47,7 @@ function InvitationsList() {
 
 export default function InvitationsView() {
   return (
-    <AppLayout>
+    <LawyerAppLayout>
       <LawyerViewLayout viewName="Invitations">
         <form>
           <div className="space-y-12">
@@ -49,6 +66,6 @@ export default function InvitationsView() {
           <InvitationsList />
         </div>
       </LawyerViewLayout>
-    </AppLayout>
+    </LawyerAppLayout>
   )
 }

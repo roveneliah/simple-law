@@ -90,7 +90,7 @@ export default function Login() {
                 <p className="mt-2 text-sm leading-6 text-gray-500">
                   Not a member?{' '}
                 </p>
-                <Link href="/account/signup">
+                <Link href="app/signup">
                   <p className="text-sm font-semibold text-indigo-600 hover:text-indigo-500">
                     Create an account
                   </p>
