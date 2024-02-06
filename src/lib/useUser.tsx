@@ -65,11 +65,6 @@ export const useLawyerUser = () => {
         .then(({ data, error }) => {
           // create if doesn't exist
           if (!data) {
-            console.log(
-              'Trying to create a new lawyer in db.  Found:',
-              data,
-              error,
-            )
             supabase
               .from('Lawyer')
               .upsert([
@@ -79,13 +74,11 @@ export const useLawyerUser = () => {
                 },
               ])
               .then(({ data, error }) => {
-                console.log('Data:', data, 'Error:', error)
                 setUser(data || null)
               })
           } else return { data, error }
         })
         .then(({ data, error }) => {
-          console.log('Data:', data, 'Error:', error)
           setUser(data || null)
         })
     })

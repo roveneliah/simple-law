@@ -131,6 +131,21 @@ export default function LawyerAppLayout({ children }: any) {
                     <Menu.Item>
                       {({ active }) => (
                         <Link
+                          href="/lawyers/verification"
+                          className={classNames(
+                            active
+                              ? 'bg-gray-100 text-gray-900'
+                              : 'text-gray-700',
+                            'block px-4 py-2 text-sm',
+                          )}
+                        >
+                          ✅ Verification
+                        </Link>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <Link
                           href="/lawyers/account"
                           className={classNames(
                             active
