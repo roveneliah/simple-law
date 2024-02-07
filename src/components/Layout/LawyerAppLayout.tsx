@@ -58,17 +58,23 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const useRedirectIfNotVerified = () => {
+const useRedirectIfNotVerified = ({ override = false }) => {
   // use supabase session to check if user is verified
+  if (override) return
+
   const session = useSession()
-  const metadata = session?.user?.user_metadata
   const router = useRouter()
-  if (!metadata?.isVerified) router.push('/lawyers/verification')
+
+  const isVerified = session?.user?.user_metadata?.isVerified
+  if (!isVerified) router.push('/lawyers/verification')
 }
 
-export default function LawyerAppLayout({ children }: any) {
+export default function LawyerAppLayout({
+  children,
+  overrideVerification = false,
+}: any) {
   const user = useLawyerUser()
-  useRedirectIfNotVerified()
+  useRedirectIfNotVerified({ override: true })
 
   if (!user?.email) {
     // direct to login

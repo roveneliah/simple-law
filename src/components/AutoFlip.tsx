@@ -4,7 +4,7 @@ const AutoFlipComponent = ({
   currentIndex,
   setCurrentIndex,
   children,
-  className,
+  className = '',
 }) => {
   // Check if children is a single element or an array
   const childrenArray = React.Children.toArray(children)
