@@ -10,9 +10,9 @@ import {
 } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { supabase, supabaseLawyers } from '@/lib/supabaseClient'
-import { useLawyerUser } from '@/lib/useUser'
+import { useLawyerUser, useSession } from '@/lib/useUser'
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useRouter } from 'next/navigation'
 
@@ -58,14 +58,17 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const useRedirectIfNotVerified = (isVerified = false) => {
+const useRedirectIfNotVerified = () => {
+  // use supabase session to check if user is verified
+  const session = useSession()
+  const metadata = session?.user?.user_metadata
   const router = useRouter()
-  if (!isVerified) router.push('/lawyers/verification')
+  if (!metadata?.isVerified) router.push('/lawyers/verification')
 }
 
 export default function LawyerAppLayout({ children }: any) {
   const user = useLawyerUser()
-  useRedirectIfNotVerified(true)
+  useRedirectIfNotVerified()
 
   if (!user?.email) {
     // direct to login

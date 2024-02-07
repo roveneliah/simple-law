@@ -45,6 +45,35 @@ export function useUser() {
   }
 }
 
+export const useSession = () => {
+  const [session, setSession] = useState(null)
+  const router = useRouter()
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data, error }) => {
+      const session = data?.session
+      if (!session) {
+        router.push('/app/login')
+      }
+      setSession(session)
+    })
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        if (!session) {
+          router.push('/app/login')
+        }
+        setSession(session)
+      },
+    )
+
+    return () => {
+      authListener?.subscription.unsubscribe()
+    }
+  }, [router])
+
+  return session
+}
+
 export const useLawyerUser = () => {
   const [user, setUser] = useState(null)
   const router = useRouter()

@@ -22,10 +22,12 @@ export default function Login() {
     const password = formData.get('password')
 
     // Here you'd add logic to handle the sign-up, e.g., calling your auth API
+    console.log(1)
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
+    console.log(2)
 
     if (data.user?.aud === 'authenticated') {
       // make sure user has db profile

@@ -5,7 +5,6 @@ import Link from 'next/link'
 import AutoFlipComponent from '@/components/AutoFlip'
 import { useState } from 'react'
 import { INVITATIONS } from './invitations/page'
-import { useRouter } from 'next/navigation'
 
 export default function LawyersHome() {
   const [currentIndex, setCurrentIndex] = useState(0)
