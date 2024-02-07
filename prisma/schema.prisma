@@ -70,6 +70,8 @@ model Case {
   offers      Offer[]
 }
 
+
+
 model Invitation {
   id        String   @id @default(uuid())
   case      Case     @relation(fields: [caseId], references: [id])
@@ -95,12 +97,15 @@ model Offer {
   message   String
 }
 
+
+
 model Document {
   id        String   @id @default(uuid())
+  caseId    String   
   case      Case     @relation(fields: [caseId], references: [id])
-  caseId    String
-  title     String
-  url       String
+  userId    String   // Assuming you want to directly link documents to users as well
+  fileName  String
+  fileType  String
+  url       String   // URL to the document in Supabase Storage
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }

@@ -2,15 +2,37 @@
 import CaseLayout from '@/components/CaseLayout'
 import { Files } from '@/components/CaseViews/Files'
 import AppLayout from '@/components/Layout/AppLayout'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useCase } from '../../status/[id]/page'
 import { usePathname } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
+import { useUser } from '@/lib/useUser'
 
 function InfoForm() {
+  const user = useUser()
   const caseId = usePathname().split('/').pop()
   const caseData = useCase(caseId)
+
   const [files, setFiles] = useState([])
+
+  const fetchFiles = async () => {
+    console.log(user?.id, caseId)
+    const { data, error } = await supabase.storage
+      .from('caseFiles')
+      .list(`${user?.id}/${caseId}`)
+
+    if (error) {
+      console.log('error', error)
+    } else {
+      console.log('setting files', data)
+      setFiles(data)
+    }
+  }
+
+  useEffect(() => {
+    console.log('fetching files')
+    if (user?.id && caseId) fetchFiles()
+  }, [user?.id, caseId])
 
   // make sure there is userid??
   const [loading, setLoading] = useState(false)
@@ -151,7 +173,7 @@ function InfoForm() {
               Write a few sentences about yourself.
             </p> */}
             </div>
-            <Files files={files} setFiles={setFiles} />
+            <Files files={files} setFiles={setFiles} fetchFiles={fetchFiles} />
             <div className="mt-6 flex items-center justify-end gap-x-6">
               <button
                 type="button"

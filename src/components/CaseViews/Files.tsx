@@ -1,5 +1,9 @@
 'use client'
+import { useCase } from '@/app/app/cases/status/[id]/page'
+import { supabase } from '@/lib/supabaseClient'
+import { useUser } from '@/lib/useUser'
 import { DocumentIcon, PaperClipIcon } from '@heroicons/react/24/outline'
+import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 const parseCaseData = (caseData) => {
@@ -77,13 +81,44 @@ function UploadView({ addFile }) {
   )
 }
 
-export function Files({ files, setFiles }) {
+export function Files({ files, setFiles, fetchFiles }) {
+  const caseId = usePathname().split('/').pop()
+  const user = useUser()
+  const caseData = useCase(caseId)
   const addFile = (file) => {
-    setFiles([...files, file])
+    // add to supabase document store
+    console.log('trying to add file to supabase')
+    supabase.storage
+      .from('caseFiles')
+      .upload(`${user.id}/${caseData.id}/${file.name}`, file, {
+        cacheControl: '3600',
+        upsert: false,
+      })
+      .then((response) => {
+        console.log('response from supabase')
+        console.log(response)
+        fetchFiles()
+      })
+      .catch((error) => {
+        console.log('error from supabase')
+        console.log(error)
+      })
   }
 
-  const deleteFile = () => {
-    setFiles(files.filter((f) => f.id !== file.id))
+  const deleteFile = (file) => {
+    // delete from supabase
+    supabase.storage
+      .from('caseFiles')
+      .remove(`${user.id}/${caseData.id}/${file.name}`)
+      .then((response) => {
+        console.log('response from supabase')
+        console.log(response)
+        fetchFiles()
+      })
+      .catch((error) => {
+        console.log('error from supabase')
+        console.log(error)
+      })
   }
 
   const handleFileChange = (e) => {
