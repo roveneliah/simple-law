@@ -89,8 +89,8 @@ export default function LawyerAppLayout({
   return (
     <div className="flex h-screen flex-row">
       {/* <Sidebar /> */}
-      <div className=" flex w-full flex-col items-center overflow-auto py-4">
-        <div className="flex w-full max-w-lg flex-col px-8 lg:px-0">
+      <div className="flex w-full flex-col items-center overflow-auto py-4">
+        <div className="flex w-full max-w-xl flex-col px-8 lg:px-0">
           {/* <CaseProgress stageIndex={0} /> */}
           <div className="mb-4 mt-8 flex w-full flex-row items-center justify-between pb-4">
             <div className="w-1/3">
