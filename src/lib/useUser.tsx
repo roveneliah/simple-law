@@ -88,12 +88,13 @@ export const useLawyerUser = () => {
       // get the user from db given id
       supabase
         .from('Lawyer')
-        .select('*')
+        .select(`*, Invitation(*)`)
         .eq('id', session?.user?.id)
         .single()
         .then(({ data, error }) => {
           // create if doesn't exist
           if (!data) {
+            console.log('creating lawyer...')
             supabase
               .from('Lawyer')
               .upsert([

@@ -205,56 +205,58 @@ export function Files({ files, setFiles, fetchFiles }) {
             />
           </label>
         </div>
-        <div className="mt-4 rounded-md border px-3 py-2">
-          {files.map((file) => (
-            <div
-              key={file.id}
-              className="flex items-center justify-between border-b border-gray-200/10 py-2"
-            >
-              <div className="flex items-center gap-x-3">
-                <PaperClipIcon
-                  className="h-5 w-5 flex-shrink-0 text-gray-400"
-                  aria-hidden="true"
-                />
-                <span className="text-sm font-medium text-gray-900/75">
-                  {file.name}
-                </span>
-                {file?.description && (
-                  <span className="text-sm font-medium text-gray-900/50">
-                    {file.description}
+        {files.length > 0 && (
+          <div className="mt-4 rounded-md border px-3 py-2">
+            {files.map((file) => (
+              <div
+                key={file.id}
+                className="flex items-center justify-between border-b border-gray-200/10 py-2"
+              >
+                <div className="flex items-center gap-x-3">
+                  <PaperClipIcon
+                    className="h-5 w-5 flex-shrink-0 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  <span className="text-sm font-medium text-gray-900/75">
+                    {file.name}
                   </span>
-                )}
-              </div>
-              <div className="flex gap-x-3">
-                {file.content && (
+                  {file?.description && (
+                    <span className="text-sm font-medium text-gray-900/50">
+                      {file.description}
+                    </span>
+                  )}
+                </div>
+                <div className="flex gap-x-3">
+                  {file.content && (
+                    <button
+                      type="button"
+                      className="font-medium text-indigo-600 hover:text-indigo-500"
+                      onClick={() => viewFile(file)}
+                    >
+                      View
+                    </button>
+                  )}
+                  {file.blob && (
+                    <button
+                      type="button"
+                      className="font-medium text-indigo-600 hover:text-indigo-500"
+                      onClick={() => downloadFile(file)}
+                    >
+                      Download
+                    </button>
+                  )}
                   <button
                     type="button"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                    onClick={() => viewFile(file)}
+                    className="text-sm font-normal text-indigo-600 hover:text-indigo-500"
+                    onClick={() => deleteFile(file)}
                   >
-                    View
+                    Delete
                   </button>
-                )}
-                {file.blob && (
-                  <button
-                    type="button"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                    onClick={() => downloadFile(file)}
-                  >
-                    Download
-                  </button>
-                )}
-                <button
-                  type="button"
-                  className="text-sm font-normal text-indigo-600 hover:text-indigo-500"
-                  onClick={() => deleteFile(file)}
-                >
-                  Delete
-                </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

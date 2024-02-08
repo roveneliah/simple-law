@@ -2,7 +2,9 @@
 import LawyerViewLayout from '@/components/LawyerViewLayout'
 import AppLayout from '@/components/Layout/AppLayout'
 import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
-import { useState } from 'react'
+import { useLawyerUser } from '@/lib/useUser'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export const INVITATIONS = [
   {
@@ -19,7 +21,15 @@ export const INVITATIONS = [
 ]
 
 function InvitationsList({}) {
-  const [invitations, setInvitations] = useState(INVITATIONS)
+  const lawyer = useLawyerUser()
+
+  const [invitations, setInvitations] = useState([])
+  useEffect(() => {
+    setInvitations(lawyer?.Invitation || [])
+  }, [lawyer?.Invitation])
+
+  console.log('invitations', invitations)
+
   const declineInvitation = (caseId) => {
     setInvitations(
       invitations.filter((i) => {
@@ -32,9 +42,13 @@ function InvitationsList({}) {
       {invitations.map((invitation, i) => (
         <div key={i}>
           <div className="font-medium">{invitation.nickname}</div>
-          <div>{invitation.note}</div>
+          <div>
+            <p className="w-64 truncate">{invitation.comment}</p>
+          </div>
           <div className="flex w-full flex-row justify-end gap-4">
-            <button>View Details</button>
+            <Link href={`/lawyers/invitations/${invitation.id}`}>
+              View Details
+            </Link>
             <button onClick={() => declineInvitation(invitation.caseId)}>
               Decline
             </button>

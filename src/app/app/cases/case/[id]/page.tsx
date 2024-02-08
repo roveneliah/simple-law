@@ -4,7 +4,7 @@ import { Files } from '@/components/CaseViews/Files'
 import AppLayout from '@/components/Layout/AppLayout'
 import { useEffect, useState } from 'react'
 import { useCase } from '../../status/[id]/page'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 import { useUser } from '@/lib/useUser'
 
@@ -36,6 +36,57 @@ function InfoForm() {
 
   // make sure there is userid??
   const [loading, setLoading] = useState(false)
+
+  const [review, setReview] = useState('')
+  const postCaseForReview = async () => {
+    console.log('posting case for review')
+    const response = await fetch('/api/cases/review', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        caseData,
+        clientName: user?.first + user?.last,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('got review')
+        console.log(data)
+        setReview('0')
+      })
+
+    console.log('response', response)
+  }
+
+  const router = useRouter()
+  useEffect(() => {
+    // if review is 0, then submit case
+    if (review == '0') {
+      console.log('submitting case')
+      fetch('/api/invitations/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          caseData,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log('submitted case')
+          console.log(data?.note)
+
+          // update Case status in db
+
+          // create invitation in db
+
+          router.push('/app/cases')
+        })
+    }
+  }, [review])
 
   const handleSave = async (e) => {
     e.preventDefault()
@@ -76,6 +127,16 @@ function InfoForm() {
           <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
             We will use this to interview lawyers on your behalf.
           </p>
+          {!!review && review != '0' && (
+            <div className="mt-2 rounded-md bg-gray-100 p-4">
+              <h3 className="text-base font-semibold leading-7 text-gray-900">
+                Review
+              </h3>
+              <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+                {review}
+              </p>
+            </div>
+          )}
         </div>
         {/* <button
           type="button"
@@ -186,6 +247,13 @@ function InfoForm() {
                 className={`${loading ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-500'} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
               >
                 {loading ? 'Saving...' : 'Save'}
+              </button>
+              <button
+                onClick={() => postCaseForReview()}
+                type="button"
+                className={`rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+              >
+                Submit
               </button>
             </div>
           </dl>

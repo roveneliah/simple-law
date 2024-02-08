@@ -76,7 +76,7 @@ model Invitation {
   id        String   @id @default(uuid())
   case      Case     @relation(fields: [caseId], references: [id])
   caseId    String
-  lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
+  lawyers   Lawyer   @relation(fields: [lawyerId], references: [id])
   lawyerId  String
   status    String
   comment   String

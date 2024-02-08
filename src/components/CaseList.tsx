@@ -36,7 +36,7 @@ export default function CaseList() {
         >
           <Link
             key={i}
-            href={'app/cases/status/' + c.id}
+            href={'/app/cases/status/' + c.id}
             className="-m-4 w-full p-4"
           >
             <div className="w-full">
