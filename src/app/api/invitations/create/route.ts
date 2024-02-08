@@ -11,18 +11,6 @@ export async function POST(request: Request) {
 
   const note = await createNoteForLawyer({ caseData, clientName })
 
-  // create invitation in DB
-  // model Invitation {
-  //   id        String   @id @default(uuid())
-  //   case      Case     @relation(fields: [caseId], references: [id])
-  //   caseId    String
-  //   lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
-  //   lawyerId  String
-  //   status    String
-  //   comment   String
-  //   createdAt DateTime @default(now())
-  //   updatedAt DateTime @updatedAt
-  // }
   const { data, error } = await supabase.from('Invitation').insert({
     id: uuidv4(),
     caseId: caseData.id,

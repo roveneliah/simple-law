@@ -64,6 +64,7 @@ model Case {
   // ai generated
   title       String?
   description String?
+  interview   String?
 
   // invitations
   invitations Invitation[]

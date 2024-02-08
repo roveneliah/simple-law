@@ -3,7 +3,7 @@ import CaseLayout from '@/components/CaseLayout'
 import { Files } from '@/components/CaseViews/Files'
 import AppLayout from '@/components/Layout/AppLayout'
 import { useEffect, useState } from 'react'
-import { useCase } from '../../status/[id]/page'
+import { useCase } from '../../../../../lib/useCase'
 import { usePathname, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 import { useUser } from '@/lib/useUser'
@@ -40,7 +40,7 @@ function InfoForm() {
   const [review, setReview] = useState('')
   const postCaseForReview = async () => {
     console.log('posting case for review')
-    const response = await fetch('/api/cases/review', {
+    await fetch('/api/cases/review', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,13 +51,7 @@ function InfoForm() {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        console.log('got review')
-        console.log(data)
-        setReview('0')
-      })
-
-    console.log('response', response)
+      .then(setReview)
   }
 
   const router = useRouter()

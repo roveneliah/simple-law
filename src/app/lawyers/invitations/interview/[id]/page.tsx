@@ -28,7 +28,7 @@ export default function InvitationsView() {
   useEffect(() => {
     supabase
       .from('Invitation')
-      .select('*')
+      .select('*, Case(*)')
       .eq('id', invitationId)
       .single()
       .then(({ data, error }) => {
@@ -37,13 +37,12 @@ export default function InvitationsView() {
       })
   }, [])
 
-  console.log('invitation', invitation)
-
   return (
     <LawyerAppLayout>
       <p>{invitation.title || 'TITLE'}</p>
       <p>{invitation.interviewBy || 'Interview by 2/14/24 @ 3pm'}</p>
       {/* <p>{invitation.status}</p> */}
+      <p>{invitation.Case.interview}</p>
       {/* render created at as readable date */}
       <div className="mt-8 flex w-full flex-row justify-center gap-4">
         <button

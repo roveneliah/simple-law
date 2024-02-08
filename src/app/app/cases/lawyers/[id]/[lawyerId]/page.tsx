@@ -4,11 +4,11 @@ import CaseLayout from '@/components/CaseLayout'
 import AppLayout from '@/components/Layout/AppLayout'
 import { withCaseData } from '@/components/withCaseData'
 import { CANDIDATES, FALLBACK_AVATAR, dummyLawyers } from '@/data/dummy'
+import { useCase } from '@/lib/useCase'
 import { BookmarkIcon, StarIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { useCase } from '../../../status/[id]/page'
 
 const useLawyer = (id) => {
   // find dummy lawyer with mathcing id

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { withCaseData } from './withCaseData'
-import { useCase } from '@/app/app/cases/status/[id]/page'
+import { useCase } from '@/lib/useCase'
 import { usePathname } from 'next/navigation'
 
 const BASE_URL = '/app/cases/'
@@ -11,7 +11,7 @@ const tabs = (id: string | number) =>
     { name: 'Lawyers', href: 'lawyers' },
     // { name: 'Chat', href: 'chat' },
     // { name: 'Learn', href: 'learn' },
-    { name: 'Help', href: 'help' },
+    // { name: 'Help', href: 'help' },
   ].map((tab) => {
     return {
       ...tab,

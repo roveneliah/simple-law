@@ -1,5 +1,5 @@
 'use client'
-import { useCase } from '@/app/app/cases/status/[id]/page'
+import { useCase } from '@/lib/useCase'
 import { supabase } from '@/lib/supabaseClient'
 import { useUser } from '@/lib/useUser'
 import { DocumentIcon, PaperClipIcon } from '@heroicons/react/24/outline'

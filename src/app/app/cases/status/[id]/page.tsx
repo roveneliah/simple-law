@@ -3,49 +3,15 @@ import CaseLayout from '@/components/CaseLayout'
 import AppLayout from '@/components/Layout/AppLayout'
 import MagicText from '@/components/vibes/MagicText'
 import { withCaseData } from '@/components/withCaseData'
-import { supabase } from '@/lib/supabaseClient'
+import { useCase } from '@/lib/useCase'
 import { useUser } from '@/lib/useUser'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
-
-export const useCase = (id) => {
-  const [caseData, setCaseData] = useState(null)
-  useEffect(() => {
-    supabase
-      .from('Case')
-      .select('*')
-      .eq('id', id)
-      .single()
-      .then(({ data, error }) => {
-        setCaseData(data)
-      })
-  }, [id])
-  return caseData
-}
 
 function CaseView() {
   const caseId = usePathname().split('/').pop()
   const caseData = useCase(caseId)
-  const [stateIndex, setStateIndex] = useState(caseData?.stateIndex || 0)
-
   const user = useUser()
-
-  // rotate stateIndex on left right arrow key press
-  useEffect(() => {
-    const slides = 4
-    const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') {
-        setStateIndex((stateIndex) => (stateIndex + slides - 1) % slides)
-      } else if (e.key === 'ArrowRight') {
-        setStateIndex((stateIndex) => (stateIndex + 1) % slides)
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [stateIndex, setStateIndex])
 
   return (
     <AppLayout>
@@ -97,7 +63,7 @@ function CaseView() {
               </p> */}
             </div>
           )}
-          {stateIndex == 1 && (
+          {caseData?.status == 'ready' && (
             <div className="col-span-full">
               <p className="text-xl font-medium text-gray-900/75">
                 Hey {user.first},
@@ -114,7 +80,7 @@ function CaseView() {
               <p className="mt-4 ">
                 If there's any addition information or documents to share, do so{' '}
                 <Link
-                  href={`/app/cases/case/${id}`}
+                  href={`/app/cases/case/${caseId}`}
                   className="text-purple-400 transition-all hover:font-medium hover:text-purple-500"
                 >
                   here
@@ -128,7 +94,7 @@ function CaseView() {
               </p>
             </div>
           )}
-          {stateIndex == 2 && (
+          {caseData?.status == 'interviewed' && (
             <div className="col-span-full w-full">
               <p className="text-xl font-medium text-gray-900/75">
                 Hey {clientFirst},
@@ -152,7 +118,7 @@ function CaseView() {
               </p>
             </div>
           )}
-          {stateIndex == 3 && (
+          {caseData?.status == 'matched' && (
             <div className="col-span-full w-full">
               <p className="text-xl font-medium text-gray-900/75">
                 Hey {clientFirst},
