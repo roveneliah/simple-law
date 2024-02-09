@@ -7,6 +7,7 @@ import { useCase } from '../../../../../lib/useCase'
 import { usePathname, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 import { useUser } from '@/lib/useUser'
+import Link from 'next/link'
 
 function InfoForm() {
   const user = useUser()
@@ -38,9 +39,13 @@ function InfoForm() {
   const [loading, setLoading] = useState(false)
 
   const [review, setReview] = useState('')
-  const postCaseForReview = async () => {
-    console.log('posting case for review')
-    await fetch('/api/cases/review', {
+  useEffect(() => {
+    caseData?.review && setReview(caseData?.review)
+  }, [caseData?.review])
+
+  const postCaseForReview = async (caseData, override = false) => {
+    console.log('posting case for review with override', override, caseData)
+    const { review, ready, data, error } = await fetch('/api/cases/review', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -48,10 +53,11 @@ function InfoForm() {
       body: JSON.stringify({
         caseData,
         clientName: user?.first + user?.last,
+        override,
       }),
-    })
-      .then((res) => res.json())
-      .then(setReview)
+    }).then((res) => res.json())
+
+    return { data, error, review, ready }
   }
 
   const router = useRouter()
@@ -72,11 +78,8 @@ function InfoForm() {
         .then((data) => {
           console.log('submitted case')
           console.log(data?.note)
-
           // update Case status in db
-
           // create invitation in db
-
           router.push('/app/cases')
         })
     }
@@ -86,6 +89,7 @@ function InfoForm() {
     e.preventDefault()
     setLoading(true)
     const formData = new FormData(e.target)
+
     const updatedData = {
       title: formData.get('nickname')?.toString().trim(),
       whatsUp: formData.get('whatsUp')?.toString().trim(),
@@ -104,11 +108,20 @@ function InfoForm() {
       .eq('id', caseId)
       .select()
 
-    setLoading(false)
-    console.log(res)
+    const activeElement = document.activeElement
+    const action = activeElement?.getAttribute('value')
+    const override = action === 'override'
 
-    // then upload docs
-    // router.push('/app/cases')
+    const { review, ready, data, error } = await postCaseForReview(
+      { ...caseData, ...updatedData },
+      override,
+    )
+    console.log('got review back!')
+    console.log(review)
+    console.log(ready)
+    setReview(review)
+    setLoading(false)
+    console.log(data, error)
   }
 
   return (
@@ -118,9 +131,17 @@ function InfoForm() {
           <h3 className="text-base font-semibold leading-7 text-gray-900">
             Key Case Info
           </h3>
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-            We will use this to interview lawyers on your behalf.
-          </p>
+          {!caseData?.readyForInvitation && (
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+              We will use this to interview lawyers on your behalf.
+            </p>
+          )}
+          {caseData?.readyForInvitation && (
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+              We're interviewing lawyers on your behalf now, but feel free to
+              add any info or updates in the meantime.
+            </p>
+          )}
           {!!review && review != '0' && (
             <div className="mt-2 rounded-md bg-gray-100 p-4">
               <h3 className="text-base font-semibold leading-7 text-gray-900">
@@ -238,17 +259,38 @@ function InfoForm() {
               </button>
               <button
                 type="submit"
+                name="action"
+                value="save"
                 className={`${loading ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-500'} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
               >
                 {loading ? 'Saving...' : 'Save'}
               </button>
               <button
-                onClick={() => postCaseForReview()}
-                type="button"
-                className={`rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                type="submit"
+                name="action"
+                value="review"
+                className={`${loading ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-500'} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
               >
-                Submit
+                {loading ? 'Reviewing...' : 'Submit'}
               </button>
+              <button
+                type="submit"
+                name="action"
+                value="override"
+                className={`${loading ? 'bg-gray-300' : ' whitespace-nowrap bg-indigo-600 hover:bg-indigo-500'} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+              >
+                {loading ? 'Submitting...' : 'Force Submit'}
+              </button>
+              {caseData?.readyForInvitation && (
+                <Link
+                  href={`/app/cases/status/${caseId}`}
+                  className={
+                    'whitespace-nowrap rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                  }
+                >
+                  Send Invitations
+                </Link>
+              )}
             </div>
           </dl>
         </div>

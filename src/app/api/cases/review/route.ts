@@ -1,5 +1,4 @@
 import { supabase } from '@/lib/supabaseClient'
-import { log } from 'console'
 import OpenAI from 'openai'
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
@@ -24,6 +23,35 @@ const reviewCaseWithAI = async ({ caseData, clientName }) => {
   return review
 }
 
+const markReady = async ({ caseData, clientName }) => {
+  console.log('marking ready...')
+  const { data, error } = await supabase
+    .from('Case')
+    .update({
+      readyForInvitation: true,
+      review: null,
+      interview: await createInterviewWithAI({ caseData, clientName }),
+    })
+    .eq('id', caseData.id)
+    .single()
+
+  return { data, error }
+}
+
+const updateCaseWithReview = async ({ caseId, review }) => {
+  const { data, error } = await supabase
+    .from('Case')
+    .update({
+      readyForInvitation: false,
+      review,
+      interview: null,
+    })
+    .eq('id', caseId)
+    .single()
+
+  return { data, error }
+}
+
 const createInterviewWithAI = async ({ caseData, clientName }) => {
   const completion = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
@@ -45,34 +73,33 @@ const createInterviewWithAI = async ({ caseData, clientName }) => {
 }
 
 export async function POST(request: Request) {
-  const { caseData, clientName } = await request.json()
+  const { caseData, clientName, override = false } = await request.json()
 
-  const review = await reviewCaseWithAI({ caseData, clientName })
-  if (review == '0') {
-    const { data, error } = await supabase
-      .from('Case')
-      .update({
-        status: 'ready',
-        interview: await createInterviewWithAI({ caseData, clientName }),
+  const review = override
+    ? null
+    : await reviewCaseWithAI({ caseData, clientName })
+  const ready = override === true || review == '0'
+
+  const { data, error } = ready
+    ? await markReady({ caseData, clientName })
+    : await updateCaseWithReview({
+        caseId: caseData.id,
+        review,
       })
-      .eq('id', caseData.id)
-      .single()
 
-    if (error) {
-      console.log(error)
-      return new Response(
-        JSON.stringify({
-          error: error.message,
-        }),
-        {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' },
-        },
-      )
-    }
+  if (error) {
+    return new Response(
+      JSON.stringify({
+        error: error.message,
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
   }
 
-  return new Response(JSON.stringify(review), {
+  return new Response(JSON.stringify({ review, ready, data, error }), {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
   })

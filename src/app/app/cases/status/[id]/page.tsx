@@ -17,10 +17,10 @@ function CaseView() {
     <AppLayout>
       <CaseLayout viewName="Status" id={caseId}>
         <div className="flex flex-row">
-          {caseData?.status == 'new' && (
+          {!caseData?.readyForInvitation && (
             <div className="col-span-full mb-16">
               <p className="text-xl font-medium text-gray-900/75">
-                Hey {user?.first},
+                Hey {user?.first.trim()},
               </p>
               <p className="mt-4 ">
                 We're going to interview lawyers for you, and send you our top
@@ -63,10 +63,10 @@ function CaseView() {
               </p> */}
             </div>
           )}
-          {caseData?.status == 'ready' && (
+          {caseData?.readyForInvitation && !caseData?.invitationsSent && (
             <div className="col-span-full">
               <p className="text-xl font-medium text-gray-900/75">
-                Hey {user.first},
+                Hey {user.first.trim()},
               </p>
               <p className="mt-4 ">
                 We're interviewing lawyers for you right now. You'll receive an
@@ -94,7 +94,7 @@ function CaseView() {
               </p>
             </div>
           )}
-          {caseData?.status == 'interviewed' && (
+          {caseData?.invitationsSent && (
             <div className="col-span-full w-full">
               <p className="text-xl font-medium text-gray-900/75">
                 Hey {clientFirst},
