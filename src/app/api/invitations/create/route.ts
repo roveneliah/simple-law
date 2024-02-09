@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { createNoteForLawyer } from './utils/createNoteForLawyer'
 import { v4 as uuidv4 } from 'uuid'
 import { Case, Lawyer } from '@prisma/client'
+import { sendEmailInvitation } from '../../email/invite/route'
 
 async function fetchCuratedList(caseData: Case) {
   const response = await fetch('http://localhost:3000/api/invitations/curate', {
@@ -22,13 +23,12 @@ export async function createInvitationsForLawyers(
   caseData: Case,
 ) {
   const invitations = curatedList.map(async (lawyer: Lawyer) => {
-    const comment = await createNoteForLawyer({ caseData, lawyer })
     return {
       id: uuidv4(),
       caseId: caseData.id,
       lawyerId: lawyer.id,
       status: 'pending',
-      comment,
+      comment: await createNoteForLawyer({ caseData, lawyer }),
       updatedAt: new Date(),
     }
   })
@@ -46,10 +46,26 @@ export async function createInvitationsForLawyers(
 
 export const createInvitations = async (caseData: Case) => {
   const curatedList = await fetchCuratedList(caseData)
-  const invitations = await createInvitationsForLawyers(curatedList, caseData)
-  const { data, error } = await supabase.from('Invitation').insert(invitations)
 
-  return { data, error }
+  // write custom notes for each recipient
+  const invitationsData = await createInvitationsForLawyers(
+    curatedList,
+    caseData,
+  )
+
+  // insert the invitations into the database
+  await supabase.from('Invitation').insert(invitationsData)
+  const { data: invitations, error } = await supabase
+    .from('Invitation')
+    .select('*, Lawyer(*), Case(*)')
+    .eq('caseId', caseData.id)
+
+  // send out emails to the lawyers
+  const receipts = await Promise.all(
+    invitations?.map(sendEmailInvitation) || [],
+  )
+
+  return { data: receipts, error }
 }
 
 export async function POST(request: Request) {

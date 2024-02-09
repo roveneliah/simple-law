@@ -74,23 +74,28 @@ const createInterviewWithAI = async ({ caseData }: any) => {
 }
 
 export async function POST(request: Request) {
-  const { caseData, clientName, override = false } = await request.json()
+  try {
+    const { caseData, clientName, override = false } = await request.json()
 
-  const review = override
-    ? null
-    : await reviewCaseWithAI({ caseData, clientName })
-  const ready = override === true || review == '0'
+    const review = override
+      ? null
+      : await reviewCaseWithAI({ caseData, clientName })
+    const ready = override === true || review == '0'
 
-  const { data, error } = ready
-    ? await markReady({ caseData, clientName }).then(
-        async () => await createInvitations(caseData),
-      )
-    : await updateCaseWithReview({
-        caseId: caseData.id,
-        review,
-      })
+    const { data, error } = ready
+      ? await markReady({ caseData, clientName }).then(
+          async () => await createInvitations(caseData),
+        )
+      : await updateCaseWithReview({
+          caseId: caseData.id,
+          review,
+        })
 
-  if (error) {
+    return new Response(JSON.stringify({ review, ready, data, error }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  } catch (error: any) {
     return new Response(
       JSON.stringify({
         error: error.message,
@@ -101,9 +106,4 @@ export async function POST(request: Request) {
       },
     )
   }
-
-  return new Response(JSON.stringify({ review, ready, data, error }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  })
 }
