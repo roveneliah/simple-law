@@ -17,7 +17,7 @@ async function fetchCuratedList(caseData: Case) {
   return curatedList || []
 }
 
-async function createInvitationsForLawyers(
+export async function createInvitationsForLawyers(
   curatedList: Lawyer[],
   caseData: Case,
 ) {
@@ -44,19 +44,20 @@ async function createInvitationsForLawyers(
   return results.map((result: any) => result.value) // Assuming you want to return successful inserts
 }
 
+export const createInvitations = async (caseData: Case) => {
+  const curatedList = await fetchCuratedList(caseData)
+  const invitations = await createInvitationsForLawyers(curatedList, caseData)
+  const { data, error } = await supabase.from('Invitation').insert(invitations)
+
+  return { data, error }
+}
+
 export async function POST(request: Request) {
   try {
     const { caseData } = await request.json()
     if (!caseData.id) throw new Error('No case id.')
 
-    const curatedList = await fetchCuratedList(caseData)
-
-    // Note: If supabase supports bulk insert, use it here
-    const invitations = await createInvitationsForLawyers(curatedList, caseData)
-
-    const { data, error } = await supabase
-      .from('Invitation')
-      .insert(invitations)
+    const { data, error } = await createInvitations(caseData)
 
     return new Response(JSON.stringify({ data, error }), {
       status: 200,

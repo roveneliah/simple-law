@@ -1,10 +1,11 @@
 import { supabase } from '@/lib/supabaseClient'
 import OpenAI from 'openai'
+import { createInvitations } from '../../invitations/create/route'
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 })
 
-const reviewCaseWithAI = async ({ caseData, clientName }) => {
+const reviewCaseWithAI = async ({ caseData, clientName }: any) => {
   const completion = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     messages: [
@@ -23,7 +24,7 @@ const reviewCaseWithAI = async ({ caseData, clientName }) => {
   return review
 }
 
-const markReady = async ({ caseData, clientName }) => {
+const markReady = async ({ caseData, clientName }: any) => {
   console.log('marking ready...')
   const { data, error } = await supabase
     .from('Case')
@@ -38,7 +39,7 @@ const markReady = async ({ caseData, clientName }) => {
   return { data, error }
 }
 
-const updateCaseWithReview = async ({ caseId, review }) => {
+const updateCaseWithReview = async ({ caseId, review }: any) => {
   const { data, error } = await supabase
     .from('Case')
     .update({
@@ -52,7 +53,7 @@ const updateCaseWithReview = async ({ caseId, review }) => {
   return { data, error }
 }
 
-const createInterviewWithAI = async ({ caseData, clientName }) => {
+const createInterviewWithAI = async ({ caseData }: any) => {
   const completion = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     messages: [
@@ -81,7 +82,9 @@ export async function POST(request: Request) {
   const ready = override === true || review == '0'
 
   const { data, error } = ready
-    ? await markReady({ caseData, clientName })
+    ? await markReady({ caseData, clientName }).then(
+        async () => await createInvitations(caseData),
+      )
     : await updateCaseWithReview({
         caseId: caseData.id,
         review,
