@@ -1,75 +1,72 @@
 import { supabase } from '@/lib/supabaseClient'
-import OpenAI from 'openai'
-const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-})
+import { createNoteForLawyer } from './utils/createNoteForLawyer'
 import { v4 as uuidv4 } from 'uuid'
+import { Case, Lawyer } from '@prisma/client'
 
-export async function POST(request: Request) {
-  const { caseData, clientName } = await request.json()
-  console.log(caseData, clientName)
-
-  const note = await createNoteForLawyer({ caseData, clientName })
-
-  const { data, error } = await supabase.from('Invitation').insert({
-    id: uuidv4(),
-    caseId: caseData.id,
-    lawyerId: '08332dfa-3634-46c3-8854-da9042f0c419',
-    status: 'pending',
-    comment: note,
-    updatedAt: new Date(),
+async function fetchCuratedList(caseData: Case) {
+  const response = await fetch('http://localhost:3000/api/invitations/curate', {
+    method: 'POST',
+    body: JSON.stringify({ caseData }),
+    headers: { 'Content-Type': 'application/json' },
   })
-
-  if (error) {
-    console.log(error)
-    return new Response(
-      JSON.stringify({
-        error: error.message,
-      }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      },
-    )
+  if (!response.ok) {
+    throw new Error(`Failed to fetch curated list: ${response.statusText}`)
   }
 
-  return new Response(
-    JSON.stringify({
-      ...caseData,
-      note,
-    }),
-    {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    },
-  )
+  const { data: curatedList } = await response.json()
+  return curatedList || []
 }
 
-const createNoteForLawyer = async ({ caseData, clientName }) => {
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
-    messages: [
-      {
-        role: 'system',
-        content:
-          "You are a legal assistant.  Given the following case data, write an invitation to the lawyer to review the invitation to the case.  Provide an analysis of whether it's a fit and worth their time given the below information on the lawyers priorities and the case's details.",
-      },
-      {
-        role: 'system',
-        content:
-          "The lawyer's expertise is in business contract law, and priorities are: 1. High value cases, 2. Quick and easy, 3. Quality clients",
-      },
-      {
-        role: 'user',
-        content: JSON.stringify(caseData),
-      },
-      {
-        role: 'system',
-        content: 'GO',
-      },
-    ],
+async function createInvitationsForLawyers(
+  curatedList: Lawyer[],
+  caseData: Case,
+) {
+  const invitations = curatedList.map(async (lawyer: Lawyer) => {
+    const comment = await createNoteForLawyer({ caseData, lawyer })
+    return {
+      id: uuidv4(),
+      caseId: caseData.id,
+      lawyerId: lawyer.id,
+      status: 'pending',
+      comment,
+      updatedAt: new Date(),
+    }
   })
 
-  const review = completion.choices[0].message.content
-  return review
+  const results = await Promise.allSettled(invitations)
+  const errors = results.filter((result) => result.status === 'rejected')
+
+  if (errors.length > 0) {
+    console.error('Errors occurred while creating invitations:', errors)
+    throw new Error('Failed to create some invitations.')
+  }
+
+  return results.map((result: any) => result.value) // Assuming you want to return successful inserts
+}
+
+export async function POST(request: Request) {
+  try {
+    const { caseData } = await request.json()
+    if (!caseData.id) throw new Error('No case id.')
+
+    const curatedList = await fetchCuratedList(caseData)
+
+    // Note: If supabase supports bulk insert, use it here
+    const invitations = await createInvitationsForLawyers(curatedList, caseData)
+
+    const { data, error } = await supabase
+      .from('Invitation')
+      .insert(invitations)
+
+    return new Response(JSON.stringify({ data, error }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  } catch (error: any) {
+    console.error(error)
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
 }

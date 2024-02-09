@@ -90,6 +90,8 @@ model Invitation {
   comment   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([caseId, lawyerId])
 }
 
 model Offer {
