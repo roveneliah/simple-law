@@ -24,24 +24,30 @@ export default function InvitationsView() {
 
   // get invitation from supabase db
   // const user = useUser()
-  const [invitation, setInvitation] = useState([])
+  const [invitation, setInvitation] = useState()
   useEffect(() => {
-    supabase
-      .from('Invitation')
-      .select('*')
-      .eq('id', invitationId)
-      .single()
-      .then(({ data, error }) => {
-        console.log('invitation', data)
-        setInvitation(data)
-      })
-  }, [])
+    invitationId &&
+      supabase
+        .from('Invitation')
+        .select('*, Case(*), Lawyer(*)')
+        .eq('id', invitationId)
+        .single()
+        .then(({ data, error }) => {
+          console.log('invitation', data)
+          setInvitation(data)
+        })
+  }, [invitationId])
 
   console.log('invitation', invitation)
+  console.log(invitationId)
+
+  if (!invitation) {
+    return <p>Loading...</p>
+  }
 
   return (
     <LawyerAppLayout>
-      <p>{invitation.title || 'TITLE'}</p>
+      <p>{invitation.Case.title || 'TITLE'}</p>
       <p>{invitation.interviewBy || 'Interview by 2/14/24 @ 3pm'}</p>
       {/* <p>{invitation.status}</p> */}
       <div className="mt-4">

@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { createNoteForLawyer } from './utils/createNoteForLawyer'
 import { v4 as uuidv4 } from 'uuid'
 import { Case, Lawyer } from '@prisma/client'
-import { sendEmailInvitation } from '../../email/invite/route'
+import { sendEmailInvitation } from '../../email/invite-by-caseId/route'
 
 async function fetchCuratedList(caseData: Case) {
   const response = await fetch('http://localhost:3000/api/invitations/curate', {

@@ -24,11 +24,11 @@ export default function InvitationsView() {
 
   // get invitation from supabase db
   // const user = useUser()
-  const [invitation, setInvitation] = useState([])
+  const [invitation, setInvitation] = useState()
   useEffect(() => {
     supabase
       .from('Invitation')
-      .select('*, Case(*)')
+      .select('*, Case(*), Lawyer(*)')
       .eq('id', invitationId)
       .single()
       .then(({ data, error }) => {
@@ -36,6 +36,10 @@ export default function InvitationsView() {
         setInvitation(data)
       })
   }, [])
+
+  if (!invitation) {
+    return <p>Loading...</p>
+  }
 
   return (
     <LawyerAppLayout>
