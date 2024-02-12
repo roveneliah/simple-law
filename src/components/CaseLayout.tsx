@@ -9,6 +9,7 @@ const tabs = (id: string | number) =>
     { name: 'Status', href: 'status' },
     { name: 'Case Info', href: 'case' },
     { name: 'Lawyers', href: 'lawyers' },
+    { name: 'Services', href: 'services' },
     // { name: 'Chat', href: 'chat' },
     // { name: 'Learn', href: 'learn' },
     // { name: 'Help', href: 'help' },

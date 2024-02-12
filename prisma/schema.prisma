@@ -94,6 +94,7 @@ model Case {
   review      String?
 
   // invitations
+  recommendedServiceIds String[] @db.VarChar(255) // Array of Service IDs
   invitations Invitation[]
   offers      Offer[]
 }
