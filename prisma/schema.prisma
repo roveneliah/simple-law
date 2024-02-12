@@ -30,10 +30,29 @@ model Lawyer {
   description   String?
   firm          String?
   savedBy       User[]
-  
+  services      Service[]
+
   verification  LawyerVerificationRequest[]
   invitations   Invitation[]
   offers        Offer[]
+}
+
+model Service {
+  id        String   @id @default(uuid())
+  type      ServiceType
+  lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
+  lawyerId  String
+  price     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ServiceType {
+  advisory
+  attorney
+  review
+  contractDrafting
+  contractReview
 }
 
 model LawyerVerificationRequest {
@@ -79,6 +98,20 @@ model Case {
   offers      Offer[]
 }
 
+model Document {
+  id        String   @id @default(uuid())
+  caseId    String   
+  case      Case     @relation(fields: [caseId], references: [id])
+  userId    String   // Assuming you want to directly link documents to users as well
+  fileName  String
+  fileType  String
+  url       String   // URL to the document in Supabase Storage
+  createdAt DateTime @default(now())
+}
+
+
+////////////////////////
+
 
 model Invitation {
   id        String   @id @default(uuid())
@@ -95,6 +128,15 @@ model Invitation {
   @@unique([caseId, lawyerId])
 }
 
+model Interview {
+  id        String   @id @default(uuid())
+  invitationId String @unique
+  questions String[]
+  answers   String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Offer {
   id        String   @id @default(uuid())
   case      Case     @relation(fields: [caseId], references: [id])
@@ -108,15 +150,4 @@ model Offer {
   message   String
 }
 
-
-
-model Document {
-  id        String   @id @default(uuid())
-  caseId    String   
-  case      Case     @relation(fields: [caseId], references: [id])
-  userId    String   // Assuming you want to directly link documents to users as well
-  fileName  String
-  fileType  String
-  url       String   // URL to the document in Supabase Storage
-  createdAt DateTime @default(now())
-}
+////////////////////////

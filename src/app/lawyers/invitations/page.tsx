@@ -3,34 +3,36 @@ import LawyerViewLayout from '@/components/LawyerViewLayout'
 import AppLayout from '@/components/Layout/AppLayout'
 import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
 import { useLawyerUser } from '@/lib/useUser'
+import { Invitation } from '@prisma/client'
+import { UUID } from 'crypto'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-export const INVITATIONS = [
-  {
-    caseId: '1234',
-    nickname: 'Personal Injury, $200000, San Diego, CA',
-    note: 'Hey John, client seeking $200000 damages, based in San Diego.  Client ready to start immediately.',
-    interviewBy: new Date(),
-  },
-  {
-    caseId: '1353424534',
-    nickname: 'Divorce, Chula Vista, CA',
-    note: 'Client looking for a divorce lawyer, based in Chula Vista.',
-  },
-]
+// export const INVITATIONS = [
+//   {
+//     caseId: '1234',
+//     nickname: 'Personal Injury, $200000, San Diego, CA',
+//     note: 'Hey John, client seeking $200000 damages, based in San Diego.  Client ready to start immediately.',
+//     interviewBy: new Date(),
+//   },
+//   {
+//     caseId: '1353424534',
+//     nickname: 'Divorce, Chula Vista, CA',
+//     note: 'Client looking for a divorce lawyer, based in Chula Vista.',
+//   },
+// ]
 
 function InvitationsList({}) {
   const lawyer = useLawyerUser()
 
-  const [invitations, setInvitations] = useState([])
+  const [invitations, setInvitations] = useState<Invitation[]>([])
   useEffect(() => {
     setInvitations(lawyer?.Invitation || [])
   }, [lawyer?.Invitation])
 
   console.log('invitations', invitations)
 
-  const declineInvitation = (caseId) => {
+  const declineInvitation = (caseId: UUID) => {
     setInvitations(
       invitations.filter((i) => {
         return caseId !== i.caseId

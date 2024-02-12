@@ -47,8 +47,7 @@ export default function InvitationsView() {
 
   return (
     <LawyerAppLayout>
-      <p>{invitation.Case.title || 'TITLE'}</p>
-      <p>{invitation.interviewBy || 'Interview by 2/14/24 @ 3pm'}</p>
+      <p>Due by:{invitation.dueBy}</p>
       {/* <p>{invitation.status}</p> */}
       <div className="mt-4">
         <p>{invitation.comment}</p>

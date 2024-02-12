@@ -44,7 +44,7 @@ export default function InvitationsView() {
   return (
     <LawyerAppLayout>
       <p>{invitation.title || 'TITLE'}</p>
-      <p>{invitation.interviewBy || 'Interview by 2/14/24 @ 3pm'}</p>
+      <p>{invitation.dueBy || 'Interview by 2/14/24 @ 3pm'}</p>
       {/* <p>{invitation.status}</p> */}
       <p>{invitation.Case.interview}</p>
       {/* render created at as readable date */}
@@ -54,6 +54,15 @@ export default function InvitationsView() {
           className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
         >
           Next
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            console.log('open offer page')
+          }}
+          className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+        >
+          Send Offer
         </button>
       </div>
     </LawyerAppLayout>

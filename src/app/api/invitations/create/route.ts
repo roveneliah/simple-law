@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { createNoteForLawyer } from './utils/createNoteForLawyer'
 import { v4 as uuidv4 } from 'uuid'
 import { Case, Lawyer } from '@prisma/client'
-import { sendEmailInvitation } from '../../email/invite-by-caseId/route'
+import sendEmailInvitation from '../../email/invite-by-caseId/sendEmailInvitation'
 
 async function fetchCuratedList(caseData: Case) {
   const response = await fetch('http://localhost:3000/api/invitations/curate', {
@@ -62,7 +62,16 @@ export const createInvitations = async (caseData: Case) => {
 
   // send out emails to the lawyers
   const receipts = await Promise.all(
-    invitations?.map(sendEmailInvitation) || [],
+    invitations?.map((invitation) => {
+      return sendEmailInvitation({
+        subject: 'New Case from ImpossibleLaw',
+        title: invitation.Case.title,
+        interviewLink: `https://impossiblelaw.com/lawyers/invitations/${invitation.caseId}`,
+        to: invitation.Lawyer.email,
+        comment: invitation.comment,
+        dueBy: invitation.dueBy,
+      })
+    }) || [],
   )
 
   return { data: receipts, error }
