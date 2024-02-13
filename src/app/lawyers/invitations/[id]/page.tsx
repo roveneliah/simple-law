@@ -64,13 +64,13 @@ export default function InvitationsView() {
           type="button"
           className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
         >
-          Next
+          Skip
         </button>
         <Link
-          href={`/lawyers/invitations/interview/${invitationId}`}
+          href={`/lawyers/invitations/lead/${invitationId}`}
           className="h-fit text-nowrap rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
         >
-          Get Started
+          Accept Lead
         </Link>
       </div>
     </LawyerAppLayout>

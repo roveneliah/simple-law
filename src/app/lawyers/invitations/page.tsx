@@ -25,7 +25,7 @@ function InvitationsList({}) {
     <div className="flex flex-col gap-4">
       <ul role="list" className="divide-y divide-gray-100">
         {invitations.map((invitation, i) => (
-          <Link href={`/lawyers/invitations/${invitation.id}`}>
+          <Link href={`/lawyers/invitations/${invitation.id}`} key={i}>
             <li
               key={invitation.id}
               className="relative flex justify-between gap-x-6 py-5"

@@ -85,7 +85,7 @@ export default function LawyersHome() {
             </div>
           </div>
           {INVITATIONS.map((invitation, i) => (
-            <div className="shadow border-x border-t bg-white">
+            <div key={i} className="shadow border-x border-t bg-white">
               <div className="px-4 py-5 sm:p-6">
                 <h3 className="text-base font-semibold leading-6 text-gray-900">
                   {invitation.nickname}
