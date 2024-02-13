@@ -14,6 +14,7 @@ import { Inquiry } from '@prisma/client'
 import { FormEvent, useEffect, useState } from 'react'
 
 export default function QuestionsPage() {
+  const [loading, setLoading] = useState<boolean>(true)
   const [inquiries, setInquiries] = useState<Inquiry[]>([])
   const lawyer = useLawyerUser()
   useEffect(() => {
@@ -27,12 +28,36 @@ export default function QuestionsPage() {
       return data
     }
 
-    lawyer.id && fetchInquiries().then(setInquiries)
+    lawyer.id &&
+      fetchInquiries()
+        .then(setInquiries)
+        .then(() => setLoading(false))
   }, [lawyer.id])
 
   console.log(inquiries)
   console.log(lawyer)
-  if (!inquiries.length) {
+
+  if (loading) {
+    return (
+      <LawyerAppLayout>
+        <LawyerViewLayout viewName="Questions" />
+        <div className="mt-8 flex flex-col items-center">
+          <FaceSmileIcon
+            className="h-12 w-12 text-gray-400"
+            aria-hidden="true"
+          />
+          <h2 className="mt-6 text-2xl font-semibold leading-6 text-gray-900">
+            Loading Inquiries..
+          </h2>
+          <p className="mt-2 text-sm text-gray-500">
+            Our robots must be sleeping on the job.
+          </p>
+        </div>
+      </LawyerAppLayout>
+    )
+  }
+
+  if (!loading && !inquiries.length) {
     return (
       <LawyerAppLayout>
         <LawyerViewLayout viewName="Questions" />
