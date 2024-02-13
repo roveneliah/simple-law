@@ -24,7 +24,7 @@ export default function LawyersHome() {
 
   return (
     <LawyerAppLayout>
-      <LawyerViewLayout />
+      <LawyerViewLayout viewName="Feed" />
       {/* <div className="mb-8">
         <div
           style={{
@@ -56,36 +56,45 @@ export default function LawyersHome() {
         setCurrentIndex={setCurrentIndex}
         className="flex w-full flex-col items-center"
       >
-        <div className="w-full px-4">
-          <div className="shadow border-x border-t bg-white">
+        <div className="w-full px-0">
+          <div className="shadow bg-white">
             <div className="px-4 py-5 sm:p-6">
-              <p>Hey Jerri,</p>
-              <p className="mt-4">You have 2 weekly updates due soon.</p>
-              <p className="mt-4">
-                We also have {INVITATIONS.length} invitation
-                {INVITATIONS.length > 1 && 's'} for you to check out. You've
-                been great about responding to these in detail, so we've started
-                sending your top tier cases.
-              </p>
-              <p className="mt-4">Keep it up!</p>
-              <div className="mt-8 flex w-full flex-row justify-center gap-4">
-                <Link
-                  href="/lawyers/clients"
-                  className="h-fit text-nowrap rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+              <h3 className="text-base font-semibold leading-6 text-gray-900">
+                From ImpossibleLaw
+              </h3>
+              <div className="mt-2 max-w-xl text-sm text-gray-500">
+                <p>Hey Jerri,</p>
+                <p className="mt-4">You have 2 weekly updates due soon.</p>
+                <p className="mt-4">
+                  We also have {INVITATIONS.length} invitation
+                  {INVITATIONS.length > 1 && 's'} for you to check out. You've
+                  been great about responding to these in detail, so we've
+                  started sending your top tier cases.
+                </p>
+                <p className="mt-4">Keep it up!</p>
+              </div>
+              {/* <div className="mt-3 text-sm leading-6">
+                <a
+                  href="#"
+                  className="font-semibold text-indigo-600 hover:text-indigo-500"
                 >
                   Complete Weekly Updates
-                </Link>
-                <Link
-                  href="/lawyers/invitations"
-                  className="h-fit text-nowrap rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+                  <span aria-hidden="true"> &rarr;</span>
+                </a>
+              </div>
+              <div className="mt-3 text-sm leading-6">
+                <a
+                  href="#"
+                  className="font-semibold text-indigo-600 hover:text-indigo-500"
                 >
                   View Invitations
-                </Link>
-              </div>
+                  <span aria-hidden="true"> &rarr;</span>
+                </a>
+              </div> */}
             </div>
           </div>
           {INVITATIONS.map((invitation, i) => (
-            <div key={i} className="shadow border-x border-t bg-white">
+            <div key={i} className="shadow border-t bg-white">
               <div className="px-4 py-5 sm:p-6">
                 <h3 className="text-base font-semibold leading-6 text-gray-900">
                   {invitation.nickname}

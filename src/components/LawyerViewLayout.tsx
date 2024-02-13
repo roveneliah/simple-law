@@ -6,9 +6,9 @@ function classNames(...classes: any[]) {
 
 const BASE_URL = '/lawyers/'
 const tabs = [
+  { name: 'Feed', href: '#' },
   { name: 'Invitations', href: 'invitations' },
   { name: 'Clients', href: '#' },
-  { name: 'Profile', href: 'profile' },
   { name: 'Questions', href: 'questions' },
 ]
 
@@ -43,7 +43,7 @@ export default function LawyerViewLayout({ children, viewName }: any) {
   return (
     <div className="mt-0">
       <LawyerMenuBar viewName={viewName} />
-      <div className="mt-8">{children}</div>
+      <div className="px-4">{children}</div>
     </div>
   )
 }

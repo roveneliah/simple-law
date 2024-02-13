@@ -32,6 +32,7 @@ model Lawyer {
   imageUrl      String?
   savedBy       User[]
   services      Service[]
+  inquiries Inquiry[]
 
   verification  LawyerVerificationRequest[]
   invitations   Invitation[]
@@ -128,6 +129,16 @@ model Invitation {
   updatedAt DateTime @updatedAt
 
   @@unique([caseId, lawyerId])
+}
+
+model Inquiry {
+  id        String   @id @default(uuid())
+  question   String  @unique
+  answer     String?
+  lawyerId   String
+  lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Interview {

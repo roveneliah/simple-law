@@ -1,53 +1,100 @@
 'use client'
 import LawyerViewLayout from '@/components/LawyerViewLayout'
 import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import { supabase } from '@/lib/supabaseClient'
+import { useLawyerUser } from '@/lib/useUser'
+import { cn } from '@/lib/utils'
 import { Listbox } from '@headlessui/react'
 import {
   FaceSmileIcon,
   InformationCircleIcon,
   PaperClipIcon,
 } from '@heroicons/react/24/outline'
-import { useEffect, useState } from 'react'
-
-const dummyInquiries = [
-  {
-    title: 'What is your experience in personal injury law?',
-    subtitle: 'Why would clients be a great fit?',
-  },
-  {
-    title: 'What should clients expect in working with you?',
-    subtitle: '',
-  },
-  {
-    title: 'How do you communicate with clients?',
-    subtitle: '',
-  },
-]
+import { Inquiry } from '@prisma/client'
+import { FormEvent, useEffect, useState } from 'react'
 
 export default function QuestionsPage() {
-  const [inquiry, setInquiry] = useState<any>({})
+  const [inquiries, setInquiries] = useState<Inquiry[]>([])
+  const lawyer = useLawyerUser()
   useEffect(() => {
-    const inq = dummyInquiries[0]
-    setInquiry(inq)
-  }, [])
+    const fetchInquiries = async () => {
+      // get inquiries that do not have answers
+      const { data, error } = await supabase
+        .from('Inquiry')
+        .select('*')
+        .eq('lawyerId', lawyer.id)
+
+      return data
+    }
+
+    lawyer.id && fetchInquiries().then(setInquiries)
+  }, [lawyer.id])
+
+  console.log(inquiries)
+  console.log(lawyer)
+  if (!inquiries.length) {
+    return (
+      <LawyerAppLayout>
+        <LawyerViewLayout viewName="Questions" />
+        <div className="mt-8 flex flex-col items-center">
+          <FaceSmileIcon
+            className="h-12 w-12 text-gray-400"
+            aria-hidden="true"
+          />
+          <h2 className="mt-6 text-2xl font-semibold leading-6 text-gray-900">
+            No questions to answer
+          </h2>
+          <p className="mt-2 text-sm text-gray-500">
+            You have no questions to answer at this time.
+          </p>
+        </div>
+      </LawyerAppLayout>
+    )
+  }
+
+  const handleAnswer = (inquiryId: number) => async (e: Event) => {
+    e.preventDefault()
+    const form = e.target
+    const data = new FormData(form)
+    const answer = data.get('comment')
+    console.log('comment', comment)
+
+    // update supabase answer
+    supabase
+      .from('Inquiry')
+      .update({ answer })
+      .eq('id', inquiryId)
+      .select()
+      .then(({ data, error }) => {
+        console.log('data', data)
+        console.log('error', error)
+      })
+
+    // reload page
+    window.location.reload()
+  }
+
+  const unansweredInquiries = inquiries.filter((inquiry) => !inquiry.answer)
+
+  const answeredInquiries = inquiries.filter((inquiry) => inquiry.answer)
 
   return (
     <LawyerAppLayout>
-      <LawyerViewLayout viewName="Questions">
-        <div className="rounded-md bg-blue-50 p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <InformationCircleIcon
-                className="h-5 w-5 text-blue-400"
-                aria-hidden="true"
-              />
-            </div>
-            <div className="ml-3 flex-1 md:flex md:justify-between">
-              <p className="text-sm text-blue-700">
-                Your responses will not be shared with clients. We use these
-                answers to match you with clients.
-              </p>
-              {/* <p className="mt-3 text-sm md:ml-6 md:mt-0">
+      <LawyerViewLayout viewName="Questions" />
+      <div className="mt-4 rounded-md bg-blue-50 p-4">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <InformationCircleIcon
+              className="h-5 w-5 text-blue-400"
+              aria-hidden="true"
+            />
+          </div>
+          <div className="ml-3 flex-1 md:flex md:justify-between">
+            <p className="text-sm text-blue-700">
+              Your responses will not be shared with clients. We use these
+              answers to match you with clients.
+            </p>
+            {/* <p className="mt-3 text-sm md:ml-6 md:mt-0">
                 <a
                   href="#"
                   className="whitespace-nowrap font-medium text-blue-700 hover:text-blue-600"
@@ -56,22 +103,26 @@ export default function QuestionsPage() {
                   <span aria-hidden="true"> &rarr;</span>
                 </a>
               </p> */}
-            </div>
           </div>
         </div>
-        <div className="mt-8 flex flex-col space-y-4">
-          <div className="flex items-start space-x-4">
-            <div className="min-w-0 flex-1">
-              <form action="#" className="relative">
+      </div>
+      <div className="mt-8 flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4">
+          {unansweredInquiries?.map((inquiry, i) => (
+            <div className="min-w-0 flex-1" key={i}>
+              <form
+                onSubmit={(e) => handleAnswer(inquiry.id)(e)}
+                className="relative"
+              >
                 <label
                   htmlFor="comment"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  {inquiry.title}
+                  {inquiry.question}
                 </label>
-                <p className="block text-sm font-medium leading-6 text-gray-600">
-                  {inquiry.subtitle}
-                </p>
+                {/* <p className="block text-sm font-medium leading-6 text-gray-600">
+                  {inquiry.answer}
+                </p> */}
                 <div className="overflow-hidden rounded-lg shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600">
                   <label htmlFor="comment" className="sr-only">
                     Add your comment
@@ -107,20 +158,56 @@ export default function QuestionsPage() {
                     </div>
                   </div> */}
                   <div></div>
-                  <div className="flex-shrink-0">
+                  <div className="flex-shrink-0 space-x-4">
+                    {/* <button
+                    type="button"
+                    className="text-sm font-semibold leading-6 text-gray-900"
+                  >
+                    Review
+                  </button> */}
                     <button
                       type="submit"
-                      className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-500"
                     >
                       Save
                     </button>
                   </div>
                 </div>
               </form>
+              <div>
+                <p>Tell us more...</p>
+                {/* <p>Any wins you can tell us about?</p> */}
+              </div>
             </div>
-          </div>
+          ))}
         </div>
-      </LawyerViewLayout>
+        <div className="flex flex-col space-y-4">
+          {answeredInquiries?.map((inquiry, i) => (
+            <div className="min-w-0 flex-1" key={i}>
+              <form
+                onSubmit={(e) => handleAnswer(inquiry.id)(e)}
+                className="relative"
+              >
+                <label
+                  htmlFor="comment"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  {inquiry.question}
+                </label>
+                <p className="block text-sm font-medium leading-6 text-gray-600">
+                  {inquiry.answer}
+                </p>
+                <div className="overflow-hidden rounded-lg shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600">
+                  <label htmlFor="comment" className="sr-only">
+                    Add your comment
+                  </label>
+                </div>
+              </form>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* </LawyerViewLayout> */}
     </LawyerAppLayout>
   )
 }
