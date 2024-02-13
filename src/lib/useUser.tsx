@@ -88,7 +88,7 @@ export const useLawyerUser = () => {
       // get the user from db given id
       supabase
         .from('Lawyer')
-        .select(`*, Invitation(*)`)
+        .select(`*, Invitation(*, Case(*, User(*)))`)
         .eq('id', session?.user?.id)
         .single()
         .then(({ data, error }) => {

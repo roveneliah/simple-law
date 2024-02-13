@@ -1,5 +1,3 @@
-import { useLawyerUser } from '@/lib/useUser'
-import { StarIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 
 function classNames(...classes: any[]) {
@@ -11,27 +9,15 @@ const tabs = [
   { name: 'Invitations', href: 'invitations' },
   { name: 'Clients', href: '#' },
   { name: 'Profile', href: 'profile' },
+  { name: 'Questions', href: 'questions' },
 ]
 
 function LawyerMenuBar({ viewName }) {
-  const lawyer = useLawyerUser()
   return (
     <div className="border-b border-gray-200">
-      <div className="sm:flex sm:flex-row sm:items-baseline sm:justify-between">
-        <Link href={`/lawyers`} className="flex flex-row items-center gap-2 ">
-          {lawyer?.first && lawyer?.last ? (
-            <>
-              <h3 className="mt-0 text-base font-semibold leading-6 text-gray-900">
-                {lawyer?.first} {lawyer?.last}, Esq.
-              </h3>
-              <StarIcon className="h-5 w-5 text-gray-600" />
-            </>
-          ) : (
-            <h3 className="mt-0 text-base font-semibold leading-6 text-gray-900"></h3>
-          )}
-        </Link>
-        <div className="mt-4 sm:mt-0">
-          <nav className="-mb-px flex flex-row items-baseline justify-start space-x-8">
+      <div className=" sm:flex sm:flex-row sm:items-baseline sm:justify-between">
+        <div className="mt-4 w-full sm:mt-0">
+          <nav className="-mb-px flex w-full flex-row items-baseline justify-evenly space-x-8">
             {tabs.map((tab, i) => (
               <Link
                 key={i}

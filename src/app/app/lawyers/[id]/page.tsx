@@ -1,3 +1,4 @@
+import { FALLBACK_AVATAR } from '@/data/dummy'
 import { Service } from '@prisma/client'
 
 const getLawyerById = async (id: string) => {
@@ -16,8 +17,12 @@ export default async function LawyerPage({ params }) {
 
   return (
     <div>
-      <p>{params.id}</p>
       <div>
+        <img
+          src={data.avatar}
+          className="h-10 w-10 rounded-full bg-gray-800"
+          alt="avatar"
+        />
         <p>
           {data.first} {data.last}
         </p>
