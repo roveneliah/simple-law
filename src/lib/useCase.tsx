@@ -1,18 +1,24 @@
 'use client'
 import { supabase } from '@/lib/supabaseClient'
+import { UUID } from 'crypto'
 import { useEffect, useState } from 'react'
 
-export const useCase = (caseId) => {
+export const useCase = (caseId: UUID) => {
   const [caseData, setCaseData] = useState(null)
   useEffect(() => {
-    supabase
-      .from('Case')
-      .select('*')
-      .eq('id', caseId)
-      .single()
-      .then(({ data, error }) => {
-        setCaseData(data)
-      })
+    try {
+      caseId &&
+        supabase
+          .from('Case')
+          .select('*')
+          .eq('id', caseId)
+          .single()
+          .then(({ data, error }) => {
+            setCaseData(data)
+          })
+    } catch (error) {
+      console.log(error)
+    }
   }, [caseId])
   return caseData
 }

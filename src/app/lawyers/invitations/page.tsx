@@ -9,6 +9,15 @@ import { Invitation } from '@prisma/client'
 import { UUID } from 'crypto'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import Markdown from 'react-markdown'
+
+// get the time left from now to date as hours
+export const hoursLeftStr = (date) => {
+  const now = Date.now()
+  const expiry = new Date(date + 'Z') // Append 'Z' if not already part of the date string  console.log(new Date(now), expiry)
+  const hoursLeft = Math.floor((expiry - now) / (1000 * 60 * 60))
+  return `${hoursLeft} hrs`
+}
 
 function InvitationsList({}) {
   const lawyer = useLawyerUser()
@@ -18,9 +27,8 @@ function InvitationsList({}) {
     setInvitations(lawyer?.Invitation || [])
   }, [lawyer?.Invitation])
 
-  console.log('invitations', invitations)
-
   console.log(invitations)
+
   return (
     <div className="flex flex-col gap-4">
       <ul role="list" className="divide-y divide-gray-100">
@@ -37,14 +45,14 @@ function InvitationsList({}) {
                   alt=""
                 />
                 <div className="min-w-0 flex-auto">
-                  <p className="text-sm font-semibold leading-6 text-gray-900">
+                  <div className="text-sm font-semibold leading-6 text-gray-900">
                     <a href={invitation.href}>
                       <span className="absolute  inset-x-0 -top-px bottom-0" />
                       <p className="relative truncate pr-2">
                         {invitation.comment}
                       </p>
                     </a>
-                  </p>
+                  </div>
                   <p className="mt-1 flex text-xs leading-5 text-gray-500">
                     <p className="relative truncate">{invitation.comment}</p>
                   </p>
@@ -55,19 +63,30 @@ function InvitationsList({}) {
                   <p className="text-sm leading-6 text-gray-900">
                     {invitation.role}
                   </p>
-                  {invitation.lastSeen ? (
+                  {invitation.status === 'declined' && (
                     <p className="mt-1 text-xs leading-5 text-gray-500">
-                      Last seen{' '}
+                      Declined{' '}
                       <time dateTime={invitation.lastSeenDateTime}>
                         {invitation.lastSeen}
                       </time>
                     </p>
-                  ) : (
+                  )}
+                  {invitation.status === 'accepted' && (
+                    <p className="mt-1 text-xs leading-5 text-gray-500">
+                      Accepted{' '}
+                      <time dateTime={invitation.lastSeenDateTime}>
+                        {invitation.lastSeen}
+                      </time>
+                    </p>
+                  )}
+                  {invitation.dueBy && (
                     <div className="mt-1 flex items-center gap-x-1.5">
                       <div className="flex-none rounded-full bg-emerald-500/20 p-1">
                         <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                       </div>
-                      <p className="text-xs leading-5 text-gray-500">8 hrs.</p>
+                      <p className="text-xs leading-5 text-gray-500">
+                        {hoursLeftStr(invitation?.dueBy)}
+                      </p>
                     </div>
                   )}
                 </div>

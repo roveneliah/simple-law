@@ -1,13 +1,18 @@
 'use client'
 import CaseLayout from '@/components/CaseLayout'
+import LawyersTable from '@/components/LawyersTable'
 import AppLayout from '@/components/Layout/AppLayout'
+import QuickConsult from '@/components/QuickConsult'
 import MagicText from '@/components/vibes/MagicText'
 import { withCaseData } from '@/components/withCaseData'
+import { supabase } from '@/lib/supabaseClient'
 import { useCase } from '@/lib/useCase'
 import { useUser } from '@/lib/useUser'
+import { UUID } from 'crypto'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useInvitation } from '../../recommendations/[invitationId]/page'
 
 export const useRecommendations = (caseId) => {
   // /api/cases/service/recommend?caseId=caseId
@@ -27,20 +32,35 @@ export const useRecommendations = (caseId) => {
   return recommendations
 }
 
-function CaseView() {
-  const caseId = usePathname().split('/').pop()
+function ServiceView() {
+  const invitationId = usePathname().split('/').pop()
+  const invitation = useInvitation(invitationId)
+  const caseId = invitation?.Case?.id
+
   const recommendations = useRecommendations(caseId)
 
   return (
     <AppLayout>
       <CaseLayout viewName="Services" id={caseId}>
-        <div className="">
-          <p>Recommend and explain services GIVEN the case details.</p>
-          <li>Second Opinion</li>
-          <li>Quick Consult</li>
-          <li>Sanity Check</li>
-          <li>Attorney Match</li>
-          <li>Advisory</li>
+        <LawyersTable caseId={caseId} />
+        <div className="mb-4 sm:flex sm:items-center">
+          <div className="sm:flex-auto">
+            <h1 className="text-base font-semibold leading-6 text-gray-900">
+              Other Options
+            </h1>
+            <p className="mt-2 text-sm text-gray-700">
+              If you're not looking to pursue your case yet, here are some other
+              options for you.
+            </p>
+          </div>
+          {/* <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+          <button
+            type="button"
+            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Add user
+          </button>
+        </div> */}
         </div>
         <ul role="list" className="divide-y divide-gray-100">
           {recommendations.map((service, i) => (
@@ -91,4 +111,4 @@ function CaseView() {
   )
 }
 
-export default withCaseData(CaseView)
+export default ServiceView

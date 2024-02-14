@@ -4,38 +4,42 @@ import CaseLayout from '@/components/CaseLayout'
 import AppLayout from '@/components/Layout/AppLayout'
 import { withCaseData } from '@/components/withCaseData'
 import { CANDIDATES, FALLBACK_AVATAR, dummyLawyers } from '@/data/dummy'
+import { supabase } from '@/lib/supabaseClient'
 import { useCase } from '@/lib/useCase'
 import { BookmarkIcon, StarIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { UUID } from 'crypto'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
-const useLawyer = (id) => {
-  // find dummy lawyer with mathcing id
-  const lawyerData = dummyLawyers(0).find((lawyer) => {
-    return lawyer.id == id
-  })
+export const useInvitation = (invitationId: UUID) => {
+  const [invitation, setInvitation] = useState(null)
+  useEffect(() => {
+    const fetchInvitation = async () => {
+      const {data, error } = await supabase
+        .from('Invitation')
+        .select('*, Case(*), Lawyer(*)')
+        .eq('id', invitationId)
+        .single()
 
-  // const [lawyerData, setLawyerData] = useState(null)
-  // useEffect(() => {
-  //   supabase
-  //     .from('Lawyer')
-  //     .select('*')
-  //     .eq('id', id)
-  //     .single()
-  //     .then(({ data, error }) => {
-  //       setLawyerData(data)
-  //     })
-  // }, [id])
-  return lawyerData
+      console.log({data, error})
+      return {data, error}
+    }
+
+    console.log("trying to ftech invitation")
+    invitationId && fetchInvitation().then(({data, error}) => setInvitation(data))
+
+  }, [invitationId])
+
+  return invitation
 }
 
-function LawyerView({ candidate = CANDIDATES[0] }) {
-  const path = usePathname().split('/')
-  const caseId = path[path.length - 1]
-  const lawyerId = path[path.length - 2]
-  const caseData = useCase(caseId)
-  const lawyerData = useLawyer(lawyerId)
+const interview = CANDIDATES[0].interview
+function InvitationView() {
+  const invitationId = usePathname().split('/').pop()
+  const invitation = useInvitation(invitationId)
+
+  const lawyerData = invitation?.Lawyer
 
   const [step, setStep] = useState(0)
 
@@ -43,16 +47,14 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
   const saveFeedback = (value: string) => {
     // write status to invitation field in supabase
     console.log('feedback saved')
-    router.push('/app/cases/lawyers/' + caseId)
+    router.push('/app/cases/lawyers/' + invitation?.Case?.id)
   }
 
-  const feedback =
-    lawyerData?.name +
-    " is a great fit for your case.  One common note is that they are very responsive and easy to work with.  They have a great track record and are very experienced.  Given that you're going to want help strategizing, it's important to have someone who's easy to work with and proactive."
+  const feedback = "feedback"
 
   return (
     <AppLayout>
-      <CaseLayout viewName="Lawyers" id={caseId}>
+      <CaseLayout viewName="Lawyers" id={invitation?.Case?.id}>
         <div className="flex flex-col">
           <div className="flex flex-row gap-x-4">
             <div className="flex w-full flex-col">
@@ -64,9 +66,7 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
                 <div>
                   <p>Hey Eli,</p>
                   <p className="mt-4">
-                    {lawyerData?.name} is a personal injury attorney with over
-                    100 wins. They've worked with 5 other clients on Impossible
-                    thus far, and has no bad reviews.
+                    {interview.ourAnalysis}
                   </p>
                   <p className="mt-4">
                     They're available to take your case, and their rate is
@@ -79,7 +79,7 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
                   <li>Free weekly updates on your case.</li>
                   <li>Free lawyer swap if you're not satisfied.</li>
                   <p className="mt-4">
-                    Check out the interview we conducted to see if she's a good
+                    Check out the interview we conducted to see if it's a good
                     fit.
                   </p>
                   <div className="mt-8 flex w-full flex-row justify-center">
@@ -118,7 +118,7 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
                       <p>{candidate.note}</p>
                     </div>
                   </div> */}
-                {candidate.interview.map(
+                {interview.map(
                   ({ question, answer, notes = '' }, i) => {
                     const [questionLive, setQuestionLive] = useState('')
                     useEffect(() => {
@@ -189,7 +189,7 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
                                 alt="avatar"
                               />
                               <div>
-                                <p className="font-medium">{lawyerData.name}</p>
+                                <p className="font-medium">{lawyerData?.first}</p>
                                 <p>{answerLive}</p>
                               </div>
                             </div>
@@ -295,7 +295,7 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
                         Decline Offer
                       </button>
                       <div className="w-full">
-                        <Link href={`/app/cases/lawyers/${caseId}`}>
+                        <Link href={`/app/cases/lawyers/${invitation?.Case?.id}`}>
                           <button className="w-full rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">
                             Skip
                           </button>
@@ -309,8 +309,8 @@ function LawyerView({ candidate = CANDIDATES[0] }) {
           </div>
         </div>
       </CaseLayout>
-    </AppLayout>
+    </AppLayout>,
   )
 }
 
-export default LawyerView
+export default InvitationView

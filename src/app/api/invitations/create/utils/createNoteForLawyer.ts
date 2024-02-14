@@ -10,7 +10,7 @@ export const createNoteForLawyer = async ({ caseData, lawyer }: any) => {
       {
         role: 'system',
         content:
-          "You are a legal assistant.  Given the following case data, write an invitation to the lawyer to review the invitation to the case.  Provide an analysis of whether it's a fit and worth their time given the below information on the lawyers priorities and the case's details.",
+          "You are a legal assistant.  Given the following case data, write an invitation to the lawyer to review the invitation to the case.  Provide an analysis of whether it's a fit and worth their time given the below information on the lawyers priorities and the case's details.  Keep brief such that lawyer can vet key details.",
       },
       {
         role: 'system',

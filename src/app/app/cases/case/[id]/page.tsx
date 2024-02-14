@@ -3,11 +3,11 @@ import CaseLayout from '@/components/CaseLayout'
 import { Files } from '@/components/CaseViews/Files'
 import AppLayout from '@/components/Layout/AppLayout'
 import { useEffect, useState } from 'react'
-import { useCase } from '../../../../../lib/useCase'
 import { usePathname, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 import { useUser } from '@/lib/useUser'
 import Link from 'next/link'
+import { useCase } from '@/lib/useCase'
 
 function InfoForm() {
   const user = useUser()
@@ -96,6 +96,7 @@ function InfoForm() {
       goals: formData.get('goals')?.toString().trim(),
       dates: formData.get('dates')?.toString().trim(),
     }
+
     console.log('Updating Case', caseId)
     const res = await supabase
       .from('Case')

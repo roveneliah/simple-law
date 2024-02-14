@@ -26,19 +26,6 @@ const dummyInterview = [
   },
 ]
 
-function formatDateToMMDDYY(inputDate) {
-  // Create a Date object from the input
-  const date = new Date(inputDate)
-
-  // Extract and format the month, day, and year
-  const month = (date.getMonth() + 1).toString()
-  const day = date.getDate().toString()
-  const year = date.getFullYear().toString().substr(-2) // Get the last 2 digits of the year
-
-  // Compile the formatted date string
-  return `${month}/${day}/${year}`
-}
-
 export default function InvitationsView() {
   const invitationId = usePathname().split('/').pop()
 

@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabaseClient'
 import { createNoteForLawyer } from './utils/createNoteForLawyer'
 import { v4 as uuidv4 } from 'uuid'
-import { Case, Lawyer } from '@prisma/client'
+import { Case, Invitation, Lawyer } from '@prisma/client'
 import sendEmailInvitation from '../../email/invite-by-caseId/sendEmailInvitation'
 
 async function fetchCuratedList(caseData: Case) {
@@ -29,6 +29,7 @@ export async function createInvitationsForLawyers(
       lawyerId: lawyer.id,
       status: 'pending',
       comment: await createNoteForLawyer({ caseData, lawyer }),
+      dueBy: new Date(Date.now() + 48 * 60 * 60 * 1000),
       updatedAt: new Date(),
     }
   })
