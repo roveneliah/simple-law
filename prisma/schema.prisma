@@ -10,76 +10,77 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id       String   @id @default(uuid())
-  email    String   @unique
-  phone    String?   @unique
-  first    String?
-  last     String?
-  cases    Case[]
+  id           String   @id @default(uuid())
+  email        String   @unique
+  phone        String?  @unique
+  first        String?
+  last         String?
+  cases        Case[]
   savedLawyers Lawyer[]
-} 
+}
 
 model Lawyer {
-  id            String   @id @default(uuid())
-  email         String   @unique
-  phone         String?   @unique
-  first         String?
-  last          String?
-  description   String?
-  firm          String?
-  imageUrl      String?
-  savedBy       User[]
-  services      Service[]
-  inquiries Inquiry[]
+  id          String    @id @default(uuid())
+  email       String    @unique
+  phone       String?   @unique
+  first       String?
+  last        String?
+  description String?
+  firm        String?
+  imageUrl    String?
+  savedBy     User[]
+  services    Service[]
+  inquiries   Inquiry[]
 
-  verification  LawyerVerificationRequest[]
-  invitations   Invitation[]
-  offers        Offer[]
+  verification LawyerVerificationRequest[]
+  invitations  Invitation[]
 }
 
 model Service {
-  id        String   @id @default(uuid())
+  id        String      @id @default(uuid())
+  invitationId String?
+  invitation Invitation? @relation(fields: [invitationId], references: [id])
   type      ServiceType
-  lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
+  lawyer    Lawyer      @relation(fields: [lawyerId], references: [id])
   lawyerId  String
   price     Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@unique([invitationId, type])
 }
 
 enum ServiceType {
+  quick
   advisory
   attorney
   review
-  contractDrafting
-  contractReview
 }
 
 model LawyerVerificationRequest {
-  id        String   @id @default(uuid())
-  barNumber String
+  id           String   @id @default(uuid())
+  barNumber    String
   jurisdiction String
-  lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
-  lawyerId  String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  lawyer       Lawyer   @relation(fields: [lawyerId], references: [id])
+  lawyerId     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Case {
   // state
-  id          String   @id @default(uuid())
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // user input
-  whatsUp     String
-  goals       String
-  dates       String
-  documents   Document[]
+  whatsUp   String
+  goals     String
+  dates     String
+  documents Document[]
 
   // other relevant
   jurisdiction String?
@@ -90,89 +91,77 @@ model Case {
   interview   String?
 
   // case info review
-  status      String
+  status             String
   readyForInvitation Boolean @default(false)
-  invitationsSent Boolean @default(false)
-  review      String?
+  invitationsSent    Boolean @default(false)
+  review             String?
 
   // invitations
-  recommendedServiceIds String[] @db.VarChar(255) // Array of Service IDs
-  invitations Invitation[]
-  offers      Offer[]
+  recommendedServiceIds String[]     @db.VarChar(255) // Array of Service IDs
+  invitations           Invitation[]
 }
 
 model Document {
   id        String   @id @default(uuid())
-  caseId    String   
+  caseId    String
   case      Case     @relation(fields: [caseId], references: [id])
-  userId    String   // Assuming you want to directly link documents to users as well
+  userId    String // Assuming you want to directly link documents to users as well
   fileName  String
   fileType  String
-  url       String   // URL to the document in Supabase Storage
+  url       String // URL to the document in Supabase Storage
   createdAt DateTime @default(now())
 }
 
-
 ////////////////////////
 
-
 model Invitation {
-  id        String   @id @default(uuid())
-  
+  id String @id @default(uuid())
+
   // on creation
-  case      Case     @relation(fields: [caseId], references: [id])
-  caseId    String
-  lawyers   Lawyer   @relation(fields: [lawyerId], references: [id])
-  lawyerId  String
-  comment   String
-  dueBy     DateTime?
+  case     Case      @relation(fields: [caseId], references: [id])
+  caseId   String
+  lawyers  Lawyer    @relation(fields: [lawyerId], references: [id])
+  lawyerId String
+  comment  String
+  dueBy    DateTime?
 
   // set by lawyer
-  status            String?
-  lawyerComment     String?
+  status        String?
+  lawyerComment String?
+  services      Service[]
 
   // handler by us
-  ourAnalysis       String?
-  
+  ourAnalysis String?
+  strategyReview String?
+
   // set by user
-  usersFeedback     String?
+  usersFeedback String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   @@unique([caseId, lawyerId])
 }
 
 model Inquiry {
   id        String   @id @default(uuid())
-  question   String  @unique
-  answer     String?
-  lawyerId   String
+  question  String   @unique
+  answer    String?
+  lawyerId  String
   lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Interview {
-  id        String   @id @default(uuid())
-  invitationId String @unique
-  questions String[]
-  answers   String[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  invitationId String   @unique
+  questions    String[]
+  answers      String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
-model Offer {
-  id        String   @id @default(uuid())
-  case      Case     @relation(fields: [caseId], references: [id])
-  caseId    String
-  lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
-  lawyerId  String
-  status    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  price     Int
-  message   String
-}
 
 // represents the agreement between the user and the lawyer
 // model Agreement {

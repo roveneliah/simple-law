@@ -14,13 +14,13 @@ export default function NotFound() {
           404
         </p>
         <h1 className="mt-6 font-display text-5xl font-extrabold text-slate-900 sm:text-6xl">
-          Page not found
+          You lost?
         </h1>
         <p className="mt-4 text-lg tracking-tight text-slate-700">
           Sorry, we couldn’t find the page you’re looking for.
         </p>
         <Link
-          href="/"
+          href="/app"
           className="mt-6 text-base font-medium text-blue-600 hover:text-blue-800"
         >
           Go back home <span aria-hidden="true">&rarr;</span>

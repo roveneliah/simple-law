@@ -2,11 +2,8 @@
 import AutoFlipComponent from '@/components/AutoFlip'
 import CaseLayout from '@/components/CaseLayout'
 import AppLayout from '@/components/Layout/AppLayout'
-import { withCaseData } from '@/components/withCaseData'
 import { CANDIDATES, FALLBACK_AVATAR, dummyLawyers } from '@/data/dummy'
 import { supabase } from '@/lib/supabaseClient'
-import { useCase } from '@/lib/useCase'
-import { BookmarkIcon, StarIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { UUID } from 'crypto'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -18,7 +15,7 @@ export const useInvitation = (invitationId: UUID) => {
     const fetchInvitation = async () => {
       const {data, error } = await supabase
         .from('Invitation')
-        .select('*, Case(*), Lawyer(*)')
+        .select('*, Case(*), Lawyer(*), Service(*)')
         .eq('id', invitationId)
         .single()
 
@@ -38,6 +35,7 @@ const interview = CANDIDATES[0].interview
 function InvitationView() {
   const invitationId = usePathname().split('/').pop()
   const invitation = useInvitation(invitationId)
+  console.log(invitation)
 
   const lawyerData = invitation?.Lawyer
 
@@ -47,10 +45,9 @@ function InvitationView() {
   const saveFeedback = (value: string) => {
     // write status to invitation field in supabase
     console.log('feedback saved')
-    router.push('/app/cases/lawyers/' + invitation?.Case?.id)
+    router.push('/app/cases/services/' + invitation?.Case?.id)
   }
 
-  const feedback = "feedback"
 
   return (
     <AppLayout>
@@ -235,7 +232,7 @@ function InvitationView() {
                       <label className="text-base font-semibold text-gray-900">
                         Our Feedback
                       </label>
-                      <p>{feedback}</p>
+                      <p>{invitation?.ourAnalysis}</p>
                     </div>
 
                     <form>
@@ -295,9 +292,16 @@ function InvitationView() {
                         Decline Offer
                       </button>
                       <div className="w-full">
-                        <Link href={`/app/cases/lawyers/${invitation?.Case?.id}`}>
+                        <Link href={`/app/cases/services/${invitation?.Case?.id}`}>
                           <button className="w-full rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">
                             Skip
+                          </button>
+                        </Link>
+                      </div>
+                      <div className="w-full">
+                        <Link href={`/app/cases/services/book/${invitation?.id}`}>
+                          <button className="w-full rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">
+                            Book Now
                           </button>
                         </Link>
                       </div>

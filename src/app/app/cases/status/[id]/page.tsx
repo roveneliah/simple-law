@@ -7,11 +7,16 @@ import { useCase } from '@/lib/useCase'
 import { useUser } from '@/lib/useUser'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import ServiceView from '../../services/[invitationId]/page'
 
 function CaseView() {
   const caseId = usePathname().split('/').pop()
   const caseData = useCase(caseId)
   const user = useUser()
+
+  // if past dueBy
+
+  // return <ServiceView />
 
   return (
     <AppLayout>
