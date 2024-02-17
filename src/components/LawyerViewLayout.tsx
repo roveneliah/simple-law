@@ -8,7 +8,7 @@ const BASE_URL = '/lawyers/'
 const tabs = [
   { name: 'Feed', href: '#' },
   { name: 'Invitations', href: 'invitations' },
-  { name: 'Clients', href: '#' },
+  { name: 'Clients', href: 'clients' },
   { name: 'Questions', href: 'questions' },
 ]
 

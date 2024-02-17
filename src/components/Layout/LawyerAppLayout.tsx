@@ -9,6 +9,7 @@ import {
   ChatBubbleOvalLeftEllipsisIcon,
   CalendarIcon,
   ChartPieIcon,
+  FaceSmileIcon,
 } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { supabase, supabaseLawyers } from '@/lib/supabaseClient'
@@ -40,15 +41,12 @@ export default function LawyerAppLayout({
   const user = useLawyerUser()
   useRedirectIfNotVerified({ override: true })
 
-  if (!user?.email) {
-    // direct to login
-    return <div>Loading...</div>
-  }
-
   const handleSignOut = async (e) => {
     e.preventDefault()
     supabaseLawyers.auth.signOut()
   }
+
+  const loading = user?.email
 
   return (
     <div className="flex h-screen flex-row">

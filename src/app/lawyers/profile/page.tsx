@@ -1,13 +1,85 @@
 'use client'
 import LawyerViewLayout from '@/components/LawyerViewLayout'
 import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import { supabase, supabaseLawyers } from '@/lib/supabaseClient'
+import { useLawyerUser } from '@/lib/useUser'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import { useEffect, useState } from 'react'
+
+const getLawyerAvatarUrlById = (lawyerId) => {
+  const timestamp = new Date().getTime() // Current timestamp as cache buster
+  return `${process.env.NEXT_PUBLIC_SUPABASE_LAWYERS_URL}/storage/v1/object/public/avatars/${lawyerId}/avatar?cacheBust=${timestamp}`
+}
+
+async function updateLawyerImageUrl(lawyerId, fullPath) {
+  const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_LAWYERS_URL}/storage/v1/object/public/${fullPath}`
+  const { data, error } = await supabase
+    .from('Lawyer')
+    .update({ imageUrl })
+    .eq('id', lawyerId)
+
+  if (error) {
+    console.error('Error updating lawyer profile:', error)
+    return { error }
+  }
+
+  return { data }
+}
 
 export default function Profile() {
+  const lawyer = useLawyerUser()
+
+  const [avatarUrl, setAvatarUrl] = useState(null)
+  useEffect(() => {
+    setAvatarUrl(getLawyerAvatarUrlById(lawyer.id))
+  }, [lawyer.id])
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const file = e.target.files[0]
+
+      // Directly upload the file without reading it as text
+      uploadPhoto({ blob: file, name: file.name })
+        .then(({ data, error }) => {
+          console.log(data, error)
+          updateLawyerImageUrl(lawyer.id, data?.fullPath)
+        })
+        .finally(() => setAvatarUrl(getLawyerAvatarUrlById(lawyer.id)))
+    }
+  }
+
+  const uploadPhoto = async ({ blob, name }) => {
+    if (!blob) {
+      alert('Please select a photo to upload.')
+      return
+    }
+
+    console.log(blob)
+    try {
+      const { data, error } = await supabaseLawyers.storage
+        .from('avatars')
+        .upload(`${lawyer.id}/avatar`, blob, {
+          cacheControl: '3600',
+          upsert: true,
+        })
+
+      console.log('Uploaded photo:', data)
+      console.log(data, error)
+      return { data, error }
+    } catch (error) {
+      console.error('Error uploading photo:', error)
+      alert('Error uploading photo.')
+    }
+  }
+
+  console.log(lawyer)
+  console.log(getLawyerAvatarUrlById(lawyer.id))
+  console.log(avatarUrl)
   return (
     <LawyerAppLayout>
       <LawyerViewLayout viewName="Profile">
-        <form>
+        <form className="mt-8">
           <div className="space-y-12">
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">
@@ -72,20 +144,30 @@ export default function Profile() {
                     Photo
                   </label>
                   <div className="mt-2 flex items-center gap-x-3">
-                    <UserCircleIcon
-                      className="h-12 w-12 text-gray-300"
-                      aria-hidden="true"
+                    <img
+                      src={avatarUrl}
+                      className="h-24 w-24 rounded-full bg-gray-800"
+                      alt="avatar"
                     />
-                    <button
-                      type="button"
-                      className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                    <label
+                      htmlFor="file-upload"
+                      className="relative cursor-pointer rounded-md font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                     >
-                      Change
-                    </button>
+                      <div className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        <span>Change</span>
+                      </div>
+                      <input
+                        id="file-upload"
+                        name="file-upload"
+                        type="file"
+                        className="sr-only"
+                        onChange={handleFileChange}
+                      />
+                    </label>
                   </div>
                 </div>
 
-                <div className="col-span-full">
+                {/* <div className="col-span-full">
                   <label
                     htmlFor="cover-photo"
                     className="block text-sm font-medium leading-6 text-gray-900"
@@ -118,7 +200,7 @@ export default function Profile() {
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

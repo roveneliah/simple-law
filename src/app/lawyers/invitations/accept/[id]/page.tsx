@@ -2,6 +2,7 @@
 import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
 import { supabase } from '@/lib/supabaseClient'
 import {
+  FaceSmileIcon,
   InformationCircleIcon,
   PhotoIcon,
   UserCircleIcon,
@@ -18,11 +19,14 @@ import {
   analyzeLawyerCaseFit,
   reviewStrategy,
 } from '@/app/api/invitations/review/route'
+import AppLayout from '@/components/Layout/AppLayout'
+import LawyerViewLayout from '@/components/LawyerViewLayout'
 
 const agreements = [
   {
     label: 'I agree to provide weekly updates.',
-    description: 'No retainer quick consultation. Pay per session.',
+    description:
+      'I will provide weekly updates on the case through ImpossibleLaw, and answer questions submitted through ImpossibleLaw.',
   },
   {
     label: 'I agree to not charge clients for any expenses.',
@@ -67,10 +71,6 @@ export default function OffersView() {
         setInvitation(data)
       })
   }, [])
-
-  if (!invitation) {
-    return <p>Loading...</p>
-  }
 
   // console.log(invitation)
 
@@ -166,6 +166,32 @@ export default function OffersView() {
     // router.push(`/lawyers/invitations/${invitationId}`)
   }
 
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    invitation && setLoading(false)
+  }, [invitation])
+
+  if (loading) {
+    return (
+      <LawyerAppLayout>
+        <LawyerViewLayout viewName="Questions" />
+
+        <div className="mt-8 flex flex-col items-center">
+          <FaceSmileIcon
+            className="h-12 w-12 text-gray-400"
+            aria-hidden="true"
+          />
+          <h2 className="mt-6 text-2xl font-semibold leading-6 text-gray-900">
+            Loading...
+          </h2>
+          <p className="mt-2 text-sm text-gray-500">
+            Our robots must be sleeping on the job.
+          </p>
+        </div>
+      </LawyerAppLayout>
+    )
+  }
+
   return (
     <LawyerAppLayout>
       <form onSubmit={handleSendOffer}>
@@ -177,9 +203,11 @@ export default function OffersView() {
             <h2 className="text-base font-semibold leading-7 text-gray-900">
               {invitation?.Case?.title || 'Missing Title'}
             </h2>
-            <p>{invitation?.Case?.description}</p>
+            <p className="mt-4 text-base text-gray-600">
+              {invitation?.Case?.description}
+            </p>
           </div>
-          <div className="border-b border-gray-900/10 pb-12">
+          {/* <div className="border-b border-gray-900/10 pb-12">
             <h2 className="text-base font-semibold leading-7 text-gray-900">
               Services
             </h2>
@@ -189,9 +217,6 @@ export default function OffersView() {
 
             <div className="space-y-10">
               <fieldset>
-                {/* <legend className="text-sm font-semibold leading-6 text-gray-900">
-                  By Email
-                </legend> */}
                 <div className="mt-6 space-y-6">
                   {services.map((service, index) => (
                     <div key={index} className="relative flex gap-x-3">
@@ -217,13 +242,13 @@ export default function OffersView() {
                 </div>
               </fieldset>
             </div>
-          </div>
+          </div> */}
           <div className="border-b border-gray-900/10 pb-12">
             <h2 className="text-base font-semibold leading-7 text-gray-900">
               ImpossibleLaw Partner Agreements
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
-              Please reaffirm your commitment to these agreements.
+              Please reaffirm your commitment to our quality guarantees.
             </p>
             <div className="space-y-10">
               <fieldset>
@@ -274,7 +299,8 @@ export default function OffersView() {
                       <p className="text-gray-500">
                         I have read and agree to ImpossibleLaw's{' '}
                         <a
-                          href="www.google.com"
+                          target="_blank"
+                          href="https://www.google.com"
                           className="font-bold text-indigo-600"
                         >
                           Service Agreement
@@ -301,7 +327,7 @@ export default function OffersView() {
               <textarea
                 id="intro"
                 name="intro"
-                rows={3}
+                rows={10}
                 className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 defaultValue={invitation?.lawyerComment}
               />
