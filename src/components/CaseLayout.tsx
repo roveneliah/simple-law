@@ -61,7 +61,7 @@ function CaseLayout({ children, viewName, caseId }: any) {
   return (
     <div className="mt-0">
       <CaseMenuBar viewName={viewName} caseId={caseId} />
-      <div className="mt-8">{children}</div>
+      <div className="mt-0">{children}</div>
     </div>
   )
 }

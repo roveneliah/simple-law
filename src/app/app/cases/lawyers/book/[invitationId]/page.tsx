@@ -114,7 +114,7 @@ export default function CheckoutView({ params: { invitationId } }) {
 
   if (loading)
     return (
-      <AppLayout>
+      <AppLayout caseId={invitation?.caseId}>
         <CaseLayout viewName="Lawyers" caseId={invitation?.caseId} />
         <div className="mt-8 flex flex-col items-center">
           <FaceSmileIcon
@@ -132,8 +132,8 @@ export default function CheckoutView({ params: { invitationId } }) {
     )
 
   return (
-    <AppLayout>
-      <CaseLayout viewName="Lawyers" caseId={invitation?.caseId} />
+    <AppLayout caseId={invitation?.caseId}>
+      {/* <CaseLayout viewName="Lawyers" caseId={invitation?.caseId} /> */}
       <div className="w-full">
         <div className="mx-auto flex w-full flex-col lg:gap-x-8">
           {/* Product details */}

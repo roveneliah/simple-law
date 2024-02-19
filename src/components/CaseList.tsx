@@ -32,7 +32,7 @@ export default function CaseList() {
       {cases.map((c, i) => (
         <div
           key={i}
-          className="group flex h-full flex-row justify-between gap-8 rounded-md px-3 py-2 transition-all hover:bg-gray-50"
+          className="group flex h-full flex-row justify-between gap-8 rounded-md px-0 py-2 transition-all hover:bg-gray-50"
         >
           <Link
             key={i}
@@ -40,7 +40,7 @@ export default function CaseList() {
             className="-m-4 w-full p-4"
           >
             <div className="w-full">
-              <p className="w-full font-medium">{c.title}</p>
+              <p className="w-full text-base text-sm font-normal">{c.title}</p>
               {/* <p>{c.description}</p> */}
             </div>
           </Link>

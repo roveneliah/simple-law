@@ -2,7 +2,11 @@ import { useInvitation } from '@/app/app/cases/recommendations/[invitationId]/pa
 import { FALLBACK_AVATAR, dummyLawyers } from '@/data/dummy'
 import { supabase } from '@/lib/supabaseClient'
 import { useCase } from '@/lib/useCase'
-import { FaceSmileIcon } from '@heroicons/react/24/outline'
+import {
+  FaceSmileIcon,
+  InformationCircleIcon,
+  SparklesIcon,
+} from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
@@ -57,17 +61,21 @@ export default function LawyersTable({ caseId }) {
   }
 
   return (
-    <div>
+    <div className="rounded-lg border px-6 py-4">
       <ul role="list" className="divide-y divide-gray-100">
-        <div className="mb-4  pt-8 sm:flex sm:items-center">
+        <div className="mb-4 sm:flex sm:items-center">
           <div className="sm:flex-auto">
-            <h1 className="text-base font-semibold leading-6 text-gray-900">
+            <h1 className="flex flex-row items-center gap-2 text-base font-semibold leading-6 text-gray-900">
               Our Choices for You
+              <div className="flex items-center">
+                <SparklesIcon className="h-5 w-5" aria-hidden="true" />
+              </div>
             </h1>
             <p className="mt-2 text-sm text-gray-700">
               We interviewed 8 lawyers, and these are our top choices for you.
             </p>
           </div>
+
           {/* <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <button
             type="button"

@@ -187,3 +187,8 @@ model Agreement {
 }
 
 ////////////////////////
+
+
+// model CaseUpdate {
+//   id 
+// }

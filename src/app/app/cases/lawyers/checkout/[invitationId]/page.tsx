@@ -5,6 +5,7 @@ import { useInvitation } from '../../../recommendations/[invitationId]/page'
 import { ShieldCheckIcon } from '@heroicons/react/24/outline'
 import { supabase } from '@/lib/supabaseClient'
 import { v4 as uuidv4 } from 'uuid'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
 
 const agreements = [
   // {
@@ -50,7 +51,7 @@ export default function Page({ params: { invitationId } }) {
   }
 
   return (
-    <AppLayout>
+    <AppLayout caseId={invitation?.caseId}>
       <CaseLayout viewName="Lawyers" caseId={invitation?.caseId}>
         <form onSubmit={handleCreateAgreement}>
           <div className="border-gray-900/10 pb-12">

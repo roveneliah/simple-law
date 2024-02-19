@@ -22,7 +22,7 @@ export default function CaseProgress({ stageIndex = 0 }) {
   }, [STEPS, stageIndex])
 
   return (
-    <div className="h-fit w-full whitespace-nowrap px-4 sm:px-6 lg:px-4">
+    <div className="h-fit w-full whitespace-nowrap">
       <nav className="flex w-full justify-center" aria-label="Progress">
         <ol role="list" className="flex w-full flex-row justify-evenly">
           {steps.map((step) => (

@@ -10,6 +10,8 @@ import { useCase } from '@/lib/useCase'
 import { useUser } from '@/lib/useUser'
 import { FaceSmileIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
+import DummyProduct from '@/components/DummyProduct'
+import DummyProduct2 from '@/components/DummyProduct2'
 
 export const useRecommendations = (caseId) => {
   // /api/cases/service/recommend?caseId=caseId
@@ -54,27 +56,21 @@ const products = [
   // More products...
 ]
 
-function ServiceView() {
-  const caseId = usePathname().split('/').pop()
-  const user = useUser()
+function ServiceView({ params: { caseId } }) {
   const caseData = useCase(caseId)
   console.log(caseData)
-  const invitation = useInvitation(caseData?.Invitation?.[0].id)
-  const services = invitation?.Service
-  // const recommendations = useRecommendations(caseId)
-
-  console.log('invitation', invitation)
-  console.log(services)
 
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-    invitation && setLoading(false)
-  }, [invitation])
+    if (caseData) {
+      setLoading(false)
+    }
+  }, [caseData])
 
   if (loading) {
     return (
-      <AppLayout>
-        <CaseLayout viewName="Lawyers" caseId={caseId} />
+      <AppLayout caseId={caseId}>
+        {/* <CaseLayout viewName="Services" caseId={caseId} /> */}
         <div className="mt-8 flex flex-col items-center">
           <FaceSmileIcon
             className="h-12 w-12 text-gray-400"
@@ -91,60 +87,35 @@ function ServiceView() {
     )
   }
 
-  console.log(caseId)
-
   return (
-    <AppLayout>
-      <CaseLayout viewName="Lawyers" caseId={caseId}>
-        <div className="mt-4 space-y-0">
-          {!caseData?.readyForInvitation && (
-            <div>
-              <p className="text-xl font-medium text-gray-900/75">
-                Hey {user?.first.trim()},
-              </p>
-              <p className="mt-4 ">
-                We're going to interview lawyers for you, and send you our top
-                picks with an explanation why.
-              </p>
-              <p className="mt-4">
-                <p>
-                  <Link href={`/app/cases/case/${caseId}`}>
-                    So we can get going, please head to Case Info and give us
-                    the basic details.
-                  </Link>
-                </p>
-              </p>
+    <AppLayout caseId={caseId}>
+      {/* <CaseLayout viewName="Services" caseId={caseId}/> */}
+      <div className="mt-8 flex flex-row items-center justify-between">
+        <div className="px-4 sm:px-0">
+          <h3 className="text-base font-semibold leading-7 text-gray-900">
+            Shop ImpossibleLaw Services
+          </h3>
 
-              <p className="mt-4">Remember, booking with us you get:</p>
-              <li className="ml-2 mt-2">
-                <p>First 2 hours free.</p>
-              </li>
-              <li className="ml-2 mt-2">
-                <p>Weekly updates from your attorney on your case's status.</p>
-              </li>
-              <li className="ml-2 mt-2">
-                <p>The ability to switch lawyers at any time.</p>
-              </li>
-              <div className="mt-8 flex flex-row">
-                <Link
-                  href={`/app/cases/case/${caseId}`}
-                  className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
-                >
-                  👍 Fill out Case Info
-                </Link>
-              </div>
-            </div>
-          )}
-          {caseData?.readyForInvitation && (
-            <div>
-              <p className="text-base text-gray-500">
-                {'[[caseData?.ourSearchStrategy]]'}
-              </p>
-            </div>
-          )}
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+            We're interviewing lawyers on your behalf now, but feel free to add
+            any info or updates in the meantime.
+          </p>
         </div>
-        <LawyersTable caseId={caseId} />
-      </CaseLayout>
+      </div>
+      <div className="mt-8">
+        {/* <Link href={`/cases/services/${caseId}/recommendations`}>
+          <div className="text-base">
+            <p>Sanity Check</p>
+          </div>
+        </Link>
+        <Link href={`/cases/services/${caseId}/recommendations`}>
+          <div className="text-base">
+            <p>Strategy Pack</p>
+          </div>
+        </Link> */}
+        <DummyProduct />
+        <DummyProduct2 />
+      </div>
     </AppLayout>
   )
 }

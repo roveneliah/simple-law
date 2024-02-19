@@ -226,6 +226,7 @@ export function Files({ files, setFiles, fetchFiles }) {
                   name="file-upload"
                   type="file"
                   className="sr-only"
+                  onChange={handleFileChange}
                 />
               </label>
               <p className="pl-1">or drag and drop</p>

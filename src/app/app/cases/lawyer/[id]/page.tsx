@@ -1,6 +1,7 @@
 'use client'
 import AutoFlipComponent from '@/components/AutoFlip'
 import CaseLayout from '@/components/CaseLayout'
+import CaseProgress from '@/components/CaseProgress'
 import AppLayout from '@/components/Layout/AppLayout'
 import { withCaseData } from '@/components/withCaseData'
 import { CANDIDATES, FALLBACK_AVATAR } from '@/data/dummy'
@@ -30,6 +31,7 @@ function Steps({ step, totalSteps }) {
         Step {steps.findIndex((step) => step.status === 'current') + 1} of{' '}
         {steps.length}
       </p> */}
+
       <ol role="list" className="flex items-center space-x-5">
         {steps.map((step, i) => (
           <li key={i}>

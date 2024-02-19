@@ -113,7 +113,7 @@ export default function CheckoutView() {
 
   if (loading)
     return (
-      <AppLayout>
+      <AppLayout caseId={invitation.caseId}>
         <CaseLayout viewName="Services" caseId={invitatoin?.caseId} />
         <div className="mt-8 flex flex-col items-center">
           <FaceSmileIcon
@@ -131,8 +131,8 @@ export default function CheckoutView() {
     )
 
   return (
-    <AppLayout>
-      <CaseLayout viewName="Services" caseId={invitatoin?.caseId} />
+    <AppLayout caseId={invitation.caseId}>
+      <CaseLayout viewName="Services" caseId={invitation?.caseId} />
       <div className="w-full">
         <div className="mx-auto flex w-full flex-col lg:gap-x-8">
           {/* Product details */}

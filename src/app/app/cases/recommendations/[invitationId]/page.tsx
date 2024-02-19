@@ -50,7 +50,7 @@ function InvitationView() {
 
 
   return (
-    <AppLayout>
+    <AppLayout caseId={invitation.caseId}>
       <CaseLayout viewName="Lawyers" id={invitation?.Case?.id}>
         <div className="flex flex-col">
           <div className="flex flex-row gap-x-4">
