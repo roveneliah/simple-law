@@ -18,6 +18,7 @@ model User {
   last         String?
   cases        Case[]
   savedLawyers Lawyer[]
+
 }
 
 model Lawyer {
@@ -32,6 +33,8 @@ model Lawyer {
   savedBy     User[]
   services    Service[]
   inquiries   Inquiry[]
+
+  agreements Agreement[]
 
   verification LawyerVerificationRequest[]
   invitations  Invitation[]
@@ -99,6 +102,9 @@ model Case {
   // invitations
   recommendedServiceIds String[]     @db.VarChar(255) // Array of Service IDs
   invitations           Invitation[]
+
+  // agreements
+  agreements Agreement[]
 }
 
 model Document {
@@ -136,6 +142,8 @@ model Invitation {
 
   // set by user
   usersFeedback String?
+  rejected     Boolean @default(false)
+  favorite     Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -164,17 +172,18 @@ model Interview {
 
 
 // represents the agreement between the user and the lawyer
-// model Agreement {
-//   id        String   @id @default(uuid())
-//   case      Case     @relation(fields: [caseId], references: [id])
-//   caseId    String
-//   lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
-//   lawyerId  String
-//   status    String
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   price     Int
-//   message   String
-// }
+model Agreement {
+  id        String   @id @default(uuid())
+  case      Case     @relation(fields: [caseId], references: [id])
+  caseId    String
+  lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
+  lawyerId  String
+  invitationId String?
+
+  contractUrl String
+  contractHash String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 ////////////////////////

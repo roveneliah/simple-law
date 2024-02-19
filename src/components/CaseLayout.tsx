@@ -6,13 +6,14 @@ import { usePathname } from 'next/navigation'
 const BASE_URL = '/app/cases/'
 const tabs = (id: string | number) =>
   [
-    { name: 'Status', href: 'status' },
-    { name: 'Case Info', href: 'case' },
+    // { name: 'Status', href: 'status' },
+    { name: 'Case', href: 'case' },
+    { name: 'Lawyers', href: 'lawyers' },
     { name: 'Services', href: 'services' },
-    { name: 'Documents', href: 'docs' },
+    // { name: 'Documents', href: 'docs' },
     // { name: 'Recommendations', href: 'recommendations' },
-    // { name: 'Lawyers', href: 'lawyers' },
     // { name: 'Chat', href: 'chat' },
+    { name: 'Workspace', href: 'workspace' },
     // { name: 'Learn', href: 'learn' },
     // { name: 'Help', href: 'help' },
   ].map((tab) => {
@@ -26,9 +27,7 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-function CaseMenuBar(props) {
-  const caseId = usePathname().split('/').pop()
-  const caseData = useCase(caseId)
+function CaseMenuBar({ caseId, viewName }) {
   return (
     <div className="border-b border-gray-200">
       <div className="sm:flex sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
@@ -42,7 +41,7 @@ function CaseMenuBar(props) {
                 key={tab.name}
                 href={tab.href}
                 className={classNames(
-                  tab.name === props.viewName
+                  tab.name === viewName
                     ? 'border-indigo-500 text-indigo-600'
                     : 'border-transparent text-gray-500 transition-all hover:border-gray-300 hover:text-gray-700',
                   'w-full whitespace-nowrap border-b-2 py-2 text-center text-sm font-medium',
@@ -58,13 +57,13 @@ function CaseMenuBar(props) {
   )
 }
 
-function CaseLayout({ children, viewName, caseData, caseId }: any) {
+function CaseLayout({ children, viewName, caseId }: any) {
   return (
     <div className="mt-0">
-      <CaseMenuBar viewName={viewName} caseData={caseData} caseId={caseId} />
+      <CaseMenuBar viewName={viewName} caseId={caseId} />
       <div className="mt-8">{children}</div>
     </div>
   )
 }
 
-export default withCaseData(CaseLayout)
+export default CaseLayout

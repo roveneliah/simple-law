@@ -31,16 +31,16 @@ export default function LawyersTable({ caseId }) {
 
   // sort the lawyers based on tag
   const sortedInvitations = useMemo(() => {
-    const invitations: any = dummyLawyers(caseId)
-    const sorted = invitations.sort((a: any, b: any) => {
+    if (!invitations) return
+    const sorted = invitations?.sort((a: any, b: any) => {
       // tag rank: 1. 'Top Choice', 2. '', 3. 'Declined'
-      if (a.tag === 'Top Choice') return -1
-      if (b.tag === 'Top Choice') return 1
-      if (a.tag === 'Declined') return 1
-      if (b.tag === 'Declined') return -1
+      if (a.favorite === true) return -1
+      if (b.favorite === true) return 1
+      if (a.rejected === true) return 1
+      if (b.rejected === true) return -1
     })
     return sorted
-  }, [caseId])
+  }, [invitations])
 
   if (loading) {
     return (
@@ -82,8 +82,8 @@ export default function LawyersTable({ caseId }) {
             <div className="h-24 w-full animate-pulse rounded-md bg-gray-300"></div>
           </div>
         )}
-        {invitations?.map((invitation: any, i: number) => (
-          <Link key={i} href={`/app/cases/services/book/${invitation.id}`}>
+        {sortedInvitations?.map((invitation: any, i: number) => (
+          <Link key={i} href={`/app/cases/lawyers/book/${invitation.id}`}>
             <li
               key={invitation.id}
               className={`-mx-3 flex cursor-pointer gap-x-4 rounded-sm px-3 py-5 hover:bg-gray-50`}
@@ -95,13 +95,6 @@ export default function LawyersTable({ caseId }) {
                     src={invitation.Lawyer?.imageUrl || FALLBACK_AVATAR}
                     alt=""
                   />
-
-                  {!invitation.tag && (
-                    <span className="absolute right-0 top-0 block h-3 w-3 rounded-full bg-green-400 ring-2 ring-white" />
-                  )}
-                  {invitation.tag === 'Shortlist' && (
-                    <span className="absolute right-0 top-0 block h-3 w-3 rounded-full bg-yellow-400 ring-2 ring-white" />
-                  )}
                 </span>
               </div>
               <div className="flex-auto">
@@ -110,7 +103,11 @@ export default function LawyersTable({ caseId }) {
                     {invitation.Lawyer?.first} {invitation.Lawyer?.last}
                   </p>
                   <p className="flex-none text-xs text-gray-600">
-                    {invitation.tag}
+                    {invitation.rejected
+                      ? 'Rejected'
+                      : invitation.favorite
+                        ? 'Top Choice'
+                        : ''}
                   </p>
                 </div>
                 <p className="mt-1 line-clamp-4 text-sm leading-6 text-gray-600">

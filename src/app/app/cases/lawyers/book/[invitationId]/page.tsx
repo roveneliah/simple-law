@@ -15,6 +15,7 @@ import { RadioGroup } from '@headlessui/react'
 import AppLayout from '@/components/Layout/AppLayout'
 import Link from 'next/link'
 import CaseLayout from '@/components/CaseLayout'
+import { supabase } from '@/lib/supabaseClient'
 
 const product = {
   name: 'Lawyer Name',
@@ -98,8 +99,8 @@ const reviews = {
   ],
 }
 
-export default function CheckoutView() {
-  const invitationId = usePathname().split('/').pop()
+export default function CheckoutView({ params: { invitationId } }) {
+  // const invitationId = usePathname().split('/').pop()
   const invitation = useInvitation(invitationId)
 
   const [selectedSize, setSelectedSize] = useState(invitation?.Service[0])
@@ -114,7 +115,7 @@ export default function CheckoutView() {
   if (loading)
     return (
       <AppLayout>
-        <CaseLayout viewName="Services" caseId={invitatoin?.caseId} />
+        <CaseLayout viewName="Lawyers" caseId={invitation?.caseId} />
         <div className="mt-8 flex flex-col items-center">
           <FaceSmileIcon
             className="h-12 w-12 text-gray-400"
@@ -132,7 +133,7 @@ export default function CheckoutView() {
 
   return (
     <AppLayout>
-      <CaseLayout viewName="Services" caseId={invitatoin?.caseId} />
+      <CaseLayout viewName="Lawyers" caseId={invitation?.caseId} />
       <div className="w-full">
         <div className="mx-auto flex w-full flex-col lg:gap-x-8">
           {/* Product details */}
@@ -347,35 +348,61 @@ export default function CheckoutView() {
                 <div className="mt-10 grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-3">
                   <button
                     type="button"
+                    onClick={() => {
+                      // update invitation favorite to true
+                      supabase
+                        .from('Invitation')
+                        .update({
+                          favorite: true,
+                          rejected: false,
+                        })
+                        .eq('id', invitationId)
+                        .single()
+                        .then(console.log)
+                    }}
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-50 px-8 py-3 text-base font-medium text-indigo-700 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                   >
                     Favorite
                   </button>
                   <Link
-                    href={'/app/cases/services/' + invitation?.Case.id}
+                    href={'/app/cases/lawyers/' + invitation?.Case.id}
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-50 px-8 py-3 text-base font-medium text-indigo-700 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                   >
                     Skip
                   </Link>
                   <button
                     type="button"
+                    onClick={() => {
+                      // update invitation rejected to true
+                      supabase
+                        .from('Invitation')
+                        .update({
+                          rejected: true,
+                          favorite: false,
+                        })
+                        .eq('id', invitationId)
+                        .single()
+                        .then(console.log)
+                    }}
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-50 px-8 py-3 text-base font-medium text-indigo-700 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                   >
                     Decline
                   </button>
                 </div>
-                <div className="mt-4 flex flex-row gap-4">
-                  <button
-                    type="submit"
-                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                  >
-                    <ShieldCheckIcon
-                      className="mr-2 h-6 w-6 flex-shrink-0 group-hover:text-gray-500"
-                      aria-hidden="true"
-                    />
-                    Book
-                  </button>
-                </div>
+                <Link href={`/app/cases/lawyers/checkout/${invitationId}`}>
+                  <div className="mt-4 flex flex-row gap-4">
+                    <button
+                      type="submit"
+                      className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                    >
+                      <ShieldCheckIcon
+                        className="mr-2 h-6 w-6 flex-shrink-0 group-hover:text-gray-500"
+                        aria-hidden="true"
+                      />
+                      Book
+                    </button>
+                  </div>
+                </Link>
                 <div className="mt-6 text-center">
                   <a
                     href="#"

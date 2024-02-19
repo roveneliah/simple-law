@@ -10,7 +10,9 @@ export const useCase = (caseId: UUID) => {
       caseId &&
         supabase
           .from('Case')
-          .select('*, Invitation(*, Lawyer(*), Service(*))')
+          .select(
+            '*, Invitation(*, Lawyer(*), Service(*)), Agreement(*, Lawyer(*))',
+          )
           .eq('id', caseId)
           .single()
           .then(({ data, error }) => {

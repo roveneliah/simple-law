@@ -74,7 +74,7 @@ function ServiceView() {
   if (loading) {
     return (
       <AppLayout>
-        <CaseLayout viewName="Services" caseId={caseId} />
+        <CaseLayout viewName="Lawyers" caseId={caseId} />
         <div className="mt-8 flex flex-col items-center">
           <FaceSmileIcon
             className="h-12 w-12 text-gray-400"
@@ -91,40 +91,59 @@ function ServiceView() {
     )
   }
 
+  console.log(caseId)
+
   return (
     <AppLayout>
-      <CaseLayout viewName="Services" caseId={caseId}>
-        <div className="flex flex-row items-center justify-between">
-          <div className="px-4 sm:px-0">
-            <h3 className="text-base font-semibold leading-7 text-gray-900">
-              Shop ImpossibleLaw Services
-            </h3>
+      <CaseLayout viewName="Lawyers" caseId={caseId}>
+        <div className="mt-4 space-y-0">
+          {!caseData?.readyForInvitation && (
+            <div>
+              <p className="text-xl font-medium text-gray-900/75">
+                Hey {user?.first.trim()},
+              </p>
+              <p className="mt-4 ">
+                We're going to interview lawyers for you, and send you our top
+                picks with an explanation why.
+              </p>
+              <p className="mt-4">
+                <p>
+                  <Link href={`/app/cases/case/${caseId}`}>
+                    So we can get going, please head to Case Info and give us
+                    the basic details.
+                  </Link>
+                </p>
+              </p>
 
-            <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-              We're interviewing lawyers on your behalf now, but feel free to
-              add any info or updates in the meantime.
-            </p>
-          </div>
-
-          {/* <button
-            type="button"
-            className="h-fit rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Save
-          </button> */}
-        </div>
-        <div className="mt-8">
-          <Link href={`/cases/services/${caseId}/recommendations`}>
-            <div className="text-base">
-              <p>Sanity Check</p>
+              <p className="mt-4">Remember, booking with us you get:</p>
+              <li className="ml-2 mt-2">
+                <p>First 2 hours free.</p>
+              </li>
+              <li className="ml-2 mt-2">
+                <p>Weekly updates from your attorney on your case's status.</p>
+              </li>
+              <li className="ml-2 mt-2">
+                <p>The ability to switch lawyers at any time.</p>
+              </li>
+              <div className="mt-8 flex flex-row">
+                <Link
+                  href={`/app/cases/case/${caseId}`}
+                  className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+                >
+                  👍 Fill out Case Info
+                </Link>
+              </div>
             </div>
-          </Link>
-          <Link href={`/cases/services/${caseId}/recommendations`}>
-            <div className="text-base">
-              <p>Strategy Pack</p>
+          )}
+          {caseData?.readyForInvitation && (
+            <div>
+              <p className="text-base text-gray-500">
+                {'[[caseData?.ourSearchStrategy]]'}
+              </p>
             </div>
-          </Link>
+          )}
         </div>
+        <LawyersTable caseId={caseId} />
       </CaseLayout>
     </AppLayout>
   )

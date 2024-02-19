@@ -334,7 +334,8 @@ export default function OffersView() {
             </div>
             <p className="mt-3 text-sm leading-6 text-gray-600">
               We will let the client know why you're a great fit, but you're
-              welcome to leave a friendly note.
+              welcome to leave a friendly note. You will only be charged if the
+              client accepts your offer.
             </p>
           </div>
         </div>

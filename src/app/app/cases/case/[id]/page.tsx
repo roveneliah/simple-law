@@ -296,10 +296,10 @@ function InfoForm() {
   )
 }
 
-export default function DocumentsView() {
+export default function DocumentsView({ params: { id } }) {
   return (
     <AppLayout>
-      <CaseLayout viewName="Case Info">
+      <CaseLayout viewName="Case" caseId={id}>
         <InfoForm />
       </CaseLayout>
     </AppLayout>
