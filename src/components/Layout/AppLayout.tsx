@@ -10,6 +10,7 @@ import {
   ShoppingBagIcon,
   InformationCircleIcon,
   Cog6ToothIcon,
+  UserIcon,
 } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
@@ -67,13 +68,13 @@ const navigation = (caseId, view) => [
   //   current: false,
   // },
   // { name: 'Notes', href: '#', icon: ChartPieIcon, current: false },
-  // {
-  //   name: 'Bookmarks',
-  //   href: '#',
-  //   icon: CalendarIcon,
-  //   count: '20+',
-  //   current: false,
-  // },
+  {
+    name: 'Lawyers',
+    href: '/app/lawyers',
+    icon: UserIcon,
+    count: '20+',
+    current: false,
+  },
   // {
   //   name: 'Help',
   //   href: '#',
@@ -188,10 +189,10 @@ export default function AppLayout({ children, caseId }: any) {
   }
 
   return (
-    <div className="flex h-screen flex-row">
+    <div className="flex h-screen flex-row overflow-y-auto">
       <Sidebar caseId={caseId} />
-      <div className="flex w-full flex-col items-center overflow-auto py-4">
-        <div className="flex w-full max-w-2xl flex-col px-8 lg:px-0">
+      <div className="flex w-full flex-col items-center overflow-y-hidden py-4">
+        <div className="flex w-full max-w-2xl flex-col overflow-y-auto px-8 lg:px-0">
           {/* <ChildViewHeader email={user.email} handleSignOut={handleSignOut} /> */}
           {children}
         </div>
@@ -209,18 +210,6 @@ function Sidebar({ caseId }) {
     else if (caseData) setShowCases(false)
   }, [caseId, caseData])
 
-  if (showCases)
-    return (
-      <div className="flex min-w-64 max-w-xl flex-col gap-y-5 overflow-y-auto border-r border-purple-100 bg-gray-50 px-6">
-        <div className="mt-8">
-          <p className="text-lg font-extrabold">
-            IMPOSSIBLE<span className="font-light text-gray-600">Law</span>
-          </p>
-        </div>
-        <CaseList />
-      </div>
-    )
-
   const pathname = usePathname().split('/')
   const view = pathname.includes('services')
     ? 'Services'
@@ -234,26 +223,44 @@ function Sidebar({ caseId }) {
             ? 'Case'
             : ''
 
-  console.log(view)
+  if (showCases)
+    return (
+      <div className="flex min-w-64 max-w-xl flex-col gap-y-5 overflow-y-auto border-r border-purple-100 bg-gray-50 px-6">
+        <div className="mt-8">
+          <p className="text-lg font-extrabold">
+            IMPOSSIBLE<span className="font-light text-gray-600">Law</span>
+          </p>
+        </div>
+        <CaseList />
+      </div>
+    )
 
   return (
     <div className="flex min-w-64 max-w-xl flex-col gap-y-5 overflow-y-auto border-r border-purple-100 bg-gray-50">
-      <div className="mt-8 px-6">
-        <p className="text-lg font-extrabold">
-          IMPOSSIBLE<span className="font-light text-gray-600">Law</span>
-        </p>
-      </div>
+      {/* <div className="mt-8 px-6">
+        <Link href={'/app/cases'}>
+          <p className="text-lg font-extrabold">
+            IMPOSSIBLE<span className="font-light text-gray-600">Law</span>
+          </p>
+        </Link>
+      </div> */}
 
-      <nav className="flex flex-1 flex-col px-6 ">
-        <div className="flex w-full flex-row items-baseline justify-between text-gray-600 transition-all hover:text-black">
-          <h3 className="mb-0 text-base font-medium">{caseData?.title}</h3>
-          <Link href={`/app/cases/case/${caseId}/settings`}>
+      <nav className="flex flex-1 flex-col px-6">
+        <div className="-mx-2 mt-8 flex w-full flex-row items-center justify-between rounded-lg border px-4 py-2 text-gray-600 transition-all hover:bg-gray-100 hover:text-black">
+          <h3 className="mb-0 w-full text-center text-sm font-medium">
+            {caseData?.title}
+          </h3>
+          {/* <Link
+            href={`/app/cases/case/${caseId}/settings`}
+            className="rounded-lg p-1.5 hover:bg-gray-200"
+          >
             <Cog6ToothIcon
-              className={classNames('text-black', 'h-4 w-4 shrink-0')}
+              className={classNames(' ', 'h-4 w-4 shrink-0')}
               aria-hidden="true"
             />
-          </Link>
+          </Link> */}
         </div>
+        <div className="mt-8" />
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <li>
             <ul role="list" className="-mx-2 space-y-1">
@@ -263,9 +270,9 @@ function Sidebar({ caseId }) {
                     href={item.href}
                     className={classNames(
                       item.current
-                        ? 'bg-gray-100 text-black'
-                        : 'text-gray-600 hover:bg-gray-100 hover:text-black',
-                      'group flex items-center justify-start gap-x-3 rounded-md p-2 text-sm font-medium leading-6',
+                        ? 'bg-gray-100 font-semibold text-black'
+                        : 'font-medium text-gray-600 hover:bg-gray-100 hover:text-black',
+                      'group flex items-center justify-start gap-x-3 rounded-md p-2 text-sm leading-6',
                     )}
                   >
                     <item.icon

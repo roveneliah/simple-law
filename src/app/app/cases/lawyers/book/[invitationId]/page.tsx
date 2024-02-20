@@ -273,7 +273,7 @@ export default function CheckoutView({ params: { invitationId } }) {
             </div> */}
 
           {/* Product form */}
-          <div className="mt-10 w-full lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start">
+          <div className="mt-10 w-full">
             <section aria-labelledby="options-heading">
               <h2 id="options-heading" className="sr-only">
                 Product options
@@ -588,7 +588,7 @@ export default function CheckoutView({ params: { invitationId } }) {
             </div> */}
           </div>
 
-          <div className="mt-16 lg:col-span-7 lg:col-start-6 lg:mt-16">
+          <div className="mt-16 lg:mt-16">
             <h3 className="sr-only">Recent reviews</h3>
 
             <div className="flow-root">

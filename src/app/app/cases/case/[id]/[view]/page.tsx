@@ -215,11 +215,15 @@ function InfoForm({ view, caseId }) {
               <div className="col-span-full py-4" id="goals">
                 <label
                   htmlFor="about"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-xl font-semibold leading-6 text-gray-900"
                 >
-                  What are your goals?
+                  What do you hope to achieve?
                 </label>
-                <div className="mt-2">
+                {/* <p className="text-md mt-1 leading-6 text-gray-600">
+                  Are you looking for advice, to pursue a legal matter,
+                  representation?
+                </p> */}
+                <div className="mt-8">
                   <textarea
                     id="goals"
                     name="goals"
@@ -229,9 +233,6 @@ function InfoForm({ view, caseId }) {
                     defaultValue={caseData?.goals}
                   />
                 </div>
-                {/* <p className="mt-3 text-sm leading-6 text-gray-600">
-              Write a few sentences about yourself.
-            </p> */}
               </div>
             )}
             {view === 'dates' && (
