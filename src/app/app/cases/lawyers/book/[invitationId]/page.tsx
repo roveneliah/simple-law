@@ -247,20 +247,6 @@ export default function CheckoutView({ params: { invitationId } }) {
             </section>
           </div>
 
-          <section className="mt-0" aria-labelledby="details-heading">
-            {/* <div className="flex flex-col items-center text-center">
-              <h2
-                id="details-heading"
-                className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
-              >
-                Strong Guarantees
-              </h2>
-              <p className="mt-3 max-w-3xl text-lg text-gray-600">
-                Booking with ImpossibleLaw offers some unique guarantees.
-              </p>
-            </div> */}
-          </section>
-
           {/* Product image */}
           {/* <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
               <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg">
@@ -491,7 +477,7 @@ export default function CheckoutView({ params: { invitationId } }) {
         </section>
       </div>
 
-      <section aria-labelledby="reviews-heading" className="">
+      <div aria-labelledby="reviews-heading" className="">
         <div className="mx-auto flex w-full flex-col lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8">
           <div className="lg:col-span-4">
             <h2
@@ -635,7 +621,7 @@ export default function CheckoutView({ params: { invitationId } }) {
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </AppLayout>
   )
 }

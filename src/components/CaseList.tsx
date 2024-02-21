@@ -29,14 +29,14 @@ export default function CaseList() {
 
   return (
     <div className="flex w-full flex-col space-y-0">
-      {cases.map((c, i) => (
+      {cases?.map((c, i) => (
         <div
           key={i}
           className="group flex h-full flex-row justify-between gap-8 rounded-md px-0 py-2 transition-all hover:bg-gray-50"
         >
           <Link
             key={i}
-            href={'/app/cases/status/' + c.id}
+            href={'/app/cases/case/' + c.id}
             className="-m-4 w-full p-4"
           >
             <div className="w-full">

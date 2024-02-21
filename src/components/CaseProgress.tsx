@@ -3,9 +3,10 @@ import { useMemo } from 'react'
 import { CheckCircleIcon } from '@heroicons/react/20/solid'
 
 const STEPS = [
-  { name: 'Enter Info', href: '#', status: 'complete' },
-  { name: 'We Interview Lawyers', href: '#', status: 'current' },
-  { name: 'You Choose One', href: '#', status: 'upcoming' },
+  { name: 'Gather Case Info', href: '#', status: 'complete' },
+  { name: 'Dispatch Interview', href: '#', status: 'complete' },
+  { name: 'Interview', href: '#', status: 'current' },
+  { name: 'Review', href: '#', status: 'upcoming' },
   // { name: 'Preview', href: '#', status: 'upcoming' },
 ]
 export default function CaseProgress({ stageIndex = 0 }) {
@@ -23,8 +24,8 @@ export default function CaseProgress({ stageIndex = 0 }) {
 
   return (
     <div className="h-fit w-full whitespace-nowrap">
-      <nav className="flex w-full justify-center" aria-label="Progress">
-        <ol role="list" className="flex w-full flex-row justify-evenly">
+      <nav className="flex w-full justify-between" aria-label="Progress">
+        <ol role="list" className="flex w-full flex-row justify-between">
           {steps.map((step) => (
             <li key={step.name} className="">
               {step.status === 'complete' ? (
@@ -32,7 +33,7 @@ export default function CaseProgress({ stageIndex = 0 }) {
                   <span className="flex items-start">
                     <span className="relative flex h-5 w-5 flex-shrink-0 items-center justify-center">
                       <CheckCircleIcon
-                        className="h-full w-full text-indigo-600 group-hover:text-indigo-800"
+                        className="h-full w-full text-gray-600 group-hover:text-gray-800"
                         aria-hidden="true"
                       />
                     </span>

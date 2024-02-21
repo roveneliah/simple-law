@@ -21,6 +21,8 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useCase } from '@/lib/useCase'
 import CaseList from '../CaseList'
 import { usePathname } from 'next/navigation'
+import abstractBackgroundImage from '@/images/resources/abstract-background.png'
+import Image from 'next/image'
 
 const navigation = (caseId, view) => [
   // {
@@ -100,7 +102,7 @@ function ChildViewHeader(props) {
       </div>
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+          <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 ring-0 ring-inset ring-gray-300 hover:bg-gray-50/50">
             Account
             <ChevronDownIcon
               className="-mr-1 h-5 w-5 text-gray-400"
@@ -177,7 +179,7 @@ function ChildViewHeader(props) {
 
 export default function AppLayout({ children, caseId }: any) {
   const user = useUser()
-  const caseData = useCase(caseId)
+  // const caseData = useCase(caseId)
 
   if (!user) {
     return <div>Loading...</div>
@@ -188,12 +190,29 @@ export default function AppLayout({ children, caseId }: any) {
     supabase.auth.signOut()
   }
 
+  console.log(abstractBackgroundImage)
+
   return (
-    <div className="flex h-screen flex-row overflow-y-auto">
-      <Sidebar caseId={caseId} />
-      <div className="flex w-full flex-col items-center overflow-y-hidden py-4">
-        <div className="flex w-full max-w-2xl flex-col overflow-y-auto px-8 lg:px-0">
-          {/* <ChildViewHeader email={user.email} handleSignOut={handleSignOut} /> */}
+    <div className="relative flex h-[100vh] flex-row overflow-y-hidden">
+      {/* Background Image Container */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src={abstractBackgroundImage}
+          alt=""
+          layout="fill"
+          objectFit="cover"
+          className="absolute z-0"
+        />
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-lg"></div>
+      </div>
+
+      {/* Sidebar Placeholder - Uncomment or modify according to your setup */}
+      {/* <Sidebar caseId={caseId} /> */}
+
+      {/* Main Content Area */}
+      <div className="z-10 flex w-full flex-col items-center py-4">
+        <div className="flex w-full max-w-2xl flex-col overflow-y-auto rounded-md">
+          <ChildViewHeader email={user.email} handleSignOut={handleSignOut} />
           {children}
         </div>
       </div>
@@ -236,7 +255,7 @@ function Sidebar({ caseId }) {
     )
 
   return (
-    <div className="flex min-w-64 max-w-xl flex-col gap-y-5 overflow-y-auto border-r border-purple-100 bg-gray-50">
+    <div className="flex min-w-64 max-w-xl flex-col gap-y-5 overflow-y-hidden border-r border-purple-100 bg-gray-50">
       {/* <div className="mt-8 px-6">
         <Link href={'/app/cases'}>
           <p className="text-lg font-extrabold">

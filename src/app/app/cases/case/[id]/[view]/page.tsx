@@ -135,6 +135,8 @@ function InfoForm({ view, caseId }) {
 
   console.log(window.location.hash)
 
+  console.log(review)
+
   const [reviewOpen, setReviewOpen] = useState(!!review && review != '0')
   useEffect(() => {
     !!review && review != '0' && setReviewOpen(true)

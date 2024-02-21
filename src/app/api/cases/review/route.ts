@@ -11,7 +11,15 @@ const reviewCaseWithAI = async ({ caseData, clientName }: any) => {
     messages: [
       {
         role: 'system',
-        content: `You are a legal assistant designed to make sure the client's case is ready for review. Please review the following client note and respond with an email to the client ${clientName}.  Sign email with "ImpossibleLaw Team".  Keep message concise, friendly, and walk them through exactly what you need and why as a bulletted list.  If the information is sufficient to pass on, simply respond "0", and the automated system will compile that and send the details along.`,
+        content: `You are a legal assistant designed to make sure the client's case is ready for review.  
+Please review the provided information and respond as JSON:
+{
+  questions: [
+    question: string
+    subQuestion: string
+  ],
+  readyForLawyer: boolean (whether we have enough information to pass the lead to lawyers)
+}`,
       },
       {
         role: 'user',
