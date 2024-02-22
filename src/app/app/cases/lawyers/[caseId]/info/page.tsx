@@ -14,18 +14,16 @@ export default function InfoGatherPage({ params: { caseId } }) {
   const [questions, setQuestions] = useState([])
   useEffect(() => {
     console.log(caseData)
-    if (!caseData?.review) return
+    if (!caseData?.Question) return
     try {
-      const parsed = JSON.parse(caseData?.review)
-
-      console.log(parsed)
-
-      setQuestions(parsed.map((q) => ({ ...q, answer: q.answer || '' })))
+      setQuestions(
+        caseData.Question.map((q) => ({ ...q, answer: q.answer || '' })),
+      )
     } catch (error) {
       console.log("Couldn't parse questions...")
       console.log(error)
     }
-  }, [caseData?.review])
+  }, [caseData?.Question])
 
   const [index, setIndex] = useState(0)
   const { id, question, subQuestion, answer } = questions?.[index] || {}
@@ -77,13 +75,12 @@ export default function InfoGatherPage({ params: { caseId } }) {
       console.log(answer, questions[index].answer)
       console.log('updating case with this new information')
       supabase
-        .from('Case')
+        .from('Question')
         .update({
-          review: JSON.stringify(updatedQuestions),
+          answer,
           updatedAt: new Date(),
         })
-        .eq('id', caseId)
-        .single()
+        .eq('id', id)
         .then(console.log)
     }
 
@@ -93,25 +90,13 @@ export default function InfoGatherPage({ params: { caseId } }) {
     } else {
       console.log('triggering a new review')
       setQuestions([])
-      fetch(`/api/cases/review`, {
+      fetch(`/api/cases/review/parse`, {
         method: 'POST',
         body: JSON.stringify({ caseId }),
       })
-        .then((res) => res.json())
-        .then(({ review }) => {
-          console.log(review)
-          if (review) {
-            if (review.readyForInvitation) {
-              router.push(`/app/cases/lawyers/${caseId}`)
-            }
-
-            setQuestions(
-              review.questions.map((q) => ({ ...q, answer: q.answer || '' })),
-            )
-          }
-        })
 
       // then refresh questions
+      router.push(`/app/cases/lawyers/${caseId}`)
     }
   }
 

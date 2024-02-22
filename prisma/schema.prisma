@@ -98,6 +98,7 @@ model Case {
   readyForInvitation Boolean @default(false)
   invitationsSent    Boolean @default(false)
   review             String?
+  questions          Question[]
 
   // invitations
   recommendedServiceIds String[]     @db.VarChar(255) // Array of Service IDs
@@ -105,6 +106,17 @@ model Case {
 
   // agreements
   agreements Agreement[]
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  question  String   @unique
+  subQuestion String
+  answer    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  case     Case     @relation(fields: [caseId], references: [id])
+  caseId   String
 }
 
 model Document {

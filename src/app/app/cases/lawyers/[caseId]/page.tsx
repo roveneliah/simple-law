@@ -29,34 +29,11 @@ export const useRecommendations = (caseId) => {
   return recommendations
 }
 
-const products = [
-  {
-    id: 1,
-    name: 'QuickConsult',
-    href: '#',
-    imageSrc:
-      'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: '$35',
-    color: 'Email-based consultation on a specific topic.',
-  },
-  {
-    id: 1,
-    name: 'Sanity Check',
-    href: '#',
-    imageSrc:
-      'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: '$50',
-    color:
-      '48 hour review of a situation, document, contract, or other legal matter.',
-  },
-  // More products...
-]
-
 function ServiceView({ params: { caseId } }) {
   const user = useUser()
   const caseData = useCase(caseId)
+
+  console.log(caseData)
 
   const [loading, setLoading] = useState(true)
   useEffect(() => {

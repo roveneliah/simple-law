@@ -6,7 +6,9 @@ import { useEffect, useState } from 'react'
 export const getCaseData = (caseId: UUID) => {
   return supabase
     .from('Case')
-    .select('*, Invitation(*, Lawyer(*), Service(*)), Agreement(*, Lawyer(*))')
+    .select(
+      '*, Question(*), Invitation(*, Lawyer(*), Service(*)), Agreement(*, Lawyer(*))',
+    )
     .eq('id', caseId)
     .single()
 }

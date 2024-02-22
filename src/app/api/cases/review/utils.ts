@@ -1,4 +1,3 @@
-import { supabase } from '@/lib/supabaseClient'
 import { openai } from './route'
 
 export const reviewCaseWithAI = async (caseData: any) => {
@@ -8,20 +7,22 @@ export const reviewCaseWithAI = async (caseData: any) => {
       {
         role: 'system',
         content:
-          "You are a legal assistant designed to make sure the client's case is ready for review.",
+          "You are a legal assistant designed to make sure the client's case is ready for review.  Prompt clients for details on what evidence they have of what, and help explain why we're asking for what we are.  Ask questions to ensure we understand their expectations and goals.",
       },
       {
         role: 'user',
         content: JSON.stringify(caseData),
       },
+      { role: 'user', content: JSON.stringify(caseData?.Question) },
       {
         role: 'system',
         content: `Please review the provided information and respond as JSON:
         {
           questions: [
-            question: string (max 128 chars)
+            question: string (max 128 chars) // any NEW questions that you have for the client
             subQuestion: string (max 256 chars)
           ],
+          determination: string (max 256 chars) // why or why not is the case ready to pass to lawyers
           readyForInvitation: boolean (whether we have enough information to pass the lead to lawyers)
         }`,
       },

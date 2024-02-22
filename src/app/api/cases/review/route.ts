@@ -2,6 +2,7 @@ import OpenAI from 'openai'
 import { reviewCaseWithAI, createInterviewWithAI } from './utils'
 import { supabase } from '@/lib/supabaseClient'
 import { NextRequest } from 'next/server'
+import { getCaseData } from './parse/route'
 export const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 })
@@ -24,13 +25,7 @@ export async function POST(request: Request) {
   console.log('Triggering case review with AI.')
   try {
     const { caseId, override = false } = await request.json()
-    const { data: caseData, error } = await supabase
-      .from('Case')
-      .select('*')
-      .eq('id', caseId)
-      .single()
-
-    console.log(caseData)
+    const { data: caseData, error } = await getCaseData(caseId)
 
     const review = override ? null : await reviewCaseWithAI(caseData)
 
