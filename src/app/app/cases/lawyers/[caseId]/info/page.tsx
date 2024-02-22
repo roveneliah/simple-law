@@ -1,51 +1,36 @@
 'use client'
 import AppLayout from '@/components/Layout/AppLayout'
 import { AVATARS, FALLBACK_AVATAR } from '@/data/dummy'
+import { supabase } from '@/lib/supabaseClient'
 import { useCase } from '@/lib/useCase'
 import { CircleStackIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
-// const questions = [
-//   {
-//     id: 1,
-//     question: 'Have you ever worked with a lawyer before?',
-//     subQuestion:
-//       'If not, what are your expectation? Are there any questions you have about the process?',
-//   },
-//   {
-//     id: 2,
-//     question: 'What is your preferred method of communication?',
-//     subQuestion: 'Do you prefer email, phone calls, or text messages?',
-//   },
-//   {
-//     id: 3,
-//     question: 'Are there any deadlines we should know about?',
-//     // subQuestion: '',
-//   },
-// ]
-
 export default function InfoGatherPage({ params: { caseId } }) {
-  console.log('caseId', caseId)
+  const caseData = useCase(caseId)
+
+  const [questions, setQuestions] = useState([])
+  useEffect(() => {
+    console.log(caseData)
+    if (!caseData?.review) return
+    try {
+      const parsed = JSON.parse(caseData?.review)
+
+      console.log(parsed)
+
+      setQuestions(parsed.map((q) => ({ ...q, answer: q.answer || '' })))
+    } catch (error) {
+      console.log("Couldn't parse questions...")
+      console.log(error)
+    }
+  }, [caseData?.review])
+
+  const [index, setIndex] = useState(0)
+  const { id, question, subQuestion, answer } = questions?.[index] || {}
 
   const inputRef = useRef(null)
-
-  const caseData = useCase(caseId)
-  const review = caseData?.review
-  console.log('review', review)
-
-  let questions
-  try {
-    questions = JSON.parse(review).questions
-  } catch (error) {
-    console.log(error)
-  }
-
-  console.log(questions)
-  const [index, setIndex] = useState(0)
-  const { id, question, subQuestion } = questions?.[index] || {}
-
   useEffect(() => {
     // Automatically focus the input when the component mounts
     const inputElement = inputRef.current
@@ -77,24 +62,56 @@ export default function InfoGatherPage({ params: { caseId } }) {
 
     // clear the input field
     const inputElement = inputRef.current
-    inputElement.value = ''
 
     console.log({ question, answer })
     console.log(e.target)
 
+    const updatedQuestions = questions.map((q, i) =>
+      i === index ? { ...q, answer } : q,
+    )
+    console.log(updatedQuestions)
+
+    // update the answer
+    // submit question to the server
+    if (questions[index].answer !== answer) {
+      console.log(answer, questions[index].answer)
+      console.log('updating case with this new information')
+      supabase
+        .from('Case')
+        .update({
+          review: JSON.stringify(updatedQuestions),
+          updatedAt: new Date(),
+        })
+        .eq('id', caseId)
+        .single()
+        .then(console.log)
+    }
+
     if (index + 1 < questions.length) {
       setIndex(index + 1)
+      inputElement.value = questions[index + 1].answer
     } else {
-      console.log('redirecting')
-
-      // submit question
-      console.log('updating case with this new information')
-
       console.log('triggering a new review')
+      setQuestions([])
+      fetch(`/api/cases/review`, {
+        method: 'POST',
+        body: JSON.stringify({ caseId }),
+      })
+        .then((res) => res.json())
+        .then(({ review }) => {
+          console.log(review)
+          if (review) {
+            if (review.readyForInvitation) {
+              router.push(`/app/cases/lawyers/${caseId}`)
+            }
 
-      // then refresh
-      router.refresh()
-      // router.push(`/app/cases/lawyers/${caseId}/info`)
+            setQuestions(
+              review.questions.map((q) => ({ ...q, answer: q.answer || '' })),
+            )
+          }
+        })
+
+      // then refresh questions
     }
   }
 
@@ -112,6 +129,17 @@ export default function InfoGatherPage({ params: { caseId } }) {
           </div>
         </div>
       </div>
+      {questions.length === 0 && (
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-lg font-semibold text-gray-700">
+            No questions to answer
+          </p>
+          <p className="text-md text-gray-500">
+            You've answered all the questions
+          </p>
+        </div>
+      )}
+
       <form key={id} className="mt-0" onSubmit={handleSubmit}>
         <div className="flex flex-row items-start justify-start gap-4">
           <img
@@ -126,17 +154,17 @@ export default function InfoGatherPage({ params: { caseId } }) {
             <p className="text-md">{subQuestion}</p>
           </div>
         </div>
-        <div className="mt-4 flex flex-row items-center justify-start gap-4">
+        <div className="mt-4 flex flex-row items-start justify-start gap-4">
           <img
             src={FALLBACK_AVATAR}
-            className="h-6 w-6 rounded-full bg-gray-800"
+            className="mt-1 h-6 w-6 rounded-full bg-gray-800"
             alt="avatar"
           />
           <input
             ref={inputRef}
             name="answer"
-            className="bg-transparent text-xl outline-none"
-            defaultValue=""
+            className="w-full bg-transparent text-xl outline-none"
+            defaultValue={answer}
           />
         </div>
       </form>

@@ -190,8 +190,6 @@ export default function AppLayout({ children, caseId }: any) {
     supabase.auth.signOut()
   }
 
-  console.log(abstractBackgroundImage)
-
   return (
     <div className="relative flex h-[100vh] flex-row overflow-y-hidden">
       {/* Background Image Container */}
