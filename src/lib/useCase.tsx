@@ -15,6 +15,7 @@ export const getCaseData = (caseId: UUID) => {
 
 export const useCase = (caseId: UUID) => {
   const [caseData, setCaseData] = useState(null)
+
   useEffect(() => {
     try {
       caseId &&
@@ -25,5 +26,6 @@ export const useCase = (caseId: UUID) => {
       console.log(error)
     }
   }, [caseId])
+
   return caseData
 }

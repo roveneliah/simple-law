@@ -17,7 +17,7 @@ import { useCase } from '@/lib/useCase'
 import CaseInfoHeader from '@/components/CaseInfoHeader'
 import ReviewDialogue from '@/components/ReviewDialogue'
 
-function InfoForm({ view, caseId }) {
+function InfoForm({ caseId, view }) {
   const user = useUser()
   const caseData = useCase(caseId)
 
@@ -133,9 +133,7 @@ function InfoForm({ view, caseId }) {
     console.log(data, error)
   }
 
-  console.log(window.location.hash)
-
-  console.log(review)
+  console.log(caseData)
 
   const [reviewOpen, setReviewOpen] = useState(!!review && review != '0')
   useEffect(() => {
@@ -162,12 +160,84 @@ function InfoForm({ view, caseId }) {
         open={reviewOpen}
         setOpen={setReviewOpen}
       />
-
       <CaseInfoHeader caseId={caseId} view={view} />
-
       <form onSubmit={handleSave}>
         <div className="mt-6 border-gray-100">
           <dl className="">
+            {view === 'summary' && (
+              <div className="col-span-full py-4">
+                <div className="mb-8">
+                  <label
+                    htmlFor="about"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Ready for Invitations
+                  </label>
+                  <div className="mt-2">
+                    <p>{caseData?.readyForInvitation ? 'True' : 'False'}</p>
+                  </div>
+                </div>
+                <div className="mb-8">
+                  <label
+                    htmlFor="about"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Summary
+                  </label>
+                  <div className="mt-2">
+                    <p>{caseData?.summary}</p>
+                  </div>
+                </div>
+                <div className="mb-8">
+                  <label
+                    htmlFor="about"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Timeline
+                  </label>
+                  <div className="mt-2">
+                    <p>{caseData?.dates}</p>
+                  </div>
+                </div>
+                <div className="mb-8">
+                  <label
+                    htmlFor="about"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    What's up?
+                  </label>
+                  <div className="mt-2">
+                    <p>{caseData?.whatsUp}</p>
+                  </div>
+                </div>
+                <div className="mb-8">
+                  <label
+                    htmlFor="about"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Goals
+                  </label>
+                  <div className="mt-2">
+                    <p>{caseData?.goals}</p>
+                  </div>
+                </div>
+                <div className="mb-8">
+                  <label
+                    htmlFor="about"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Our Questions for You
+                  </label>
+                  <div className="mt-2">
+                    {caseData?.Question?.map((q) => (
+                      <div key={q.id} className="mt-2">
+                        <p>{q.question}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
             {view === 'settings' && (
               <div className="col-span-full py-4">
                 <label
@@ -308,11 +378,11 @@ function InfoForm({ view, caseId }) {
   )
 }
 
-export default function DocumentsView({ params: { id, view } }) {
+export default function DocumentsView({ params: { caseId, view } }) {
   return (
-    <AppLayout caseId={id}>
+    <AppLayout caseId={caseId}>
       {/* <CaseLayout viewName="Case" caseId={id}> */}
-      <InfoForm view={view} caseId={id} />
+      <InfoForm view={view} caseId={caseId} />
       {/* </CaseLayout> */}
     </AppLayout>
   )

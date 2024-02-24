@@ -85,6 +85,9 @@ model Case {
   dates     String
   documents Document[]
 
+  // ai assistance for user
+  summary String? // summary to help user understand their case
+
   // other relevant
   jurisdiction String?
 

@@ -1,9 +1,14 @@
 'use client'
+import CaseProgress from '@/components/CaseProgress'
 import AppLayout from '@/components/Layout/AppLayout'
 import { AVATARS, FALLBACK_AVATAR } from '@/data/dummy'
 import { supabase } from '@/lib/supabaseClient'
 import { useCase } from '@/lib/useCase'
-import { CircleStackIcon } from '@heroicons/react/24/outline'
+import {
+  CircleStackIcon,
+  PaperAirplaneIcon,
+  PaperClipIcon,
+} from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -102,14 +107,34 @@ export default function InfoGatherPage({ params: { caseId } }) {
 
   return (
     <AppLayout caseId={caseId}>
+      <CaseProgress stageIndex={0} />
+      <div className="mt-16"></div>
+
       <div className="mb-8 flex flex-row justify-between">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-          Gather Information
-        </h1>
-        <div className="flex flex-row justify-end gap-2">
-          <div className="flex flex-row items-center gap-1">
+        <div className="flex w-full flex-row justify-between">
+          <div className="flex flex-row justify-start gap-2 text-sm">
+            <Link href={`/app/cases/lawyers/${caseId}/info`}>
+              {/* <CircleStackIcon className="h-5 w-5" /> */}
+
+              <p>Chat</p>
+            </Link>
+            <Link href={`/app/cases/case/${caseId}/summary`}>
+              {/* <CircleStackIcon className="h-5 w-5" /> */}
+
+              <p>Case Summary</p>
+            </Link>
+          </div>
+          <div className="flex flex-row justify-end gap-4 text-sm">
+            <button className="flex flex-row items-center gap-2">
+              <PaperClipIcon className="h-5 w-5" />
+
+              <p>Upload File</p>
+            </button>
             <Link href={`/app/cases/case/${caseId}/documents`}>
-              <CircleStackIcon className="h-5 w-5" />
+              <div className="flex flex-row items-center gap-1">
+                <CircleStackIcon className="h-5 w-5" />
+                <p>Documents</p>
+              </div>
             </Link>
           </div>
         </div>

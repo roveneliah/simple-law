@@ -16,6 +16,11 @@ import Link from 'next/link'
 */
 const tabs = (caseId) => [
   {
+    name: 'Summary',
+    href: `/app/cases/case/${caseId}/summary`,
+    current: false,
+  },
+  {
     name: 'Documents',
     href: `/app/cases/case/${caseId}/documents`,
     current: false,
@@ -60,9 +65,9 @@ export default function CaseInfoHeader({ caseId, view }) {
   console.log(liveTabs)
 
   return (
-    <div className="border-b border-gray-200 pb-5 sm:pb-0">
+    <div className="">
       <h3 className="text-4xl font-medium leading-6 text-gray-900">
-        Case Info
+        Case Summary
       </h3>
       <p className="mt-4 max-w-2xl text-sm leading-6 text-gray-500">
         We will use this to interview lawyers on your behalf.
@@ -83,7 +88,7 @@ export default function CaseInfoHeader({ caseId, view }) {
             ))}
           </select>
         </div>
-        <div className="hidden sm:block">
+        {/* <div className="hidden sm:block">
           <nav className="-mb-px flex space-x-8">
             {liveTabs.map((tab) => (
               <Link
@@ -101,7 +106,7 @@ export default function CaseInfoHeader({ caseId, view }) {
               </Link>
             ))}
           </nav>
-        </div>
+        </div> */}
       </div>
     </div>
   )

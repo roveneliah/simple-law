@@ -1,9 +1,10 @@
 import { supabase } from '@/lib/supabaseClient'
-import { createNoteForLawyer } from './utils/createNoteForLawyer'
-import { v4 as uuidv4 } from 'uuid'
 import { Case, Invitation, Lawyer } from '@prisma/client'
 import sendEmailInvitation from '../../email/invite-by-caseId/sendEmailInvitation'
+import { createInvitationsForLawyers } from './utils/createInvitationsForLawyers'
+import { getCaseData } from '../../cases/review/parse/route'
 
+// Get lawyers to Interview
 async function fetchCuratedList(caseData: Case) {
   const response = await fetch('http://localhost:3000/api/invitations/curate', {
     method: 'POST',
@@ -18,35 +19,8 @@ async function fetchCuratedList(caseData: Case) {
   return curatedList || []
 }
 
-export async function createInvitationsForLawyers(
-  curatedList: Lawyer[],
-  caseData: Case,
-) {
-  const invitations = curatedList.map(async (lawyer: Lawyer) => {
-    return {
-      id: uuidv4(),
-      caseId: caseData.id,
-      lawyerId: lawyer.id,
-      status: 'pending',
-      comment: await createNoteForLawyer({ caseData, lawyer }),
-      dueBy: new Date(Date.now() + 48 * 60 * 60 * 1000),
-      updatedAt: new Date(),
-    }
-  })
-
-  const results = await Promise.allSettled(invitations)
-  const errors = results.filter((result) => result.status === 'rejected')
-
-  if (errors.length > 0) {
-    console.error('Errors occurred while creating invitations:', errors)
-    throw new Error('Failed to create some invitations.')
-  }
-
-  return results.map((result: any) => result.value) // Assuming you want to return successful inserts
-}
-
-export const createInvitations = async (caseData: Case) => {
-  const curatedList = await fetchCuratedList(caseData)
+export const createInvitationsForCase = async (caseData: Case) => {
+  const curatedList: Lawyer[] = await fetchCuratedList(caseData)
 
   // write custom notes for each recipient
   const invitationsData = await createInvitationsForLawyers(
@@ -55,35 +29,32 @@ export const createInvitations = async (caseData: Case) => {
   )
 
   // insert the invitations into the database
-  await supabase.from('Invitation').insert(invitationsData)
-  const { data: invitations, error } = await supabase
+  const { data, error } = await supabase
     .from('Invitation')
-    .select('*, Lawyer(*), Case(*)')
-    .eq('caseId', caseData.id)
+    .insert(invitationsData)
+    .select()
 
-  // send out emails to the lawyers
-  const receipts = await Promise.all(
-    invitations?.map((invitation) => {
-      return sendEmailInvitation({
-        subject: 'New Case from ImpossibleLaw',
-        title: invitation.Case.title,
-        interviewLink: `https://impossiblelaw.com/lawyers/invitations/${invitation.caseId}`,
-        to: invitation.Lawyer.email,
-        comment: invitation.comment,
-        dueBy: invitation.dueBy,
-      })
-    }) || [],
-  )
-
-  return { data: receipts, error }
+  return { data, error }
 }
 
 export async function POST(request: Request) {
   try {
-    const { caseData } = await request.json()
-    if (!caseData.id) throw new Error('No case id.')
+    console.log('Trying to create invitations for case...')
+    const { caseId } = await request.json()
+    console.log(caseId)
+    if (!caseId) throw new Error('No case id.')
 
-    const { data, error } = await createInvitations(caseData)
+    const { data: caseData, error: getCaseDataError } =
+      await getCaseData(caseId)
+
+    if (getCaseDataError)
+      throw new Error(`Failed to get case data: ${getCaseDataError}`)
+    if (!caseData) throw new Error(`No case data found for case id: ${caseId}`)
+    if (!caseData.readyForInvitation)
+      throw new Error('Case is not ready for invitation.')
+
+    const { data, error } = await createInvitationsForCase(caseData)
+    if (error) throw new Error(`Failed to create invitations: ${error.message}`)
 
     return new Response(JSON.stringify({ data, error }), {
       status: 200,

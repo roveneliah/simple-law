@@ -4,9 +4,9 @@ import { CheckCircleIcon } from '@heroicons/react/20/solid'
 
 const STEPS = [
   { name: 'Gather Case Info', href: '#', status: 'complete' },
-  { name: 'Dispatch Interview', href: '#', status: 'complete' },
-  { name: 'Interview', href: '#', status: 'current' },
-  { name: 'Review', href: '#', status: 'upcoming' },
+  { name: 'Send Invites', href: '#', status: 'complete' },
+  { name: 'Interviewing', href: '#', status: 'current' },
+  { name: 'Review Options', href: '#', status: 'upcoming' },
   // { name: 'Preview', href: '#', status: 'upcoming' },
 ]
 export default function CaseProgress({ stageIndex = 0 }) {

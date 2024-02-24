@@ -40,7 +40,7 @@ function ServiceView({ params: { caseId } }) {
     caseData && setLoading(false)
   }, [caseData])
 
-  const [stageIndex, setStageIndex] = useState(null)
+  const [stageIndex, setStageIndex] = useState<null | number>(null)
   useEffect(() => {
     setStageIndex(
       !caseData?.readyForInvitation ? 0 : !caseData?.Invitation?.length ? 1 : 2,
@@ -62,6 +62,27 @@ function ServiceView({ params: { caseId } }) {
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [stageIndex, setStageIndex])
+
+  const handleCreateInvitations = async (e) => {
+    e.preventDefault()
+    setStageIndex(2)
+    console.log('creating invitations...')
+    // trigger create invitations
+    const res = await fetch(`/api/invitations/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ caseId }),
+    })
+
+    const { data, error } = await res.json()
+    if (error) {
+      console.error(error)
+    }
+
+    console.log(data)
+  }
 
   if (loading) {
     return (
@@ -130,8 +151,11 @@ function ServiceView({ params: { caseId } }) {
                 the button below whenever you're ready.
               </p>
               <div className="mt-10 flex items-center gap-x-6">
-                <button className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                  Get started
+                <button
+                  onClick={handleCreateInvitations}
+                  className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Send Invitations
                 </button>
                 <a
                   href="#"
@@ -159,11 +183,13 @@ function ServiceView({ params: { caseId } }) {
               Interviewing lawyers now.
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
-              Expect an email within 48 hours. We're out in the trenches finding
-              the best lawyers for you. Given your case, we're prioritizing
-              lawyers with experience in negotiations. Given the high value of
-              experience in your situation, you don't want to cheap out on this
-              one.
+              <span className="font-bold">
+                Expect an email within 48 hours.
+              </span>{' '}
+              We're out in the trenches finding the best lawyers for you. Given
+              your case, we're prioritizing lawyers with experience in
+              negotiations. Given the high value of experience in your
+              situation, you don't want to cheap out on this one.
             </p>
             <div className="mt-10 flex items-center gap-x-6">
               <button className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
@@ -180,7 +206,7 @@ function ServiceView({ params: { caseId } }) {
         </div>
       )}
       {stageIndex === 3 && (
-        <div className="mb-32 mt-16 w-full overflow-hidden">
+        <div className="mb-32 mt-16 w-full">
           <div className="mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
             <div className="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
