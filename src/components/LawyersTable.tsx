@@ -2,6 +2,7 @@ import { useInvitation } from '@/app/app/cases/recommendations/[invitationId]/pa
 import { FALLBACK_AVATAR, dummyLawyers } from '@/data/dummy'
 import { supabase } from '@/lib/supabaseClient'
 import { useCase } from '@/lib/useCase'
+import { Dialog } from '@headlessui/react'
 import {
   FaceSmileIcon,
   InformationCircleIcon,
@@ -10,6 +11,7 @@ import {
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+import BookingDialog from './BookingDialog'
 
 export default function LawyersTable({ caseId }) {
   const [loading, setLoading] = useState(true)
@@ -32,6 +34,8 @@ export default function LawyersTable({ caseId }) {
 
   const caseData = useCase(caseId)
   const invitations = caseData?.Invitation
+
+  const [lawyerDialogOpen, setLawyerDialogOpen] = useState(false)
 
   // sort the lawyers based on tag
   const sortedInvitations = useMemo(() => {
@@ -71,9 +75,16 @@ export default function LawyersTable({ caseId }) {
                 <SparklesIcon className="h-5 w-5" aria-hidden="true" />
               </div>
             </h1>
-            <p className="mt-2 text-lg text-gray-700">
-              We interviewed 8 lawyers, and these are our top choices for you.
-            </p>
+            {invitations?.length > 1 ? (
+              <p className="mt-2 text-lg text-gray-700">
+                We interviewed {invitations.length} lawyers , and these are our
+                top choices for you.
+              </p>
+            ) : (
+              <p className="mt-2 text-lg text-gray-700">
+                Here is our top choice for you.
+              </p>
+            )}
           </div>
 
           {/* <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -91,10 +102,15 @@ export default function LawyersTable({ caseId }) {
           </div>
         )}
         {sortedInvitations?.map((invitation: any, i: number) => (
-          <Link key={i} href={`/app/cases/lawyers/book/${invitation.id}`}>
+          // <Link key={i} href={`/app/cases/lawyers/book/${invitation.id}`}>
+          <button
+            key={i}
+            onClick={() => setLawyerDialogOpen(true)}
+            className="w-full"
+          >
             <li
               key={invitation.id}
-              className={`-mx-3 flex cursor-pointer gap-x-4 rounded-sm px-3 py-5 hover:bg-gray-50`}
+              className={`flex cursor-pointer gap-x-4 rounded-sm px-0 py-5 hover:bg-gray-50/10`}
             >
               <div>
                 <span className="relative inline-block h-12 w-12">
@@ -105,6 +121,11 @@ export default function LawyersTable({ caseId }) {
                   />
                 </span>
               </div>
+              <BookingDialog
+                invitation={invitation}
+                open={lawyerDialogOpen}
+                setOpen={setLawyerDialogOpen}
+              />
               <div className="flex-auto">
                 <div className="flex items-baseline justify-between gap-x-4">
                   <p className="text-sm font-semibold leading-6 text-gray-900">
@@ -123,7 +144,8 @@ export default function LawyersTable({ caseId }) {
                 </p>
               </div>
             </li>
-          </Link>
+            {/* </Link> */}
+          </button>
         ))}
         {/* {sortedInvitations.map((lawyer: any, i: number) => (
           <Link key={i} href={`/app/cases/recommendations/${lawyer.id}/`}>

@@ -56,6 +56,20 @@ export async function POST(request: Request) {
     const { data, error } = await createInvitationsForCase(caseData)
     if (error) throw new Error(`Failed to create invitations: ${error.message}`)
 
+    // update interviewDueBy on Case
+    const interviewDueBy = new Date()
+    interviewDueBy.setDate(interviewDueBy.getDate() + 2)
+    const { data: caseUpdateData, error: caseUpdateError } = await supabase
+      .from('Case')
+      .update({ interviewDueBy })
+      .eq('id', caseId)
+      .select()
+
+    if (caseUpdateError)
+      throw new Error(
+        `Failed to set interviewDueBy date: ${caseUpdateError.message}`,
+      )
+
     return new Response(JSON.stringify({ data, error }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

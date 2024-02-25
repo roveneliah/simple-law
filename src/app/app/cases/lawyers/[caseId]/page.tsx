@@ -10,6 +10,7 @@ import { FaceSmileIcon, SparklesIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import CaseProgress from '@/components/CaseProgress'
 import AutoFlipComponent from '@/components/AutoFlip'
+import { hoursLeft, hoursLeftStr } from '@/app/lawyers/invitations/page'
 
 export const useRecommendations = (caseId) => {
   // /api/cases/service/recommend?caseId=caseId
@@ -29,8 +30,83 @@ export const useRecommendations = (caseId) => {
   return recommendations
 }
 
+function ReviewInterviewsView({ caseId }) {
+  return (
+    <div className="mb-32 mt-16 w-full">
+      <div className="mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
+        <div className="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+            Here's what we found.
+          </h1>
+          <p className="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
+            We built a custom interview given your case, and narrowed down a few
+            top candidates. We'll walk you through our picks and what you might
+            like about each.
+          </p>
+          {/* <div className="mt-10 flex items-center gap-x-6">
+               <button className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                 Get started
+               </button>
+               <a
+                 href="#"
+                 className="text-sm font-semibold leading-6 text-gray-900"
+               >
+                 How it works <span aria-hidden="true">→</span>
+               </a>
+             </div> */}
+        </div>
+      </div>
+
+      <div className="mt-16">
+        <h1 className="flex flex-row items-center gap-2 text-3xl  font-bold leading-6 text-gray-900">
+          What we looked for.
+          <div className="flex items-center">
+            <SparklesIcon className="h-5 w-5" aria-hidden="true" />
+          </div>
+        </h1>
+        <p className="mt-2 text-lg text-gray-700">
+          A lot of personal injury lawyers take on too many clients. We looked
+          for lawyers who are selective about the cases they take on. We also
+          looked for lawyers who have over 50 wins, and who have experience in
+          negotiations.
+        </p>
+      </div>
+      <div className="mt-16" />
+      <LawyersTable caseId={caseId} />
+
+      {/* <div className="mt-8 rounded-lg border px-6 py-4">
+        <ul role="list" className="divide-y divide-gray-100">
+          <div className="mb-4 sm:flex sm:items-center">
+            <div className="sm:flex-auto">
+              <h1 className="flex flex-row items-center gap-2 text-base font-semibold leading-6 text-gray-900">
+                Other Options
+                <div className="flex items-center">
+                  <SparklesIcon className="h-5 w-5" aria-hidden="true" />
+                </div>
+              </h1>
+              <p className="mt-2 text-sm text-gray-700">
+                Before jumping into it with a lawyer, consider these
+                lighter-touch options.
+              </p>
+            </div>
+
+            <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+              <button
+                type="button"
+                className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Add user
+              </button>
+            </div>
+          </div>
+        </ul>
+      </div> */}
+    </div>
+  )
+}
+
 function ServiceView({ params: { caseId } }) {
-  const user = useUser()
+  // const user = useUser()
   const caseData = useCase(caseId)
 
   console.log(caseData)
@@ -41,9 +117,16 @@ function ServiceView({ params: { caseId } }) {
   }, [caseData])
 
   const [stageIndex, setStageIndex] = useState<null | number>(null)
+
   useEffect(() => {
     setStageIndex(
-      !caseData?.readyForInvitation ? 0 : !caseData?.Invitation?.length ? 1 : 2,
+      !caseData?.readyForInvitation
+        ? 0
+        : !caseData?.Invitation?.length
+          ? 1
+          : new Date(caseData?.interviewDueBy) < Date.now()
+            ? 3
+            : 2,
     )
   }, [caseData?.readyForInvitation, caseData?.Invitation?.length])
 
@@ -103,6 +186,15 @@ function ServiceView({ params: { caseId } }) {
       </AppLayout>
     )
   }
+
+  console.log(caseData?.interviewDueBy)
+  console.log(
+    Math.floor((caseData?.interviewDueBy - Date.now()) / (1000 * 60 * 60)),
+  )
+
+  const hrsLeft = hoursLeft(new Date(caseData?.interviewDueBy))
+  const timeLeftStr =
+    hrsLeft > 36 ? '2 days' : hrsLeft > 24 ? '1 day' : `${hrsLeft} hours`
 
   return (
     <AppLayout caseId={caseId}>
@@ -177,106 +269,41 @@ function ServiceView({ params: { caseId } }) {
         </div>
       )} */}
       {stageIndex === 2 && (
-        <div className="mt-16 gap-x-14 pb-32 lg:mx-0 lg:flex">
+        <div className="mt-16 gap-x-14 pb-32 lg:mx-1 lg:flex">
           <div className="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
               Interviewing lawyers now.
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
               <span className="font-bold">
-                Expect an email within 48 hours.
+                Expect an email within {timeLeftStr}.
               </span>{' '}
-              We're out in the trenches finding the best lawyers for you. Given
-              your case, we're prioritizing lawyers with experience in
-              negotiations. Given the high value of experience in your
-              situation, you don't want to cheap out on this one.
+              We'll send you our top picks for your case and budget with an
+              explanation why.
             </p>
+            {/* <div>
+              <p className="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
+                Remember, booking with ImpossibleLaw means:
+              </p>
+              <div>
+                <p></p>
+              </div>
+            </div> */}
             <div className="mt-10 flex items-center gap-x-6">
-              <button className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                Get started
+              <button className="rounded-md bg-gray-500/50 px-3.5 py-2.5 text-sm font-semibold text-white/85 shadow-sm ring-1 ring-gray-900/20 transition-all hover:bg-gray-500/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
+                Learn more
               </button>
-              <a
+              <Link
                 href="#"
                 className="text-sm font-semibold leading-6 text-gray-900"
               >
                 How it works <span aria-hidden="true">→</span>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
       )}
-      {stageIndex === 3 && (
-        <div className="mb-32 mt-16 w-full">
-          <div className="mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
-            <div className="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
-              <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-                Here's what we found.
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
-                We built a custom interview given your case, and narrowed down a
-                few top candidates. We'll walk you through our picks and what
-                you might like about each.
-              </p>
-              {/* <div className="mt-10 flex items-center gap-x-6">
-                      <button className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        Get started
-                      </button>
-                      <a
-                        href="#"
-                        className="text-sm font-semibold leading-6 text-gray-900"
-                      >
-                        How it works <span aria-hidden="true">→</span>
-                      </a>
-                    </div> */}
-            </div>
-          </div>
-
-          <div className="mt-16">
-            <h1 className="flex flex-row items-center gap-2 text-3xl  font-bold leading-6 text-gray-900">
-              What we looked for.
-              <div className="flex items-center">
-                <SparklesIcon className="h-5 w-5" aria-hidden="true" />
-              </div>
-            </h1>
-            <p className="mt-2 text-lg text-gray-700">
-              A lot of personal injury lawyers take on too many clients. We
-              looked for lawyers who are selective about the cases they take on.
-              We also looked for lawyers who have over 50 wins, and who have
-              experience in negotiations.
-            </p>
-          </div>
-          <div className="mt-16" />
-          <LawyersTable caseId={caseId} />
-
-          {/* <div className="mt-8 rounded-lg border px-6 py-4">
-          <ul role="list" className="divide-y divide-gray-100">
-            <div className="mb-4 sm:flex sm:items-center">
-              <div className="sm:flex-auto">
-                <h1 className="flex flex-row items-center gap-2 text-base font-semibold leading-6 text-gray-900">
-                  Other Options
-                  <div className="flex items-center">
-                    <SparklesIcon className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                </h1>
-                <p className="mt-2 text-sm text-gray-700">
-                  Before jumping into it with a lawyer, consider these
-                  lighter-touch options.
-                </p>
-              </div>
-
-              <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                <button
-                  type="button"
-                  className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  Add user
-                </button>
-              </div>
-            </div>
-          </ul>
-        </div> */}
-        </div>
-      )}
+      {stageIndex === 3 && <ReviewInterviewsView caseId={caseId} />}
     </AppLayout>
   )
 }
