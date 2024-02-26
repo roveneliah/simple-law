@@ -3,17 +3,25 @@ import Link from 'next/link'
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { classNames } from './AppLayout'
+import { classNames } from './Sidebar'
 
-function AccountMenu(props) {
+export default function AccountMenu({ email, handleSignOut, userImageUrl }) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 ring-0 ring-inset ring-gray-300 hover:bg-gray-50/50">
-          Account
+        <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-sm font-semibold text-gray-900 ring-0 ring-inset ring-gray-300">
+          {/* Account
           <ChevronDownIcon
             className="-mr-1 h-5 w-5 text-gray-400"
             aria-hidden="true"
+          /> */}
+
+          <img
+            src={userImageUrl}
+            alt=""
+            width={40}
+            height={40}
+            className="mt-2 rounded-full bg-blue-100 p-0.5"
           />
         </Menu.Button>
       </div>
@@ -31,20 +39,20 @@ function AccountMenu(props) {
           <div className="px-4 py-3">
             <p className="text-sm">Signed in as</p>
             <p className="truncate text-sm font-medium text-gray-900">
-              {props.email}
+              {email}
             </p>
           </div>
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
                 <Link
-                  href="/app"
+                  href="/app/perks"
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'block px-4 py-2 text-sm',
                   )}
                 >
-                  🚀 Cases
+                  Perks
                 </Link>
               )}
             </Menu.Item>
@@ -57,7 +65,7 @@ function AccountMenu(props) {
                     'block px-4 py-2 text-sm',
                   )}
                 >
-                  🧟 Account settings
+                  Account settings
                 </Link>
               )}
             </Menu.Item>
@@ -65,13 +73,13 @@ function AccountMenu(props) {
               <Menu.Item>
                 {({ active }) => (
                   <button
-                    onClick={props.handleSignOut}
+                    onClick={handleSignOut}
                     className={classNames(
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'block w-full px-4 py-2 text-left text-sm',
                     )}
                   >
-                    ✈️ Sign out
+                    Sign out
                   </button>
                 )}
               </Menu.Item>

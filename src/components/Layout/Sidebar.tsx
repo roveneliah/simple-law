@@ -59,7 +59,7 @@ export const navigation = (caseId, view) => [
   {
     name: 'Lawyers',
     href: '/app/lawyers',
-    icon: UserIcon,
+    icon: UsersIcon,
     count: '20+',
     current: false,
   },

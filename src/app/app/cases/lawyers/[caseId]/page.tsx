@@ -11,6 +11,7 @@ import Link from 'next/link'
 import CaseProgress from '@/components/CaseProgress'
 import AutoFlipComponent from '@/components/AutoFlip'
 import { hoursLeft, hoursLeftStr } from '@/app/lawyers/invitations/page'
+import Image from 'next/image'
 
 export const useRecommendations = (caseId) => {
   // /api/cases/service/recommend?caseId=caseId
@@ -56,13 +57,20 @@ function ReviewInterviewsView({ caseId }) {
              </div> */}
         </div>
       </div>
-
       <div className="mt-16">
         <h1 className="flex flex-row items-center gap-2 text-3xl  font-bold leading-6 text-gray-900">
-          What we looked for.
-          <div className="flex items-center">
-            <SparklesIcon className="h-5 w-5" aria-hidden="true" />
-          </div>
+          What to watch out for...
+        </h1>
+        <p className="mt-2 text-lg text-gray-700">
+          A lot of personal injury lawyers take on too many clients. We looked
+          for lawyers who are selective about the cases they take on. We also
+          looked for lawyers who have over 50 wins, and who have experience in
+          negotiations.
+        </p>
+      </div>
+      <div className="mt-16">
+        <h1 className="flex flex-row items-center gap-2 text-3xl  font-bold leading-6 text-gray-900">
+          How we did it...
         </h1>
         <p className="mt-2 text-lg text-gray-700">
           A lot of personal injury lawyers take on too many clients. We looked
@@ -269,7 +277,8 @@ function ServiceView({ params: { caseId } }) {
         </div>
       )} */}
       {stageIndex === 2 && (
-        <div className="mt-16 gap-x-14 pb-32 lg:mx-1 lg:flex">
+        <div className="mt-16 w-full flex flex-row overflow-x-hidden gap-x-14 pb-32 lg:mx-1 lg:flex">
+        
           <div className="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
               Interviewing lawyers now.
@@ -290,14 +299,18 @@ function ServiceView({ params: { caseId } }) {
               </div>
             </div> */}
             <div className="mt-10 flex items-center gap-x-6">
-              <button className="rounded-md bg-gray-500/50 px-3.5 py-2.5 text-sm font-semibold text-white/85 shadow-sm ring-1 ring-gray-900/20 transition-all hover:bg-gray-500/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
+              {/* <button className="rounded-md bg-gray-500/50 px-3.5 py-2.5 text-sm font-semibold text-white/85 shadow-sm ring-1 ring-gray-900/20 transition-all hover:bg-gray-500/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
                 Learn more
-              </button>
+              </button> */}
               <Link
                 href="#"
-                className="text-sm font-semibold leading-6 text-gray-900"
+                className="text-sm flex flex-row items-center font-semibold leading-6 text-gray-900"
               >
-                How it works <span aria-hidden="true">→</span>
+                <span aria-hidden="true" className="text-2xl">
+                  -—>
+                  {/* → */}
+                </span>{' '}
+                <span className='ml-4 text-lgs -mb-1'>HOW IT WORKS</span>
               </Link>
             </div>
           </div>

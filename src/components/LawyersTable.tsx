@@ -71,9 +71,6 @@ export default function LawyersTable({ caseId }) {
           <div className="sm:flex-auto">
             <h1 className="flex flex-row items-center gap-2 text-3xl  font-bold leading-6 text-gray-900">
               Our Choices for You
-              <div className="flex items-center">
-                <SparklesIcon className="h-5 w-5" aria-hidden="true" />
-              </div>
             </h1>
             {invitations?.length > 1 ? (
               <p className="mt-2 text-lg text-gray-700">

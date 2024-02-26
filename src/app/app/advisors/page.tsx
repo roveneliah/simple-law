@@ -1,12 +1,12 @@
-'use client'
-import CaseList from '@/components/CaseList'
 import AppLayout from '@/components/Layout/AppLayout'
 
-export default function Cases() {
+export default function AdvisorsPage() {
   return (
     <AppLayout>
       <div className="h-[80vh]">
-        <CaseList />
+        <h3 className="text-6xl font-bold tracking-tighter text-gray-900">
+          Advisors
+        </h3>
       </div>
     </AppLayout>
   )
