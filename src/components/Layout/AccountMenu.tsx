@@ -35,10 +35,10 @@ export default function AccountMenu({ email, handleSignOut, userImageUrl }) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white/60 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="px-4 py-3">
-            <p className="text-sm">Signed in as</p>
-            <p className="truncate text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium tracking-tighter">Signed in as</p>
+            <p className="truncate text-sm font-medium tracking-tighter text-gray-900">
               {email}
             </p>
           </div>
@@ -49,7 +49,7 @@ export default function AccountMenu({ email, handleSignOut, userImageUrl }) {
                   href="/app/perks"
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm',
+                    'block px-4 py-2 text-sm font-semibold tracking-tighter',
                   )}
                 >
                   Perks
@@ -62,7 +62,7 @@ export default function AccountMenu({ email, handleSignOut, userImageUrl }) {
                   href="/app/account"
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm',
+                    'block px-4 py-2 text-sm font-semibold tracking-tighter',
                   )}
                 >
                   Account settings
@@ -76,7 +76,7 @@ export default function AccountMenu({ email, handleSignOut, userImageUrl }) {
                     onClick={handleSignOut}
                     className={classNames(
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block w-full px-4 py-2 text-left text-sm',
+                      'block w-full px-4 py-2 text-left text-sm font-semibold tracking-tighter',
                     )}
                   >
                     Sign out

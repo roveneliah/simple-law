@@ -38,6 +38,9 @@ function InvitationsList({}) {
 
   return (
     <div className="flex flex-col gap-4">
+      <div>
+        <h1 className="text-5xl font-bold tracking-tighter">Invitations</h1>
+      </div>
       <ul role="list" className="divide-y divide-gray-100">
         {invitations.map((invitation, i) => (
           <Link href={`/lawyers/invitations/${invitation.id}`} key={i}>

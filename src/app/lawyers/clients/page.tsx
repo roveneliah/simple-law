@@ -25,7 +25,7 @@ export default function LawyersHome() {
 
   return (
     <LawyerAppLayout>
-      <LawyerViewLayout viewName="Clients" />
+      {/* <LawyerViewLayout viewName="Clients" /> */}
       {/* <div className="mb-8">
         <div
           style={{
@@ -51,6 +51,9 @@ export default function LawyersHome() {
           ></iframe>
         </div>
       </div> */}
+      <div>
+        <h1 className="text-5xl font-bold tracking-tighter">Clients</h1>
+      </div>
 
       <AutoFlipComponent
         currentIndex={currentIndex}
@@ -59,7 +62,7 @@ export default function LawyersHome() {
       >
         <div className="w-full px-0">
           <div className="shadow bg-white">
-            <div className="px-4 py-5 sm:p-6">
+            <div className="px-0 py-5">
               <h3 className="text-base font-semibold leading-6 text-gray-900">
                 From ImpossibleLaw
               </h3>
@@ -96,7 +99,7 @@ export default function LawyersHome() {
           </div>
           {CLIENTS.map((invitation, i) => (
             <div key={i} className="shadow border-t bg-white">
-              <div className="px-4 py-5 sm:p-6">
+              <div className="px-0 py-5">
                 <h3 className="text-base font-semibold leading-6 text-gray-900">
                   {invitation.nickname}
                 </h3>

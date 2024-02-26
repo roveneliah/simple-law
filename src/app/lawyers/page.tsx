@@ -57,6 +57,9 @@ export default function LawyersHome() {
         className="flex w-full flex-col items-center"
       >
         <div className="w-full px-0">
+          <div>
+            <h1 className="text-5xl font-bold tracking-tighter">Feed</h1>
+          </div>
           <div className="shadow bg-white">
             <div className="px-4 py-5 sm:p-6">
               <h3 className="text-base font-semibold leading-6 text-gray-900">
