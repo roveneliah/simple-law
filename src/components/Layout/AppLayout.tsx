@@ -8,6 +8,7 @@ import castleBackgroundImage from '@/images/resources/castle.png'
 import Image from 'next/image'
 import { FALLBACK_AVATAR } from '@/data/dummy'
 import AccountMenu from './AccountMenu'
+import { getUserAvatarUrlById } from '@/app/app/account/page'
 
 function ChildViewHeader({ email, handleSignOut, caseId, userImageUrl }) {
   return (
@@ -70,6 +71,7 @@ function ChildViewHeader({ email, handleSignOut, caseId, userImageUrl }) {
 
 export default function AppLayout({ children, caseId }: any) {
   const user = useSession()?.user
+  const userImageUrl = getUserAvatarUrlById(user?.id)
   // const caseData = useCase(caseId)
   console.log(user)
 
@@ -103,7 +105,7 @@ export default function AppLayout({ children, caseId }: any) {
       <div className="z-10 flex w-full flex-col items-center py-4">
         <div className="flex w-full max-w-2xl flex-col overflow-y-auto overflow-x-hidden rounded-md">
           <ChildViewHeader
-            userImageUrl={FALLBACK_AVATAR}
+            userImageUrl={userImageUrl}
             email={user.email}
             caseId={caseId}
             handleSignOut={handleSignOut}

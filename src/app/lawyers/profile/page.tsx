@@ -6,7 +6,7 @@ import { useLawyerUser } from '@/lib/useUser'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { useEffect, useState } from 'react'
 
-const getLawyerAvatarUrlById = (lawyerId) => {
+const getLawyerAvatarUrlById = (lawyerId: string) => {
   const timestamp = new Date().getTime() // Current timestamp as cache buster
   return `${process.env.NEXT_PUBLIC_SUPABASE_LAWYERS_URL}/storage/v1/object/public/avatars/${lawyerId}/avatar?cacheBust=${timestamp}`
 }
@@ -29,7 +29,7 @@ async function updateLawyerImageUrl(lawyerId, fullPath) {
 export default function Profile() {
   const lawyer = useLawyerUser()
 
-  const [avatarUrl, setAvatarUrl] = useState(null)
+  const [avatarUrl, setAvatarUrl] = useState<string>('')
   useEffect(() => {
     setAvatarUrl(getLawyerAvatarUrlById(lawyer.id))
   }, [lawyer.id])
@@ -41,7 +41,7 @@ export default function Profile() {
 
       // Directly upload the file without reading it as text
       uploadPhoto({ blob: file, name: file.name })
-        .then(({ data, error }) => {
+        .then(({ data, error }: any) => {
           console.log(data, error)
           updateLawyerImageUrl(lawyer.id, data?.fullPath)
         })
@@ -49,7 +49,7 @@ export default function Profile() {
     }
   }
 
-  const uploadPhoto = async ({ blob, name }) => {
+  const uploadPhoto = async ({ blob, name }: any) => {
     if (!blob) {
       alert('Please select a photo to upload.')
       return

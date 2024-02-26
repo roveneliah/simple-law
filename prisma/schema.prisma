@@ -16,6 +16,7 @@ model User {
   phone        String?  @unique
   first        String?
   last         String?
+  imageUrl    String?
   cases        Case[]
   savedLawyers Lawyer[]
 

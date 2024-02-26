@@ -6,7 +6,27 @@ import { useUser } from '@/lib/useUser'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+export const getUserAvatarUrlById = (userId: string) => {
+  const timestamp = new Date().getTime() // Current timestamp as cache buster
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/user-avatars/${userId}/avatar?cacheBust=${timestamp}`
+}
+
+async function updateLawyerImageUrl(userId: string, fullPath: string) {
+  const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${fullPath}`
+  const { data, error } = await supabase
+    .from('User')
+    .update({ imageUrl })
+    .eq('id', userId)
+
+  if (error) {
+    console.error('Error updating lawyer profile:', error)
+    return { error }
+  }
+
+  return { data }
+}
 
 export default function Account() {
   const user = useUser()
@@ -48,6 +68,50 @@ export default function Account() {
     }
   }
 
+  const [avatarUrl, setAvatarUrl] = useState<string>('')
+  useEffect(() => {
+    setAvatarUrl(getUserAvatarUrlById(user.id))
+  }, [user.id])
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const file = e.target.files[0]
+
+      // Directly upload the file without reading it as text
+      uploadPhoto({ blob: file, name: file.name })
+        .then(({ data, error }: any) => {
+          console.log(data, error)
+          updateLawyerImageUrl(user.id, data?.fullPath)
+        })
+        .finally(() => setAvatarUrl(getUserAvatarUrlById(user.id)))
+    }
+  }
+
+  const uploadPhoto = async ({ blob, name }: any) => {
+    if (!blob) {
+      alert('Please select a photo to upload.')
+      return
+    }
+
+    console.log(blob)
+    try {
+      const { data, error } = await supabase.storage
+        .from('user-avatars')
+        .upload(`${user.id}/avatar`, blob, {
+          cacheControl: '3600',
+          upsert: true,
+        })
+
+      console.log('Uploaded photo:', data)
+      console.log(data, error)
+      return { data, error }
+    } catch (error) {
+      console.error('Error uploading photo:', error)
+      alert('Error uploading photo.')
+    }
+  }
+
   return (
     <AppLayout>
       <form onSubmit={handleSubmit} className="">
@@ -60,14 +124,27 @@ export default function Account() {
               Review and edit your personal information.
             </p>
           </div>
-          <div className="group">
-            <img
-              src={user?.avatar_url || FALLBACK_AVATAR}
-              alt="avatar"
-              width={100}
-              height={100}
-              className="rounded-full bg-blue-100 p-1 transition-all hover:bg-black/10"
-            />
+          <div className="mt-2 flex items-center gap-x-3">
+            <label
+              htmlFor="file-upload"
+              className="relative cursor-pointer rounded-md font-semibold text-indigo-600 focus-within:outline-none"
+            >
+              {/* <div className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <span>Change</span>
+              </div> */}
+              <img
+                src={avatarUrl}
+                className="h-24 w-24 rounded-full bg-gray-300 p-1 transition-all hover:bg-gray-600"
+                alt="avatar"
+              />
+              <input
+                id="file-upload"
+                name="file-upload"
+                type="file"
+                className="sr-only"
+                onChange={handleFileChange}
+              />
+            </label>
           </div>
         </div>
         <div className="mt-16 flex w-full flex-row">
@@ -87,7 +164,7 @@ export default function Account() {
               Notifications
             </button>
           </div>
-          <div className="w-full space-y-12">
+          <div className="w-full space-y-0">
             {view === 'user' && (
               <div className="w-full border-b border-gray-900/10">
                 <div className="grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -228,8 +305,8 @@ export default function Account() {
             )}
 
             {view === 'notifications' && (
-              <div className="border-b border-gray-900/10 pb-12">
-                <h2 className="text-base font-semibold leading-7 text-gray-900">
+              <div className=" border-gray-900/10 ">
+                <h2 className="text-3xl font-bold leading-7 tracking-tighter text-gray-900">
                   Notifications
                 </h2>
                 <p className="mt-1 text-sm leading-6 text-gray-600">
@@ -365,7 +442,7 @@ export default function Account() {
                 </div>
               </div>
             )}
-            <div className="border-b border-gray-900/10 pb-12">
+            <div className="">
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 {/* <div className="sm:col-span-4">
                 <label
@@ -391,7 +468,7 @@ export default function Account() {
                 </div>
               </div> */}
 
-                <div className="col-span-full">
+                {/* <div className="col-span-full">
                   <label
                     htmlFor="cover-photo"
                     className="block text-sm font-medium leading-6 text-gray-900"
@@ -424,7 +501,7 @@ export default function Account() {
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="mt-6 flex items-center justify-end gap-x-6">
