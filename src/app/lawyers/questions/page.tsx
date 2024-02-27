@@ -105,7 +105,10 @@ export default function QuestionsPage() {
 
   return (
     <LawyerAppLayout>
-      <LawyerViewLayout viewName="Questions" />
+      {/* <LawyerViewLayout viewName="Questions" /> */}
+      <div>
+        <h1 className="text-5xl font-bold tracking-tighter">Questions</h1>
+      </div>
       <div className="mt-4 rounded-md bg-blue-50 p-4">
         <div className="flex">
           <div className="flex-shrink-0">

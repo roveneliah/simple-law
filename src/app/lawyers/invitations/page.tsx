@@ -11,7 +11,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import Markdown from 'react-markdown'
 
-export const hoursLeft = (date) => {
+export const hoursLeft = (date: Date) => {
   const now = Date.now()
   const expiry = new Date(date + 'Z') // Append 'Z' if not already part of the date string  console.log(new Date(now), expiry)
   const hoursLeft = Math.floor((expiry - now) / (1000 * 60 * 60))
@@ -116,24 +116,8 @@ function InvitationsList({}) {
 export default function InvitationsView() {
   return (
     <LawyerAppLayout>
-      <LawyerViewLayout viewName="Invitations">
-        <form>
-          <div className="mt-8 space-y-12">
-            <div className="border-b border-gray-900/10 pb-12">
-              <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Invitations
-              </h2>
-              <p className="mt-1 text-sm leading-6 text-gray-600">
-                We've screened out the best cases for you. Check them out and
-                let us know if you're interested.
-              </p>
-            </div>
-          </div>
-        </form>
-        <div className="mt-8">
-          <InvitationsList />
-        </div>
-      </LawyerViewLayout>
+      <div className="mt-8"></div>
+      <InvitationsList />
     </LawyerAppLayout>
   )
 }

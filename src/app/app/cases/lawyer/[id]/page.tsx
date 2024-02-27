@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
-function Steps({ step, totalSteps }) {
+function Steps({ step, totalSteps }: any) {
   const steps = useMemo(() => {
     return Array(totalSteps)
       .fill()
@@ -72,7 +72,7 @@ function Steps({ step, totalSteps }) {
   )
 }
 
-function CaseView({ caseData, candidate = CANDIDATES[0] }) {
+function CaseView({ caseData, candidate = CANDIDATES[0] }: any) {
   const { id, name, description } = caseData || {
     id: null,
     name: null,

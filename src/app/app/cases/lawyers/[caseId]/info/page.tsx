@@ -1,5 +1,6 @@
 'use client'
 import CaseProgress from '@/components/CaseProgress'
+import CaseProgressVertical from '@/components/CaseProgressVertical'
 import AppLayout from '@/components/Layout/AppLayout'
 import { AVATARS, FALLBACK_AVATAR } from '@/data/dummy'
 import { supabase } from '@/lib/supabaseClient'
@@ -108,6 +109,7 @@ export default function InfoGatherPage({ params: { caseId } }) {
   return (
     <AppLayout caseId={caseId}>
       <CaseProgress stageIndex={0} />
+      <CaseProgressVertical stageIndex={0} />
       <div className="mt-16"></div>
 
       <div className="mb-8 flex flex-row justify-between">

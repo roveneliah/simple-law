@@ -1,19 +1,15 @@
 'use client'
-import CaseLayout from '@/components/CaseLayout'
 import LawyersTable from '@/components/LawyersTable'
 import AppLayout from '@/components/Layout/AppLayout'
-import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useCase } from '@/lib/useCase'
-import { useUser } from '@/lib/useUser'
 import { FaceSmileIcon, SparklesIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import CaseProgress from '@/components/CaseProgress'
-import AutoFlipComponent from '@/components/AutoFlip'
 import { hoursLeft, hoursLeftStr } from '@/app/lawyers/invitations/page'
-import Image from 'next/image'
+import CaseProgressVertical from '@/components/CaseProgressVertical'
 
-export const useRecommendations = (caseId) => {
+export const useRecommendations = (caseId:string) => {
   // /api/cases/service/recommend?caseId=caseId
   const [recommendations, setRecommendations] = useState([])
   useEffect(() => {
@@ -31,7 +27,7 @@ export const useRecommendations = (caseId) => {
   return recommendations
 }
 
-function ReviewInterviewsView({ caseId }) {
+function ReviewInterviewsView({ caseId }:any) {
   return (
     <div className="mb-32 mt-16 w-full">
       <div className="mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
@@ -46,17 +42,23 @@ function ReviewInterviewsView({ caseId }) {
           </p>
           {/* <div className="mt-10 flex items-center gap-x-6">
                <button className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                 Get started
+               Get started
                </button>
                <a
-                 href="#"
-                 className="text-sm font-semibold leading-6 text-gray-900"
+               href="#"
+               className="text-sm font-semibold leading-6 text-gray-900"
                >
-                 How it works <span aria-hidden="true">→</span>
+               How it works <span aria-hidden="true">→</span>
                </a>
-             </div> */}
+              </div> */}
         </div>
       </div>
+      <div className='flex flex-row w-full gap-16 justify-between'>
+        {/* <div className='mt-16 w-1/3'>
+
+      <CaseProgressVertical stageIndex={3} />
+        </div> */}
+      <div>
       <div className="mt-16">
         <h1 className="flex flex-row items-center gap-2 text-3xl  font-bold leading-6 text-gray-900">
           What to watch out for...
@@ -110,6 +112,8 @@ function ReviewInterviewsView({ caseId }) {
         </ul>
       </div> */}
     </div>
+    </div>
+    </div>
   )
 }
 
@@ -126,13 +130,16 @@ function ServiceView({ params: { caseId } }) {
 
   const [stageIndex, setStageIndex] = useState<null | number>(null)
 
+  const hrsLeft = hoursLeft(new Date(caseData?.interviewDueBy))
+  const timeLeftStr =
+    hrsLeft > 36 ? '2 days' : hrsLeft > 24 ? '1 day' : `${hrsLeft} hours`
   useEffect(() => {
     setStageIndex(
       !caseData?.readyForInvitation
         ? 0
         : !caseData?.Invitation?.length
           ? 1
-          : new Date(caseData?.interviewDueBy) < Date.now()
+          : hrsLeft < 0
             ? 3
             : 2,
     )
@@ -194,15 +201,6 @@ function ServiceView({ params: { caseId } }) {
       </AppLayout>
     )
   }
-
-  console.log(caseData?.interviewDueBy)
-  console.log(
-    Math.floor((caseData?.interviewDueBy - Date.now()) / (1000 * 60 * 60)),
-  )
-
-  const hrsLeft = hoursLeft(new Date(caseData?.interviewDueBy))
-  const timeLeftStr =
-    hrsLeft > 36 ? '2 days' : hrsLeft > 24 ? '1 day' : `${hrsLeft} hours`
 
   return (
     <AppLayout caseId={caseId}>

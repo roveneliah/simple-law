@@ -10,7 +10,7 @@ import { FALLBACK_AVATAR } from '@/data/dummy'
 import AccountMenu from './AccountMenu'
 import { getUserAvatarUrlById } from '@/app/app/account/page'
 
-function ChildViewHeader({ email, handleSignOut, caseId, userImageUrl }) {
+function ChildViewHeader({ email, handleSignOut, caseId, userImageUrl }: any) {
   return (
     <div className="mb-4 mt-8 flex w-full flex-row items-center justify-between pb-4">
       {/* <div className="w-1/3">
@@ -43,7 +43,7 @@ function ChildViewHeader({ email, handleSignOut, caseId, userImageUrl }) {
             advisors
           </Link>
         </div>
-        {/* <div>
+        <div>
           <Link
             href="/app/account"
             className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
@@ -56,14 +56,14 @@ function ChildViewHeader({ email, handleSignOut, caseId, userImageUrl }) {
               className="mt-2 rounded-full bg-blue-100 p-0.5"
             />
           </Link>
-        </div> */}
-        <div>
+        </div>
+        {/* <div>
           <AccountMenu
             userImageUrl={userImageUrl}
             email={email}
             handleSignOut={handleSignOut}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   )
@@ -73,7 +73,6 @@ export default function AppLayout({ children, caseId }: any) {
   const user = useSession()?.user
   const userImageUrl = getUserAvatarUrlById(user?.id)
   // const caseData = useCase(caseId)
-  console.log(user)
 
   if (!user) {
     return <div>Loading...</div>

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase, supabaseLawyers } from '@/lib/supabaseClient'
+import { Session } from '@supabase/supabase-js'
 
 export function useUser() {
   const [user, setUser] = useState(null)
@@ -45,8 +46,8 @@ export function useUser() {
   }
 }
 
-export const useSession = () => {
-  const [session, setSession] = useState(null)
+export const useSession = (): Session | null => {
+  const [session, setSession] = useState<Session | null>(null)
   const router = useRouter()
   useEffect(() => {
     supabase.auth.getSession().then(({ data, error }) => {
