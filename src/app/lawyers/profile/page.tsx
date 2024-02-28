@@ -26,6 +26,74 @@ async function updateLawyerImageUrl(lawyerId: string, fullPath: string) {
   return { data }
 }
 
+export function LawyerProfileHeader({ lawyer, status, view }: any) {
+  return (
+    <div className="flex flex-row justify-between">
+      <div className="w-fit">
+        <h1 className="text-5xl font-bold tracking-tighter">
+          Impossible{' '}
+          <span className="underline decoration-amber-300">Gold</span>
+        </h1>
+
+        <div className="flex flex-row flex-wrap gap-2 gap-y-0 text-4xl font-bold tracking-tighter text-gray-400">
+          <Link href={'/lawyers/account'}>
+            <p
+              className={`transition-all hover:text-gray-500 ${view === 'account' && 'text-gray-600'} `}
+            >
+              account settings
+            </p>
+          </Link>
+          <Link href={'/lawyers/perks'}>
+            <p
+              className={`transition-all hover:text-gray-500 ${view === 'perks' && 'text-gray-600'} `}
+            >
+              perks
+            </p>
+          </Link>
+          <Link href={'/lawyers/verification'}>
+            <p
+              className={`transition-all hover:text-gray-500 ${view === 'verification' && 'text-gray-600'} `}
+            >
+              verification
+            </p>
+          </Link>
+          <Link href={'/lawyers/profile'}>
+            <p
+              className={`transition-all hover:text-gray-500 ${view === 'profile' && 'text-gray-600'} `}
+            >
+              profile
+            </p>
+          </Link>
+        </div>
+      </div>
+      <div className="h-48 w-2/5 rounded-md border border-slate-900 bg-slate-600 shadow-sm shadow-black/50">
+        <div className="px-4 py-4">
+          <div className="flex flex-row gap-2">
+            <p className="font-bold tracking-tighter text-gray-100">
+              {lawyer.first} {lawyer.last}
+            </p>
+            <p className="w-fit bg-amber-400 px-1 text-sm font-bold capitalize tracking-tighter text-black">
+              {status}
+            </p>
+          </div>
+          <p className="text-sm font-bold tracking-tighter text-gray-400">
+            Member Since '24
+          </p>
+          <p className="text-sm font-bold tracking-tighter text-gray-400">
+            4 Cases
+          </p>
+          <p className="text-sm font-bold tracking-tighter text-gray-400">
+            12 Clients
+          </p>
+          <p className="text-sm font-bold tracking-tighter text-gray-400">
+            $50000 Earned
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Profile() {
   const lawyer = useLawyerUser()
 
@@ -78,47 +146,9 @@ export default function Profile() {
   console.log(avatarUrl)
   return (
     <LawyerAppLayout>
-      <form className="mt-8">
+      <form className="mt-16">
         <div className="space-y-0">
-          <div className="flex flex-row justify-between">
-            <div className="w-fit">
-              <h1 className="text-5xl font-bold tracking-tighter">
-                Impossible{' '}
-                <span className="underline decoration-amber-300">Gold</span>
-              </h1>
-
-              <div className="flex flex-row gap-2 text-4xl font-bold tracking-tighter text-gray-400">
-                <Link href={'/lawyers/account'}>
-                  <p className="transition-all hover:text-gray-500">
-                    account settings
-                  </p>
-                </Link>
-                <Link href={'/lawyers/perks'}>
-                  <p className="transition-all hover:text-gray-500">perks</p>
-                </Link>
-                <Link href={'/lawyers/verification'}>
-                  <p className="transition-all hover:text-gray-500">
-                    verification
-                  </p>
-                </Link>
-              </div>
-            </div>
-            <div className="h-48 w-2/5 rounded-md border border-slate-900 bg-slate-600 shadow-sm shadow-black/50">
-              <div className="px-4 py-4">
-                <div className="flex flex-row gap-2">
-                  <p className="font-bold tracking-tighter text-gray-100">
-                    {lawyer.first} {lawyer.last}
-                  </p>
-                  <p className="w-fit bg-amber-400  px-1 text-sm font-bold tracking-tighter text-black">
-                    Gold
-                  </p>
-                </div>
-                <p className="text-sm font-bold tracking-tighter text-gray-400">
-                  Member Since '24
-                </p>
-              </div>
-            </div>
-          </div>
+          <LawyerProfileHeader lawyer={lawyer} status={'Gold'} view="profile" />
           <div className="border-b border-gray-900/10 pb-12">
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-4">

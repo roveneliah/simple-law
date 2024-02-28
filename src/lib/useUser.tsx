@@ -76,57 +76,65 @@ export const useSession = (): Session | null => {
 }
 
 export const useLawyerUser = () => {
+  const [session, setSession] = useState<Session | null>(null)
   const [user, setUser] = useState(null)
   const router = useRouter()
 
   useEffect(() => {
-    supabaseLawyers.auth.getSession().then(({ data, error }) => {
-      const session = data?.session
-      // if (!session) {
-      //   router.push('/lawyers/login')
-      // }
+    if (!session?.user?.id) {
+      console.log("no session, can't find lawyer user:", session)
+    } else {
+      console.log('trying to get lawyer from db with id:', session?.user?.id)
+      supabaseLawyers.auth.getSession().then(({ data, error }) => {
+        const session = data?.session
+        // if (!session) {
+        //   router.push('/lawyers/login')
+        // }
 
-      // get the user from db given id
-      supabase
-        .from('Lawyer')
-        .select(`*, Invitation(*, Case(*, User(*)))`)
-        .eq('id', session?.user?.id)
-        .single()
-        .then(({ data, error }) => {
-          // create if doesn't exist
-          if (!data) {
-            console.log('creating lawyer...')
-            supabase
-              .from('Lawyer')
-              .upsert([
-                {
-                  id: session?.user?.id,
-                  email: session?.user?.email,
-                },
-              ])
-              .then(({ data, error }) => {
-                setUser(data || null)
-              })
-          } else return { data, error }
-        })
-        .then(({ data, error }) => {
-          setUser(data || null)
-        })
-    })
+        // get the user from db given id
+        supabase
+          .from('Lawyer')
+          .select(`*, Invitation(*, Case(*, User(*))), Agreement(*)`)
+          .eq('id', session?.user?.id)
+          .single()
+          .then(({ data, error }) => {
+            // create if doesn't exist
+            if (!data) {
+              console.log('creating lawyer...')
+              supabase
+                .from('Lawyer')
+                .upsert([
+                  {
+                    id: session?.user?.id,
+                    email: session?.user?.email,
+                  },
+                ])
+                .then(({ data, error }) => {
+                  setUser(data || null)
+                })
+            } else return { data, error }
+          })
+          .then(({ data, error }) => {
+            setUser(data || null)
+          })
+      })
+    }
+  }, [session])
 
+  useEffect(() => {
     const { data: authListener } = supabaseLawyers.auth.onAuthStateChange(
       (_event, session) => {
         if (!session) {
           router.push('/lawyers/login')
         }
-        setUser(session?.user || null)
+        setSession(session)
       },
     )
 
     return () => {
       authListener?.subscription.unsubscribe()
     }
-  }, [router])
+  }, [])
 
   return {
     first: '',

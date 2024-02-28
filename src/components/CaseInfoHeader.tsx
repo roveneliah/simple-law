@@ -62,8 +62,6 @@ export default function CaseInfoHeader({ caseId, view }) {
 
   console.log(view)
 
-  console.log(liveTabs)
-
   return (
     <div className="">
       <h3 className="text-4xl font-medium leading-6 text-gray-900">

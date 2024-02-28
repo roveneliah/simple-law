@@ -7,8 +7,7 @@ import {
   PaperClipIcon,
   PhotoIcon,
 } from '@heroicons/react/24/outline'
-import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const parseCaseData = (caseData) => {
   const { id, name, description } = caseData || {
@@ -85,16 +84,44 @@ function UploadView({ addFile }) {
   )
 }
 
-export function Files({ files, setFiles, fetchFiles }) {
-  const caseId = usePathname().split('/').pop()
+export const useFiles = (userId: string, caseId: string) => {
+  const [files, setFiles] = useState([])
+  const [nonce, setNonce] = useState<number>(0)
+
+  const fetchFiles = async (userId, caseId) => {
+    const { data, error } = await supabase.storage
+      .from('caseFiles')
+      .list(`${userId}/${caseId}`)
+
+    console.log('fetched files', data, error)
+
+    return { data, error }
+  }
+
+  useEffect(() => {
+    if (userId && caseId) {
+      console.log('fetching files', userId, caseId)
+      fetchFiles(userId, caseId).then(({ data, error }: any) => setFiles(data))
+    } else {
+      console.log("not fetching files because userId or caseId isn't set")
+    }
+  }, [userId, caseId, nonce])
+
+  console.log(files)
+
+  return { files, setFiles, fetchFiles: () => setNonce(Math.random()) }
+}
+
+export function Files({ caseId }) {
   const user = useUser()
-  const caseData = useCase(caseId)
+  const { files, setFiles, fetchFiles } = useFiles(user.id, caseId)
+  // const caseData = useCase(caseId)
   const addFile = (file) => {
     // add to supabase document store
     console.log('trying to add file to supabase')
     supabase.storage
       .from('caseFiles')
-      .upload(`${user.id}/${caseData.id}/${file.name}`, file, {
+      .upload(`${user.id}/${caseId}/${file.name}`, file, {
         cacheControl: '3600',
         upsert: false,
       })
@@ -113,7 +140,7 @@ export function Files({ files, setFiles, fetchFiles }) {
     // delete from supabase
     supabase.storage
       .from('caseFiles')
-      .remove(`${user.id}/${caseData.id}/${file.name}`)
+      .remove(`${user.id}/${caseId}/${file.name}`)
       .then((response) => {
         console.log('response from supabase')
         console.log(response)

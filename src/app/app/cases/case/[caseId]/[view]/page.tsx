@@ -21,26 +21,26 @@ function InfoForm({ caseId, view }) {
   const user = useUser()
   const caseData = useCase(caseId)
 
-  const [files, setFiles] = useState([])
+  // const [files, setFiles] = useState([])
 
-  const fetchFiles = async () => {
-    console.log(user?.id, caseId)
-    const { data, error } = await supabase.storage
-      .from('caseFiles')
-      .list(`${user?.id}/${caseId}`)
+  // const fetchFiles = async () => {
+  //   console.log(user?.id, caseId)
+  //   const { data, error } = await supabase.storage
+  //     .from('caseFiles')
+  //     .list(`${user?.id}/${caseId}`)
 
-    if (error) {
-      console.log('error', error)
-    } else {
-      console.log('setting files', data)
-      setFiles(data)
-    }
-  }
+  //   if (error) {
+  //     console.log('error', error)
+  //   } else {
+  //     console.log('setting files', data)
+  //     setFiles(data)
+  //   }
+  // }
 
-  useEffect(() => {
-    console.log('fetching files')
-    if (user?.id && caseId) fetchFiles()
-  }, [user?.id, caseId])
+  // useEffect(() => {
+  //   console.log('fetching files')
+  //   if (user?.id && caseId) fetchFiles()
+  // }, [user?.id, caseId])
 
   // make sure there is userid??
   const [loading, setLoading] = useState(false)
@@ -332,11 +332,7 @@ function InfoForm({ caseId, view }) {
             )}
             {view === 'documents' && (
               <div className="mt-8">
-                <Files
-                  files={files}
-                  setFiles={setFiles}
-                  fetchFiles={fetchFiles}
-                />
+                <Files caseId={caseId} />
               </div>
             )}
             <div className="mb-64 mt-6 flex items-center justify-end gap-x-6">

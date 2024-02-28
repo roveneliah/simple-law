@@ -1,27 +1,36 @@
 'use client'
 import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
-import LawyerViewLayout from '@/components/LawyerViewLayout'
-import Link from 'next/link'
 import AutoFlipComponent from '@/components/AutoFlip'
 import { useState } from 'react'
+import { useLawyerUser } from '@/lib/useUser'
 
 export const CLIENTS = [
   {
     caseId: '1234',
+    name: 'John Doe',
+    status: 'Weekly update due in 3 days',
     nickname: 'Raul v. Acme, $200000, San Diego, CA',
     note: 'Hey John, client seeking $200000 damages, based in San Diego.  Client ready to start immediately.',
     interviewBy: new Date(),
     action: 'Complete Weekly Update',
   },
   {
+    name: 'Jane Doe',
+    status: 'Weekly update due in 3 days',
     caseId: '1353424534',
     nickname: 'Mary L. — Divorce, Chula Vista, CA',
     note: 'Client looking for a divorce lawyer, based in Chula Vista.',
   },
 ]
 
+const useLawyerClients = (id) => {
+  return CLIENTS
+}
+
 export default function LawyersHome() {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const { id } = useLawyerUser()
+  const clients = useLawyerClients(id)
 
   return (
     <LawyerAppLayout>
@@ -61,52 +70,16 @@ export default function LawyersHome() {
         className="flex w-full flex-col items-center"
       >
         <div className="w-full px-0">
-          <div className="shadow bg-white">
-            <div className="px-0 py-5">
-              <h3 className="text-base font-semibold leading-6 text-gray-900">
-                From ImpossibleLaw
-              </h3>
-              <div className="mt-2 max-w-xl text-sm text-gray-500">
-                <p>Hey Jerri,</p>
-                <p className="mt-4">You have 2 weekly updates due soon.</p>
-                <p className="mt-4">
-                  We also have {CLIENTS.length} invitation
-                  {CLIENTS.length > 1 && 's'} for you to check out. You've been
-                  great about responding to these in detail, so we've started
-                  sending your top tier cases.
-                </p>
-                <p className="mt-4">Keep it up!</p>
-              </div>
-              {/* <div className="mt-3 text-sm leading-6">
-                <a
-                  href="#"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
-                >
-                  Complete Weekly Updates
-                  <span aria-hidden="true"> &rarr;</span>
-                </a>
-              </div>
-              <div className="mt-3 text-sm leading-6">
-                <a
-                  href="#"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
-                >
-                  View CLIENTS
-                  <span aria-hidden="true"> &rarr;</span>
-                </a>
-              </div> */}
-            </div>
-          </div>
-          {CLIENTS.map((invitation, i) => (
-            <div key={i} className="shadow border-t bg-white">
+          {clients.map((client, i) => (
+            <div key={i} className="">
               <div className="px-0 py-5">
                 <h3 className="text-base font-semibold leading-6 text-gray-900">
-                  {invitation.nickname}
+                  {client.name}
                 </h3>
                 <div className="mt-2 max-w-xl text-sm text-gray-500">
-                  <p>{invitation.note}</p>
+                  <p>{client.status}</p>
                 </div>
-                {invitation.action && (
+                {/* {invitation.action && (
                   <div className="mt-3 text-sm leading-6">
                     <a
                       href="#"
@@ -116,7 +89,7 @@ export default function LawyersHome() {
                       <span aria-hidden="true"> &rarr;</span>
                     </a>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           ))}

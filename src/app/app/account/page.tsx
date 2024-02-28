@@ -1,11 +1,7 @@
 'use client'
 import AppLayout from '@/components/Layout/AppLayout'
-import { FALLBACK_AVATAR } from '@/data/dummy'
 import { supabase } from '@/lib/supabaseClient'
 import { useUser } from '@/lib/useUser'
-import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
-import Image from 'next/image'
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export const getUserAvatarUrlById = (userId: string) => {

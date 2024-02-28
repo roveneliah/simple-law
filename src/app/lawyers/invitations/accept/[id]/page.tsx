@@ -63,7 +63,7 @@ export default function OffersView() {
   useEffect(() => {
     supabase
       .from('Invitation')
-      .select('*, Case(*), Lawyer(*)')
+      .select('*, Case(*, User(*)), Lawyer(*)')
       .eq('id', invitationId)
       .single()
       .then(({ data, error }) => {
@@ -71,8 +71,6 @@ export default function OffersView() {
         setInvitation(data)
       })
   }, [])
-
-  // console.log(invitation)
 
   const router = useRouter()
 
@@ -93,14 +91,14 @@ export default function OffersView() {
         return any || service.selected
       }, false),
     )
-    if (
-      !selectedServices.reduce((any: boolean, service) => {
-        return any || service.selected
-      }, false)
-    ) {
-      alert('Please select at least one service to accept invitation.')
-      return
-    }
+    // if (
+    //   !selectedServices.reduce((any: boolean, service) => {
+    //     return any || service.selected
+    //   }, false)
+    // ) {
+    //   alert('Please select at least one service to accept invitation.')
+    //   return
+    // }
 
     if (formData.getAll('agreements').length !== agreements.length + 1) {
       alert('Please agree to all the agreements.')
@@ -140,7 +138,7 @@ export default function OffersView() {
     const { data, error: supabaseError } = await supabase
       .from('Invitation')
       .update({
-        status: 'offered',
+        status: 'accepted',
         lawyerComment,
         strategyReview,
         // ourAnalysis,
@@ -163,7 +161,7 @@ export default function OffersView() {
     //   .select()
     // console.log('offered', insertedServices, insertError)
 
-    // router.push(`/lawyers/invitations/${invitationId}`)
+    router.push(`/lawyers/invitations/${invitationId}`)
   }
 
   const [loading, setLoading] = useState(true)
@@ -174,7 +172,7 @@ export default function OffersView() {
   if (loading) {
     return (
       <LawyerAppLayout>
-        <LawyerViewLayout viewName="Questions" />
+        {/* <LawyerViewLayout viewName="Questions" /> */}
 
         <div className="mt-8 flex flex-col items-center">
           <FaceSmileIcon
@@ -194,9 +192,29 @@ export default function OffersView() {
 
   return (
     <LawyerAppLayout>
-      <form onSubmit={handleSendOffer}>
-        <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-12">
+      <div className="flex flex-row gap-1">
+        <p className="text-xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
+          Litigation
+        </p>
+        <p className="font-bold">.</p>
+        <p className="text-xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
+          $50,000 Dispute
+        </p>
+        <p className="font-bold">.</p>
+        <p className="text-xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
+          $5,000 Estimate
+        </p>
+      </div>
+      <h3 className="text-3xl font-bold tracking-tighter">
+        {invitation.Case.title}
+      </h3>
+      <p className="font-semibold tracking-tighter">
+        Client — {invitation?.Case?.User?.first} {invitation?.Case?.User?.last}
+      </p>
+      {invitation?.status !== 'accepted' ? (
+        <form onSubmit={handleSendOffer}>
+          <div className="">
+            {/* <div className="border-b border-gray-900/10 pb-12">
             <p className="mt-1 text-sm leading-6 text-gray-600">
               Due in {hoursLeftStr(invitation.dueBy)}.
             </p>
@@ -206,8 +224,8 @@ export default function OffersView() {
             <p className="mt-4 text-base text-gray-600">
               {invitation?.Case?.description}
             </p>
-          </div>
-          {/* <div className="border-b border-gray-900/10 pb-12">
+          </div> */}
+            {/* <div className="border-b border-gray-900/10 pb-12">
             <h2 className="text-base font-semibold leading-7 text-gray-900">
               Services
             </h2>
@@ -243,24 +261,51 @@ export default function OffersView() {
               </fieldset>
             </div>
           </div> */}
-          <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
-              ImpossibleLaw Partner Agreements
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              Please reaffirm your commitment to our quality guarantees.
-            </p>
-            <div className="space-y-10">
-              <fieldset>
-                {/* <legend className="text-sm font-semibold leading-6 text-gray-900">
+
+            <div className="mt-16">
+              <h2 className="text-2xl font-bold leading-7 tracking-tighter text-gray-900">
+                ImpossibleLaw Partner Agreements
+              </h2>
+              <p className="mt-2 max-w-xl text-lg font-semibold leading-6 tracking-tight text-gray-600">
+                Great service means great leads. Help build your inbound funnel
+                by committing to our service agreements.
+              </p>
+              <div className="mt-4 space-y-10">
+                <fieldset>
+                  {/* <legend className="text-sm font-semibold leading-6 text-gray-900">
                   By Email
                 </legend> */}
-                <div className="mt-6 space-y-6">
-                  {agreements.map((agreement, index) => (
-                    <div key={index} className="relative flex gap-x-3">
+                  <div className="mt-6 space-y-6">
+                    {agreements.map((agreement, index) => (
+                      <div key={index} className="relative flex gap-x-3">
+                        <div className="flex h-6 items-center">
+                          <input
+                            id={`agreement-${index}`}
+                            name="agreements"
+                            type="checkbox"
+                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          />
+                        </div>
+                        <div className="text-sm leading-6">
+                          <label
+                            htmlFor={`agreement-${index}`}
+                            className="font-medium text-gray-900"
+                          >
+                            {agreement.label}
+                          </label>
+                          <p className="text-gray-500">
+                            {agreement.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                    <div
+                      key={agreements.length}
+                      className="relative flex gap-x-3"
+                    >
                       <div className="flex h-6 items-center">
                         <input
-                          id={`agreement-${index}`}
+                          id={`agreement-${agreements.length}`}
                           name="agreements"
                           type="checkbox"
                           className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
@@ -268,93 +313,75 @@ export default function OffersView() {
                       </div>
                       <div className="text-sm leading-6">
                         <label
-                          htmlFor={`agreement-${index}`}
+                          htmlFor={`agreement-${agreements.length}`}
                           className="font-medium text-gray-900"
                         >
-                          {agreement.label}
+                          Impossible Agreement
                         </label>
-                        <p className="text-gray-500">{agreement.description}</p>
+                        <p className="text-gray-500">
+                          I have read and agree to ImpossibleLaw's{' '}
+                          <a
+                            target="_blank"
+                            href="https://www.google.com"
+                            className="font-bold text-indigo-600"
+                          >
+                            Service Agreement
+                          </a>
+                          .
+                        </p>
                       </div>
                     </div>
-                  ))}
-                  <div
-                    key={agreements.length}
-                    className="relative flex gap-x-3"
-                  >
-                    <div className="flex h-6 items-center">
-                      <input
-                        id={`agreement-${agreements.length}`}
-                        name="agreements"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                      />
-                    </div>
-                    <div className="text-sm leading-6">
-                      <label
-                        htmlFor={`agreement-${agreements.length}`}
-                        className="font-medium text-gray-900"
-                      >
-                        Impossible Agreement
-                      </label>
-                      <p className="text-gray-500">
-                        I have read and agree to ImpossibleLaw's{' '}
-                        <a
-                          target="_blank"
-                          href="https://www.google.com"
-                          className="font-bold text-indigo-600"
-                        >
-                          Service Agreement
-                        </a>
-                        .
-                      </p>
-                    </div>
                   </div>
-                </div>
-              </fieldset>
+                </fieldset>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-          <div className="col-span-full">
-            <label
-              htmlFor="intro"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Introduction
-            </label>
-            <div className="mt-2">
-              <textarea
-                id="intro"
-                name="intro"
-                rows={10}
-                className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                defaultValue={invitation?.lawyerComment}
-              />
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="col-span-full">
+              <label
+                htmlFor="intro"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Introduction
+              </label>
+              <div className="mt-2">
+                <textarea
+                  id="intro"
+                  name="intro"
+                  rows={10}
+                  className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  defaultValue={invitation?.lawyerComment}
+                />
+              </div>
+              <p className="mt-3 text-sm leading-6 text-gray-600">
+                We will let the client know why you're a great fit, but you're
+                welcome to leave a friendly note. You will only be charged if
+                the client accepts your offer.
+              </p>
             </div>
-            <p className="mt-3 text-sm leading-6 text-gray-600">
-              We will let the client know why you're a great fit, but you're
-              welcome to leave a friendly note. You will only be charged if the
-              client accepts your offer.
-            </p>
           </div>
-        </div>
 
-        <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button
+          <div className="mt-6 flex items-center justify-end gap-x-6">
+            {/* <button
             type="submit"
             className="text-sm font-semibold leading-6 text-gray-900"
           >
             Save
-          </button>
-          <button
-            type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Send Offer
-          </button>
+          </button> */}
+            <button
+              type="submit"
+              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Send Offer
+            </button>
+          </div>
+        </form>
+      ) : (
+        <div className="mt-4">
+          <p>Awaiting client response...</p>
         </div>
-      </form>
+      )}
     </LawyerAppLayout>
   )
 }

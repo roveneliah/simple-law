@@ -1,5 +1,6 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextRequest, NextResponse } from 'next/server'
+import { supabaseLawyers } from './lib/supabaseClient'
 
 export async function middleware(req: NextRequest) {
   console.log('calling middleware...')
@@ -12,12 +13,16 @@ export async function middleware(req: NextRequest) {
   const { data: session, error: sessionError }: any =
     await supabase.auth.getSession()
   const { data: user, error: userError } = await supabase.auth.getUser()
+  const { data: lawyerSession, error: lawyerSessionError }: any =
+    await supabaseLawyers.auth.getSession()
+  const { data: lawyerUser, error: lawyerUserError } =
+    await supabaseLawyers.auth.getUser()
 
   // If there's no session or user, or if there's an error, block the request
-  if (!session || !user || sessionError || userError) {
+  if ((!session && !lawyerSession) || sessionError || lawyerSessionError) {
     // You can customize this response based on your needs
     // E.g., redirect to login, return a 401 Unauthorized response, etc.
-    console.log('Authentication required. Blocking request.')
+    console.log('No user auth found.')
 
     // Define your secret API key (this should be stored securely, e.g., in environment variables)
     const SECRET_API_KEY = process.env.SECRET_API_KEY

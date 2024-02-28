@@ -1,6 +1,8 @@
 'use client'
+import { Files, useFiles } from '@/components/CaseViews/Files'
 import AppLayout from '@/components/Layout/AppLayout'
 import { useCase } from '@/lib/useCase'
+import { useUser } from '@/lib/useUser'
 import Link from 'next/link'
 import { useEffect } from 'react'
 
@@ -8,6 +10,7 @@ import { useEffect } from 'react'
 export default function CaseView({ params: { caseId } }) {
   // trigger new questions if none already
   const caseData = useCase(caseId)
+  const user = useUser()
 
   useEffect(() => {
     const questions = caseData?.Question
@@ -27,9 +30,14 @@ export default function CaseView({ params: { caseId } }) {
     }
   }, [caseData?.Question])
 
+  const { files } = useFiles(user.id, caseId)
+
   return (
     <AppLayout>
       <div className="">
+        <button className="text-md font-bold tracking-tighter text-gray-500 transition-colors hover:text-gray-600">
+          impossible free
+        </button>
         <h1 className="text-5xl font-bold tracking-tighter text-gray-900">
           {caseData?.title}
         </h1>
@@ -96,7 +104,15 @@ export default function CaseView({ params: { caseId } }) {
           Documents
         </h3>
         <div className="mt-2 flex flex-row gap-2">
-          <div className="h-64 w-52 border-spacing-7 rounded-md border border-dashed border-gray-900"></div>
+          {files.map((file) => (
+            <div className="relative h-64 w-52 flex-shrink-0 border-spacing-7 rounded-md border border-dashed border-gray-900">
+              <div className="overlay-box absolute bottom-0 left-0 flex h-1/3 w-full flex-col justify-center bg-black/70 p-2 text-center text-white">
+                <p className="text-xl font-bold tracking-tighter text-gray-300 transition-all hover:text-gray-900">
+                  {file.name}
+                </p>
+              </div>
+            </div>
+          ))}
           <div className="h-64 w-52 border-spacing-7 rounded-md border border-dashed border-gray-900"></div>
           <div className="h-64 w-52 border-spacing-7 rounded-md border border-dashed border-gray-900"></div>
         </div>

@@ -192,14 +192,14 @@ export default function LawyerAppLayout({
             </div>
             <div className="flex flex-row items-center gap-4">
               <div className="flex flex-row items-center justify-end gap-4 tracking-tighter">
-                <div>
+                {/* <div>
                   <Link
                     href="/lawyers"
                     className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
                   >
                     feed
                   </Link>
-                </div>
+                </div> */}
 
                 <div>
                   <Link
@@ -223,6 +223,14 @@ export default function LawyerAppLayout({
                     className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
                   >
                     questions
+                  </Link>
+                </div>
+                <div>
+                  <Link
+                    href="/lawyers/questions"
+                    className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
+                  >
+                    tasks
                   </Link>
                 </div>
                 <div>

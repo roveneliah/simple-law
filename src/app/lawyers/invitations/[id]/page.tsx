@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Markdown from 'react-markdown'
-import { hoursLeftStr } from '../page'
+import { hoursLeft, hoursLeftStr } from '../page'
 import remarkGfm from 'remark-gfm'
 import rehypeReact from 'rehype-react'
 import SyntaxHighlighter from 'react-syntax-highlighter'
@@ -108,17 +108,62 @@ export default function InvitationsView() {
   //   return <AcceptedView />
   // }
 
-  console.log(invitation.comment)
-
   return (
     <LawyerAppLayout>
-      <p>{hoursLeftStr(invitation.dueBy)} to accept.</p>
+      {/* {hoursLeft(invitation?.dueBy) > 0 ? (
+        <p>{hoursLeftStr(invitation.dueBy)} to accept.</p>
+      ) : (
+        <p className="text-2xl font-bold tracking-tighter text-gray-900">
+          EXPIRED
+        </p>
+      )} */}
       {/* <p>{invitation.status}</p> */}
-      <div className="mt-4">
+      <div className="flex flex-row gap-1">
+        <p className="text-xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
+          Litigation
+        </p>
+        <p className="font-bold">.</p>
+        <p className="text-xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
+          $50,000 Dispute
+        </p>
+        <p className="font-bold">.</p>
+        <p className="text-xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
+          $5,000 Estimate
+        </p>
+      </div>
+      <h3 className="text-5xl font-bold tracking-tighter">
+        {invitation.Case.title}
+      </h3>
+
+      <div className="flex flex-row gap-2 text-4xl">
+        <Link
+          href={`/lawyers/invitations/accept/${invitationId}`}
+          className="font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700"
+        >
+          Accept
+        </Link>
+
+        <p
+          onClick={() => declineInvitation(invitationId)}
+          className="font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700"
+        >
+          Decline
+        </p>
+
+        <Link href={nextIndexLink}>
+          <p className="font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
+            Skip
+          </p>
+        </Link>
+      </div>
+
+      <div className="mt-4 max-w-2xl text-lg font-semibold">
         <Markdown
           remarkPlugins={[remarkGfm]}
           components={{
             p: ({ children }) => <p className="mt-4">{children}</p>,
+            h1: ({ children }) => <h1 className="text-3xl">{children}</h1>,
+            h2: ({ children }) => <h2 className="text-2xl">{children}</h2>,
             h3: ({ children }) => <h3 className="text-xl">{children}</h3>,
             li: ({ children }) => <li className="">{children}</li>,
             ul: ({ children }) => (
@@ -132,7 +177,7 @@ export default function InvitationsView() {
         />
       </div>
       {/* render created at as readable date */}
-      <div className="mt-8 flex w-full flex-row justify-center gap-4">
+      {/* <div className="mt-8 flex w-full flex-row justify-center gap-4">
         <button
           type="button"
           onClick={() => declineInvitation(invitationId)}
@@ -152,7 +197,7 @@ export default function InvitationsView() {
         >
           Accept Lead
         </Link>
-      </div>
+      </div> */}
     </LawyerAppLayout>
   )
 }
