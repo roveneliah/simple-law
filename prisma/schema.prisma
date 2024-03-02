@@ -23,7 +23,7 @@ model User {
 }
 
 model Lawyer {
-  id          String    @id @default(uuid())
+  id          String    @id @default(uuid()) // todo: right now, linked to authId, but this means we can't add lawyers that aren't members
   email       String    @unique
   phone       String?   @unique
   first       String?
@@ -35,10 +35,32 @@ model Lawyer {
   services    Service[]
   inquiries   Inquiry[]
 
+  // membership info
+  barMemberships BarMembership[]
+
+  // stripe info
+  stripeCustomerId String?
+
   agreements Agreement[]
 
   verification LawyerVerificationRequest[]
   invitations  Invitation[]
+}
+
+model BarMembership {
+  id        String   @id @default(uuid())
+  barNumber String   @unique
+  state     String
+  lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
+  lawyerId  String
+
+  // verification
+  verified  Boolean @default(false)
+  verifiedAt DateTime?
+  verifiedBy String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Service {

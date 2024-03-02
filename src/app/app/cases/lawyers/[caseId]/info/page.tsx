@@ -49,13 +49,13 @@ export default function InfoGatherPage({ params: { caseId } }) {
     }
 
     // Add an event listener to refocus the input whenever it loses focus
-    inputElement.addEventListener('blur', keepFocus)
+    inputElement?.addEventListener('blur', keepFocus)
 
     // Cleanup: Remove the event listener when the component unmounts
     return () => {
-      inputElement.removeEventListener('blur', keepFocus)
+      inputElement?.removeEventListener('blur', keepFocus)
     }
-  }, [index])
+  }, [index, inputRef.current])
 
   const router = useRouter()
   const handleSubmit = (e) => {
@@ -109,7 +109,7 @@ export default function InfoGatherPage({ params: { caseId } }) {
   return (
     <AppLayout caseId={caseId}>
       <CaseProgress stageIndex={0} />
-      <CaseProgressVertical stageIndex={0} />
+      {/* <CaseProgressVertical stageIndex={0} /> */}
       <div className="mt-16"></div>
 
       <div className="mb-8 flex flex-row justify-between">

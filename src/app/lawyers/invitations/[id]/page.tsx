@@ -51,8 +51,8 @@ function AcceptedView() {
   )
 }
 
-export default function InvitationsView() {
-  const invitationId = usePathname().split('/').pop()
+export default function InvitationsView({ params: { id } }) {
+  const invitationId = id
   const [invitationIds, setInvitationIds] = useState([])
   const router = useRouter()
 
@@ -73,15 +73,17 @@ export default function InvitationsView() {
     ? `/lawyers/invitations/${nextId}`
     : '/lawyers/invitations'
 
-  const declineInvitation = async (id: UUID, response = null) => {
+  const declineInvitation = async (id: UUID) => {
     // mark invitation as declined
     const { data, error } = await supabase
       .from('Invitation')
-      .update({ status: 'declined', response })
+      .update({ status: 'declined' })
       .eq('id', id)
       .single()
 
-    router.push(nextIndexLink)
+    console.log({ data, error })
+
+    // router.push(nextIndexLink)
   }
 
   // get invitation from supabase db
@@ -135,29 +137,31 @@ export default function InvitationsView() {
         {invitation.Case.title}
       </h3>
 
-      <div className="flex flex-row gap-2 text-4xl">
-        <Link
-          href={`/lawyers/invitations/accept/${invitationId}`}
-          className="font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700"
-        >
-          Accept
-        </Link>
+      {invitation.status === 'pending' && (
+        <div className="flex flex-row gap-2 text-4xl">
+          <Link
+            href={`/lawyers/invitations/accept/${invitationId}`}
+            className="font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700"
+          >
+            Accept
+          </Link>
 
-        <p
-          onClick={() => declineInvitation(invitationId)}
-          className="font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700"
-        >
-          Decline
-        </p>
-
-        <Link href={nextIndexLink}>
-          <p className="font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
-            Skip
+          <p
+            onClick={() => declineInvitation(invitationId)}
+            className="font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700"
+          >
+            Decline
           </p>
-        </Link>
-      </div>
 
-      <div className="mt-4 max-w-2xl text-lg font-semibold">
+          <Link href={nextIndexLink}>
+            <p className="font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
+              Skip
+            </p>
+          </Link>
+        </div>
+      )}
+
+      <div className="mb-64 mt-4 max-w-2xl text-lg font-semibold">
         <Markdown
           remarkPlugins={[remarkGfm]}
           components={{

@@ -1,16 +1,6 @@
 'use client'
 // import { MenubarDemo } from '@/components/MenubarDemo'
 
-import {
-  DocumentDuplicateIcon,
-  FolderIcon,
-  HomeIcon,
-  UsersIcon,
-  ChatBubbleOvalLeftEllipsisIcon,
-  CalendarIcon,
-  ChartPieIcon,
-  FaceSmileIcon,
-} from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { supabase, supabaseLawyers } from '@/lib/supabaseClient'
 import { useLawyerUser, useSession } from '@/lib/useUser'
@@ -19,6 +9,7 @@ import { Fragment, useEffect } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useRouter } from 'next/navigation'
 import { getLawyerAvatarUrlById } from '@/app/lawyers/profile/page'
+import DemoBar from './DemoBar'
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
@@ -170,12 +161,14 @@ export default function LawyerAppLayout({
   const lawyerImageUrl = getLawyerAvatarUrlById(user?.id)
 
   return (
-    <div className="flex h-screen flex-row">
-      {/* <Sidebar /> */}
-      <div className="flex w-full flex-col items-center overflow-auto py-4">
-        <div className="flex w-full max-w-4xl flex-col px-8 lg:px-0">
-          <div className="mb-4 mt-4 flex w-full flex-row items-center justify-between pb-4">
-            {/* <div className="w-1/3">
+    <>
+      {!user?.verified && <DemoBar />}
+      <div className="flex h-screen flex-row">
+        {/* <Sidebar /> */}
+        <div className="flex w-full flex-col items-center overflow-auto py-4">
+          <div className="flex w-full max-w-4xl flex-col px-8 lg:px-0">
+            <div className="mb-4 mt-4 flex w-full flex-row items-center justify-between pb-4">
+              {/* <div className="w-1/3">
               <Link href="/lawyers">
                 <p className="text-xl font-extrabold">
                   IMPOSSIBLE
@@ -183,16 +176,16 @@ export default function LawyerAppLayout({
                 </p>
               </Link>
             </div> */}
-            <div className="mt-1 w-1/3">
-              <Link href={'/lawyers'}>
-                <p className="text-xl font-bold tracking-tighter">
-                  impossible.
-                </p>
-              </Link>
-            </div>
-            <div className="flex flex-row items-center gap-4">
-              <div className="flex flex-row items-center justify-end gap-4 tracking-tighter">
-                {/* <div>
+              <div className="mt-1 flex w-1/3 flex-row items-center gap-1">
+                <Link href={'/lawyers'}>
+                  <p className="text-xl font-bold tracking-tighter">
+                    impossible.
+                  </p>
+                </Link>
+              </div>
+              <div className="flex flex-row items-center gap-4">
+                <div className="flex flex-row items-center justify-end gap-4 tracking-tighter">
+                  {/* <div>
                   <Link
                     href="/lawyers"
                     className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
@@ -201,62 +194,71 @@ export default function LawyerAppLayout({
                   </Link>
                 </div> */}
 
-                <div>
-                  <Link
-                    href="/lawyers/invitations"
-                    className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
-                  >
-                    invitations
-                  </Link>
+                  <div>
+                    <Link
+                      href="/lawyers/invitations"
+                      className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
+                    >
+                      invitations
+                    </Link>
+                  </div>
+                  <div>
+                    <Link
+                      href="/lawyers/clients"
+                      className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
+                    >
+                      clients
+                    </Link>
+                  </div>
+                  {/* <div>
+                    <Link
+                      href="/lawyers/questions"
+                      className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
+                    >
+                      questions
+                    </Link>
+                  </div> */}
+                  <div>
+                    <Link
+                      href="/lawyers/questions"
+                      className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
+                    >
+                      tasks
+                    </Link>
+                  </div>
+                  <div>
+                    <Link
+                      href="/lawyers/tools"
+                      className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
+                    >
+                      tools
+                    </Link>
+                  </div>
+                  <div>
+                    <Link
+                      href="/lawyers/account"
+                      className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
+                    >
+                      <img
+                        src={lawyerImageUrl}
+                        alt=""
+                        width={40}
+                        height={40}
+                        className="mt-2 rounded-full bg-amber-300 p-0.5"
+                      />
+                    </Link>
+                  </div>
                 </div>
-                <div>
-                  <Link
-                    href="/lawyers/clients"
-                    className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
-                  >
-                    clients
-                  </Link>
-                </div>
-                <div>
-                  <Link
-                    href="/lawyers/questions"
-                    className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
-                  >
-                    questions
-                  </Link>
-                </div>
-                <div>
-                  <Link
-                    href="/lawyers/questions"
-                    className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
-                  >
-                    tasks
-                  </Link>
-                </div>
-                <div>
-                  <Link
-                    href="/lawyers/profile"
-                    className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
-                  >
-                    <img
-                      src={lawyerImageUrl}
-                      alt=""
-                      width={40}
-                      height={40}
-                      className="mt-2 rounded-full bg-blue-100 p-0.5"
-                    />
-                  </Link>
-                </div>
-              </div>
-              {/* <LawyerDropdownMenu
+                {/* <LawyerDropdownMenu
                 email={user.email}
                 handleSignOut={handleSignOut}
               /> */}
+              </div>
             </div>
+            {children}
           </div>
-          {children}
         </div>
       </div>
-    </div>
+    </>
   )
 }

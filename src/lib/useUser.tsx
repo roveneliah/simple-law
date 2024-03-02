@@ -75,10 +75,80 @@ export const useSession = (): Session | null => {
   return session
 }
 
+export const useStripePolice = (user: any) => {
+  // create stripe user if doesn't exist
+  useEffect(() => {
+    if (!user?.stripeCustomerId && user?.email && user?.first && user?.last) {
+      console.log('creating stripe user...')
+      fetch('/api/stripe/customer/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user.email,
+          name: `${user.first} ${user.last}`,
+          id: user.id,
+        }),
+      }).then(async (res) => {
+        const data = await res.json()
+        console.log(data)
+        if (data.error) {
+          console.error(data.error)
+        } else {
+          console.log('created stripe user:', data.data)
+          supabase
+            .from('Lawyer')
+            .update({ stripeCustomerId: data.data.customer.id })
+            .eq('id', user.id)
+            .then(({ data, error }) => {
+              console.log('updated user:', data)
+            })
+        }
+      })
+    }
+  }, [user?.stripeCustomerId, user?.email])
+
+  // check stripeCustomerId is real
+  useEffect(() => {
+    if (user?.stripeCustomerId) {
+      console.log('getting stripe user...')
+      fetch(`/api/stripe/customer/get?customerId=${user.stripeCustomerId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(async (res) => {
+        const data = await res.json()
+        const customer = data.data.customer
+
+        if (customer.deleted) {
+          console.log('customer deleted on stripe, deleting on supabase...')
+          supabase
+            .from('Lawyer')
+            .update({ stripeCustomerId: null })
+            .eq('id', user.id)
+            .then(({ data, error }) => {
+              console.log('deleted stripeCustomerId:', data)
+            })
+        }
+
+        console.log(data)
+        if (data.error) {
+          console.error(data.error)
+        } else {
+          console.log('got stripe user:', data.data)
+        }
+      })
+    }
+  }, [user?.stripeCustomerId])
+}
+
 export const useLawyerUser = () => {
   const [session, setSession] = useState<Session | null>(null)
   const [user, setUser] = useState(null)
   const router = useRouter()
+  useStripePolice(user)
 
   useEffect(() => {
     if (!session?.user?.id) {
@@ -87,9 +157,6 @@ export const useLawyerUser = () => {
       console.log('trying to get lawyer from db with id:', session?.user?.id)
       supabaseLawyers.auth.getSession().then(({ data, error }) => {
         const session = data?.session
-        // if (!session) {
-        //   router.push('/lawyers/login')
-        // }
 
         // get the user from db given id
         supabase
@@ -114,7 +181,7 @@ export const useLawyerUser = () => {
                 })
             } else return { data, error }
           })
-          .then(({ data, error }) => {
+          .then(({ data, error }: any) => {
             setUser(data || null)
           })
       })

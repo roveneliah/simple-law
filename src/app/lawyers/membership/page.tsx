@@ -5,6 +5,7 @@ import { useLawyerUser, useRedirectLawyerIfSignedIn } from '@/lib/useUser'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react'
 import { LawyerProfileHeader } from '../profile/page'
+import Link from 'next/link'
 
 export default function Account() {
   const user = useLawyerUser()
@@ -50,22 +51,18 @@ export default function Account() {
   return (
     <LawyerAppLayout>
       <div className="mt-16" />
-      <LawyerProfileHeader lawyer={user} status={'gold'} view={'perks'} />
-      <div className="mt-8 flex w-full flex-row sm:gap-8">
-        <div className="flex flex-col items-start gap-0">
-          <button>Training</button>
-          <button>Marketing</button>
+      <LawyerProfileHeader lawyer={user} status={'gold'} view={'membership'} />
+      <div className="mt-16 flex w-full flex-row sm:gap-8">
+        <div className="flex w-1/3 flex-col items-start gap-0">
+          <button>Gold</button>
+          <button>Platinum</button>
         </div>
         <div className="flex w-full flex-col gap-4">
           <div>
-            <p className="font-bold tracking-tighter">
-              Empathizing with Clients via Negotiation
-            </p>
-            <p>Black Swan Group</p>
-            <p>
-              Fees reduces by 20% on completion of communications training
-              pathway.
-            </p>
+            <p className="text-4xl font-bold tracking-tighter">Gold</p>
+            <p>Current Plan</p>
+            <li>$99 Flat Fee for all cases.</li>
+            <Link href={process.env.NEXT_PUBLIC_STRIPE_GOLD}>Upgrade</Link>
           </div>
           <div>
             <p className="font-bold tracking-tighter">

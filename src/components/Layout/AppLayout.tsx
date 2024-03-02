@@ -9,6 +9,7 @@ import Image from 'next/image'
 import { FALLBACK_AVATAR } from '@/data/dummy'
 import AccountMenu from './AccountMenu'
 import { getUserAvatarUrlById } from '@/app/app/account/page'
+import AppMenu from './AppMenu'
 
 function ChildViewHeader({ email, handleSignOut, caseId, userImageUrl }: any) {
   return (
@@ -43,6 +44,7 @@ function ChildViewHeader({ email, handleSignOut, caseId, userImageUrl }: any) {
             advisors
           </Link>
         </div>
+        <AppMenu />
         <div>
           <Link
             href="/app/account"

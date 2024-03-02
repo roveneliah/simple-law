@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import Markdown from 'react-markdown'
 import { partition } from 'ramda'
+import { useCase } from '@/lib/useCase'
 export const hoursLeft = (date: Date) => {
   const now = Date.now()
   const expiry = new Date(date + 'Z') // Append 'Z' if not already part of the date string  console.log(new Date(now), expiry)
@@ -38,6 +39,18 @@ function InvitationsList({}) {
     (invitation: any) => hoursLeft(invitation?.dueBy) > 0,
   )(invitations.filter((invitation) => invitation.status !== 'accepted'))
 
+  const createDummyInvitation = () => {
+    fetch('/api/invitations/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        caseId: 'b2d09d4f-175a-49ef-85a8-413608318e16',
+      }),
+    })
+  }
+
   const [subview, setSubview] = useState('live')
   return (
     <div className="flex flex-col gap-4">
@@ -63,6 +76,12 @@ function InvitationsList({}) {
           </button>
         </div>
         <h1 className="text-5xl font-bold tracking-tighter">Invitations</h1>
+        <button
+          onClick={() => createDummyInvitation()}
+          className="text-lg font-semibold text-gray-600"
+        >
+          Create Dummy Invitation
+        </button>
       </div>
       <div className="mt-8 flex flex-row justify-between gap-4">
         <div className="w-3/4">

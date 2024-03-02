@@ -29,10 +29,11 @@ export default function QuestionsPage() {
     }
 
     lawyer.id &&
+      setInquiries &&
       fetchInquiries()
         .then(setInquiries)
         .then(() => setLoading(false))
-  }, [lawyer.id])
+  }, [lawyer.id, setInquiries])
 
   console.log(inquiries)
   console.log(lawyer)

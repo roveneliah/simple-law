@@ -7,7 +7,7 @@ import { UserCircleIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 import { useState } from 'react'
 
-export default function Account() {
+export default function VerificationPage() {
   const user = useLawyerUser()
 
   const [loading, setLoading] = useState(false)
