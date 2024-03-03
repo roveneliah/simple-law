@@ -29,14 +29,21 @@ export default function CaseSwitcherDropdown({ caseId }: any) {
     setSelected(selectedCase)
   }, [caseId, cases.length])
 
-  if (!selected) return null
+  if (!cases)
+    return (
+      <Link href={'/app/cases/new'} className="text-xl font-bold text-gray-500">
+        New Case
+      </Link>
+    )
 
   return (
     <div className="z-50 w-64 tracking-tighter">
       <Listbox value={selected} onChange={setSelected}>
         <div className="relative mt-1">
-          <Listbox.Button className="relative w-full cursor-default rounded-lg border bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-            <span className="block truncate">{selected?.title}</span>
+          <Listbox.Button className="relative w-full cursor-default rounded-lg border bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500  focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+            <span className="block truncate">
+              {selected?.title || 'Select Case'}
+            </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronUpDownIcon
                 className="h-5 w-5 text-gray-400"
@@ -61,7 +68,13 @@ export default function CaseSwitcherDropdown({ caseId }: any) {
                   }
                   value={caseData}
                 >
-                  <Link href={`/app/cases/case/${caseData.id}`}>
+                  <Link
+                    href={
+                      caseData?.readyForInvitation
+                        ? `/app/cases/case/${caseData.id}`
+                        : `/app/cases/new/${caseData.id}`
+                    }
+                  >
                     <span
                       className={`block truncate ${
                         selected?.id == caseData.id
@@ -77,9 +90,15 @@ export default function CaseSwitcherDropdown({ caseId }: any) {
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
                       </span>
                     ) : null}
+                    {!caseData?.readyForInvitation && (
+                      <span className="absolute inset-y-0 right-4 flex items-center pl-3 text-amber-600/70">
+                        Draft
+                      </span>
+                    )}
                   </Link>
                 </Listbox.Option>
               ))}
+
               <Listbox.Option
                 className={({ active }) =>
                   `relative cursor-default select-none py-2 pl-4 pr-4 ${

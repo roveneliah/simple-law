@@ -1,6 +1,4 @@
 'use client'
-import AutoFlipComponent from '@/components/AutoFlip'
-import { Files } from '@/components/CaseViews/Files'
 import AppLayout from '@/components/Layout/AppLayout'
 import prisma from '@/lib/prismaClient'
 import { supabase } from '@/lib/supabaseClient'
@@ -8,9 +6,8 @@ import { useUser } from '@/lib/useUser'
 import { v4 as uuidv4 } from 'uuid'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { POST } from '@/app/api/cases/refine/route'
 import { NewFiles } from '@/components/CaseViews/NewFiles'
-import InfoGatherPage from '../lawyers/[caseId]/info/page'
+import { useCase } from '@/lib/useCase'
 
 const uploadDocuments = async (files) => {
   const uploadedDocs = await Promise.all(
@@ -43,70 +40,25 @@ const createDocumentEntries = async (uploadedDocs) => {
   return documentEntries
 }
 
-function NewCaseForm() {
-  const router = useRouter()
-  const user = useUser()
+function NewCaseForm({ caseData }) {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   // basics
-  const [nickname, setNickname] = useState('')
-  const [whatsUp, setWhatsUp] = useState('')
+  const [nickname, setNickname] = useState(caseData?.title)
+  const [whatsUp, setWhatsUp] = useState(caseData?.whatsUp)
 
   const [goals, setGoals] = useState('')
   const [dates, setDates] = useState('')
   const [files, setFiles] = useState([])
 
-  // make sure there is userid??
-  const handleCreateCase = async () => {
-    console.log('Create case')
-
-    // const refinedCase = refineCaseWithAI({ whatsUp, goals, dates, files })
-    // call POST /api/cases/refine with caseData to get refinedCase
-
-    // call endpoint
-    // const refinedCase = await fetch('/api/cases/refine', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     refinedCase: {
-    //       whatsUp,
-    //       goals,
-    //       dates,
-    //       files,
-    //     },
-    //   }),
-    // }).then((res) => res.json())
-
-    supabase
-      .from('Case')
-      .insert([
-        {
-          // generate id
-          id: uuidv4(),
-          userId: user.id,
-          title: nickname,
-          whatsUp,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ])
-      .select()
-      .then(({ data, error }) => {
-        if (error?.code === '23503') {
-          console.error('User not found')
-          return { data, error }
-        }
-
-        console.log(data, error)
-      })
-
-    // then upload docs
-    // router.push('/app/cases')
-  }
-
   const [view, setView] = useState('basics')
+
+  if (!caseData?.title)
+    return (
+      <div>
+        <h1>Loading...</h1>
+      </div>
+    )
 
   return (
     <div className="mt-8 w-full">
@@ -208,10 +160,10 @@ function NewCaseForm() {
                     </button>
                     <button
                       type="submit"
-                      onClick={handleCreateCase}
+                      onClick={() => {}}
                       className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
-                      Create Case
+                      Next
                     </button>
                   </div>
                 </div>
@@ -384,19 +336,12 @@ function NewCaseForm() {
   )
 }
 
-export default function NewCase() {
-  const caseData = {
-    id: 0,
-    name: '',
-    description: '',
-    access: 'Private',
-    status: 'Open',
-    documents: [],
-  }
+export default function NewCase({ params: { id } }) {
+  const caseData = useCase(id)
 
   return (
     <AppLayout>
-      <NewCaseForm />
+      <NewCaseForm caseData={caseData} />
     </AppLayout>
   )
 }

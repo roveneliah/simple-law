@@ -6,38 +6,55 @@ import { useCase } from '@/lib/useCase'
 import { useUser } from '@/lib/useUser'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { CaseSummary } from './[view]/page'
-import { redirect } from 'next/navigation'
+import { CaseSummary } from '../case/[caseId]/[view]/page'
+
+const DEMO_CASE = {
+  id: '1',
+  title: 'Case 1',
+  summary: 'This is a summary of the case',
+  Agreement: [
+    {
+      Lawyer: {
+        id: '1',
+        first: 'John',
+        last: 'Doe',
+      },
+    },
+    {
+      Lawyer: {
+        id: '2',
+        first: 'Jane',
+        last: 'Doe',
+      },
+    },
+  ],
+}
 
 // TODO: should be server component...
-export default function CaseView({ params: { caseId } }) {
+export default function CaseView() {
   // trigger new questions if none already
-  const caseData = useCase(caseId)
-  const user = useUser()
+  const caseId = -1
+  const caseData = DEMO_CASE
 
-  console.log(caseData)
-
-  useEffect(() => {
-    const questions = caseData?.Question
-    if (caseData?.id && (!questions || questions.length === 0)) {
-      console.log('No questions found, triggering new questions...')
-      fetch(`/api/cases/review/parse`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ caseId }),
-      })
-      // router.push(`/app/cases/lawyers/${caseId}`)
-    } else if (caseData?.id && questions.length > 0) {
-      console.log('Questions found, not triggering new questions...')
-      // router.push(`/app/cases/lawyers/${caseId}`)
-    }
-  }, [caseData?.Question])
+  // useEffect(() => {
+  //   const questions = caseData?.Question
+  //   if (caseData?.id && (!questions || questions.length === 0)) {
+  //     console.log('No questions found, triggering new questions...')
+  //     fetch(`/api/cases/review/parse`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ caseId }),
+  //     })
+  //     // router.push(`/app/cases/lawyers/${caseId}`)
+  //   } else if (caseData?.id && questions.length > 0) {
+  //     console.log('Questions found, not triggering new questions...')
+  //     // router.push(`/app/cases/lawyers/${caseId}`)
+  //   }
+  // }, [caseData?.Question])
 
   // const { files } = useFiles(user.id, caseId)
-
-  return redirect(`/app/cases/lawyers/${caseId}`)
 
   return (
     <AppLayout caseId={caseId}>

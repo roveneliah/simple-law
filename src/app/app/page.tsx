@@ -1,4 +1,3 @@
-import CaseList from '@/components/CaseList'
 import AppLayout from '@/components/Layout/AppLayout'
 import Link from 'next/link'
 

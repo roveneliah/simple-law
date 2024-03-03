@@ -103,9 +103,10 @@ model Case {
   updatedAt DateTime @updatedAt
 
   // user input
-  whatsUp   String
-  goals     String
-  dates     String
+  title       String
+  whatsUp   String?
+  goals     String?
+  dates     String?
   documents Document[]
 
   // ai assistance for user
@@ -115,12 +116,11 @@ model Case {
   jurisdiction String?
 
   // ai generated
-  title       String?
   description String?
   interview   String?
 
   // case info review
-  status             String
+  status             String?
   interviewDueBy    DateTime?
   readyForInvitation Boolean @default(false)
   invitationsSent    Boolean @default(false)

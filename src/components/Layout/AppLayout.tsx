@@ -11,6 +11,7 @@ import AccountMenu from './AccountMenu'
 import { getUserAvatarUrlById } from '@/app/app/account/page'
 import AppMenu from './AppMenu'
 import CaseSwitcherDropdown from './CaseSwitcherDropdown'
+import Loading from '@/app/app/loading'
 
 function ChildViewHeader({ email, handleSignOut, userImageUrl, caseId }: any) {
   return (
@@ -77,7 +78,36 @@ export default function AppLayout({ children, caseId }: any) {
   // const caseData = useCase(caseId)
 
   if (!user) {
-    return <div>Loading...</div>
+    return (
+      <div className="relative flex h-[100vh] flex-row">
+        {/* Background Image Container */}
+        {/* <div className="absolute inset-0 z-0">
+      <Image
+        src={abstractBackgroundImage}
+        alt=""
+        layout="fill"
+        objectFit="cover"
+        className="absolute z-0"
+      />
+      <div className="absolute inset-0 bg-white/60 backdrop-blur-md"></div>
+    </div> */}
+
+        {/* Sidebar Placeholder - Uncomment or modify according to your setup */}
+        {/* <Sidebar caseId={caseId} /> */}
+
+        {/* Main Content Area */}
+        <div className="z-10 flex w-full flex-col items-center py-4">
+          <div className="flex min-h-96 w-full max-w-3xl flex-col overflow-x-hidden rounded-md">
+            <ChildViewHeader
+              userImageUrl={userImageUrl}
+              // email={user.email}
+              caseId={caseId}
+              // handleSignOut={handleSignOut}
+            />
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const handleSignOut = async (e) => {
@@ -104,7 +134,7 @@ export default function AppLayout({ children, caseId }: any) {
 
       {/* Main Content Area */}
       <div className="z-10 flex w-full flex-col items-center py-4">
-        <div className="flex min-h-96 w-full max-w-3xl flex-col overflow-y-auto overflow-x-hidden rounded-md">
+        <div className="flex min-h-96 w-full max-w-3xl flex-col overflow-x-hidden rounded-md">
           <ChildViewHeader
             userImageUrl={userImageUrl}
             email={user.email}
