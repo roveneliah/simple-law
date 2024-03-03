@@ -1,5 +1,5 @@
-import { FALLBACK_AVATAR } from '@/data/dummy'
-import { Service } from '@prisma/client'
+import { LawyerProfile } from '@/app/lawyers/profile/[id]/page'
+import AppLayout from '@/components/Layout/AppLayout'
 
 const getLawyerById = async (id: string) => {
   const { data, error } = await fetch(
@@ -16,27 +16,8 @@ export default async function LawyerPage({ params }) {
   const { data, error } = await getLawyerById(params.id)
 
   return (
-    <div>
-      <div>
-        <img
-          src={data.avatar}
-          className="h-10 w-10 rounded-full bg-gray-800"
-          alt="avatar"
-        />
-        <p>
-          {data.first} {data.last}
-        </p>
-        <p>{data.bio}</p>
-        <p>{data.firm}</p>
-      </div>
-      <div>
-        {data.Service.map((service: Service) => (
-          <div key={service.id}>
-            <p>{service.type}</p>
-            <p>{service.price}</p>
-          </div>
-        ))}
-      </div>
-    </div>
+    <AppLayout>
+      <LawyerProfile lawyer={data} />
+    </AppLayout>
   )
 }

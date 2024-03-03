@@ -60,13 +60,7 @@ function InvitationsList({}) {
             onClick={() => setSubview('live')}
             className={`tracking-tighter ${subview === 'live' ? 'text-gray-900' : 'text-gray-500'}`}
           >
-            Live
-          </button>
-          <button
-            onClick={() => setSubview('expired')}
-            className={`tracking-tighter ${subview === 'expired' ? 'text-gray-900' : 'text-gray-500'}`}
-          >
-            Expired
+            New
           </button>
           <button
             onClick={() => setSubview('accepted')}
@@ -74,14 +68,26 @@ function InvitationsList({}) {
           >
             Accepted
           </button>
+          {/* <button
+            onClick={() => setSubview('expired')}
+            className={`tracking-tighter ${subview === 'expired' ? 'text-gray-900' : 'text-gray-500'}`}
+          >
+            Expired
+          </button> */}
+          {/* <button
+            onClick={() => setSubview('matched')}
+            className={`tracking-tighter ${subview === 'matched' ? 'text-gray-900' : 'text-gray-500'}`}
+          >
+            Matched
+          </button> */}
         </div>
         <h1 className="text-5xl font-bold tracking-tighter">Invitations</h1>
-        <button
+        {/* <button
           onClick={() => createDummyInvitation()}
           className="text-lg font-semibold text-gray-600"
         >
           Create Dummy Invitation
-        </button>
+        </button> */}
       </div>
       <div className="mt-8 flex flex-row justify-between gap-4">
         <div className="w-3/4">
@@ -258,24 +264,6 @@ function InvitationsList({}) {
                               {invitation.lastSeen}
                             </time>
                           </p>
-                        )}
-                        {invitation.status === 'accepted' && (
-                          <p className="mt-1 text-xs leading-5 text-gray-500">
-                            Accepted{' '}
-                            <time dateTime={invitation.lastSeenDateTime}>
-                              {invitation.lastSeen}
-                            </time>
-                          </p>
-                        )}
-                        {invitation.dueBy && (
-                          <div className="mt-1 flex items-center gap-x-1.5">
-                            <div className="flex-none rounded-full bg-orange-500/20 p-1">
-                              <div className="h-1.5 w-1.5 rounded-full bg-orange-500" />
-                            </div>
-                            <p className="text-xs leading-5 text-gray-500">
-                              Expired
-                            </p>
-                          </div>
                         )}
                       </div>
                       <ChevronRightIcon

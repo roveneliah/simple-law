@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { useLawyerUser, useRedirectLawyerIfSignedIn } from '@/lib/useUser'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react'
-import { LawyerProfileHeader } from '../profile/page'
+import { LawyerProfileHeader } from '../../../components/LawyerProfileHeader'
 
 export default function Account() {
   const user = useLawyerUser()

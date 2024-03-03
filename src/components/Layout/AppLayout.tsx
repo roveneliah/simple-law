@@ -10,8 +10,9 @@ import { FALLBACK_AVATAR } from '@/data/dummy'
 import AccountMenu from './AccountMenu'
 import { getUserAvatarUrlById } from '@/app/app/account/page'
 import AppMenu from './AppMenu'
+import CaseSwitcherDropdown from './CaseSwitcherDropdown'
 
-function ChildViewHeader({ email, handleSignOut, caseId, userImageUrl }: any) {
+function ChildViewHeader({ email, handleSignOut, userImageUrl, caseId }: any) {
   return (
     <div className="mb-4 mt-8 flex w-full flex-row items-center justify-between pb-4">
       {/* <div className="w-1/3">
@@ -28,23 +29,24 @@ function ChildViewHeader({ email, handleSignOut, caseId, userImageUrl }: any) {
         </Link>
       </div>
       <div className="flex flex-row items-center justify-end gap-4 tracking-tighter">
-        <div>
+        {/* <div>
           <Link
             href="/app/cases"
             className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
           >
             cases
           </Link>
-        </div>
-        <div>
+        </div> */}
+        {/* <div>
           <Link
             href="/app/advisors"
             className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
           >
             advisors
           </Link>
-        </div>
-        <AppMenu />
+        </div> */}
+        <CaseSwitcherDropdown caseId={caseId} />
+        {/* <AppMenu /> */}
         <div>
           <Link
             href="/app/account"
@@ -53,9 +55,7 @@ function ChildViewHeader({ email, handleSignOut, caseId, userImageUrl }: any) {
             <img
               src={userImageUrl}
               alt=""
-              width={40}
-              height={40}
-              className="mt-2 rounded-full bg-blue-100 p-0.5"
+              className="mt-2 h-10 w-10 rounded-full bg-blue-100 p-0.5"
             />
           </Link>
         </div>
@@ -86,9 +86,9 @@ export default function AppLayout({ children, caseId }: any) {
   }
 
   return (
-    <div className="relative flex min-h-[100vh] flex-row">
+    <div className="relative flex h-[100vh] flex-row">
       {/* Background Image Container */}
-      <div className="absolute inset-0 z-0">
+      {/* <div className="absolute inset-0 z-0">
         <Image
           src={abstractBackgroundImage}
           alt=""
@@ -97,14 +97,14 @@ export default function AppLayout({ children, caseId }: any) {
           className="absolute z-0"
         />
         <div className="absolute inset-0 bg-white/60 backdrop-blur-md"></div>
-      </div>
+      </div> */}
 
       {/* Sidebar Placeholder - Uncomment or modify according to your setup */}
       {/* <Sidebar caseId={caseId} /> */}
 
       {/* Main Content Area */}
       <div className="z-10 flex w-full flex-col items-center py-4">
-        <div className="flex w-full max-w-2xl flex-col overflow-y-auto overflow-x-hidden rounded-md">
+        <div className="flex min-h-96 w-full max-w-3xl flex-col overflow-y-auto overflow-x-hidden rounded-md">
           <ChildViewHeader
             userImageUrl={userImageUrl}
             email={user.email}

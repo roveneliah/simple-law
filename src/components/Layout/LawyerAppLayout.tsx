@@ -8,8 +8,8 @@ import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useEffect } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useRouter } from 'next/navigation'
-import { getLawyerAvatarUrlById } from '@/app/lawyers/profile/page'
 import DemoBar from './DemoBar'
+import { getLawyerAvatarUrlById } from '../ProfileForm'
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')

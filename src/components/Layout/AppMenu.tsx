@@ -7,7 +7,7 @@ import { Bars4Icon, ChevronDownIcon } from '@heroicons/react/24/outline'
 
 export default function AppMenu({}) {
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className="relative z-50 inline-block text-left">
       <div className="flex flex-col justify-center">
         <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-sm font-semibold text-gray-900 ring-0 ring-inset ring-gray-300">
           {/* Account */}
@@ -47,7 +47,21 @@ export default function AppMenu({}) {
                   )}
                 >
                   <div className="h-5 w-5 rounded-sm bg-black" />
-                  Personal
+                  Find Lawyer
+                </Link>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <Link
+                  href="/"
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'flex flex-row items-center gap-2 px-4 py-2 text-sm font-semibold tracking-tighter',
+                  )}
+                >
+                  <div className="h-5 w-5 rounded-sm bg-black" />
+                  Shop
                 </Link>
               )}
             </Menu.Item>
@@ -61,7 +75,7 @@ export default function AppMenu({}) {
                   )}
                 >
                   <div className="h-5 w-5 rounded-sm bg-black" />
-                  Business Edition
+                  For Business Owners
                 </Link>
               )}
             </Menu.Item>
@@ -75,7 +89,7 @@ export default function AppMenu({}) {
                   )}
                 >
                   <div className="h-5 w-5 rounded-sm bg-black" />
-                  Lawyers Portal
+                  Resources
                 </Link>
               )}
             </Menu.Item>

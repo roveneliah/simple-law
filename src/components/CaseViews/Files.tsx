@@ -206,7 +206,7 @@ export function Files({ caseId }) {
   }
 
   return (
-    <div>
+    <div className="">
       {/* <div className="col-span-full mt-8">
         <label
           htmlFor="cover-photo"

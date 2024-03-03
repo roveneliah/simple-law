@@ -4,7 +4,9 @@ import { supabase } from '@/lib/supabaseClient'
 import { useLawyerUser, useRedirectLawyerIfSignedIn } from '@/lib/useUser'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react'
-import Profile, { LawyerProfileHeader } from '../profile/page'
+import { ProfileForm } from '../profile/[id]/page'
+import { LawyerProfileHeader } from '../../../components/LawyerProfileHeader'
+import Profile from '../../../components/ProfileForm'
 import Verification from '../verification/page'
 
 export default function Account() {
@@ -58,10 +60,10 @@ export default function Account() {
         <div className="flex w-fit flex-col items-start gap-0">
           <button
             type="button"
-            onClick={() => setSubview('profile')}
+            onClick={() => setSubview('account')}
             className={`text-base font-semibold leading-7 ${subview === 'profile' ? 'text-bold text-gray-900' : 'text-gray-500'}`}
           >
-            Profile
+            Account
           </button>
           <button
             type="button"
@@ -78,7 +80,7 @@ export default function Account() {
             Verification
           </button>
         </div>
-        {subview === 'profile' && <Profile />}
+        {subview === 'account' && <ProfileForm />}
         {subview === 'verification' && (
           <div>
             {user?.verified ? (

@@ -148,21 +148,38 @@ export default function Account() {
             <button
               type="button"
               onClick={() => setView('user')}
-              className="mt-1 text-left text-sm leading-6 text-gray-900"
+              className={`mt-1 text-left text-sm leading-6 ${view === 'user' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
             >
               Basic Information
             </button>
             <button
               type="button"
               onClick={() => setView('notifications')}
-              className="mt-1 text-left text-sm leading-6 text-gray-600"
+              className={`mt-1 text-left text-sm leading-6 ${view === 'notifications' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
             >
               Notifications
+            </button>
+            <button
+              type="button"
+              onClick={() => setView('help')}
+              className={`mt-1 text-left text-sm leading-6 ${view === 'help' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
+            >
+              Help
             </button>
           </div>
           <div className="w-full space-y-0">
             {view === 'user' && (
-              <div className="w-full border-b border-gray-900/10">
+              <div className="w-full">
+                <div className="mb-8">
+                  <h2 className="text-3xl font-bold leading-7 tracking-tighter text-gray-900">
+                    Basic Information
+                  </h2>
+                  <p className="mt-1 text-sm leading-6 text-gray-600">
+                    We'll always let you know about important changes, but you
+                    pick what else you want to hear about.
+                  </p>
+                </div>
+
                 <div className="grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-3">
                     <label
@@ -296,6 +313,20 @@ export default function Account() {
                       />
                     </div>
                   </div>
+                </div>
+                <div className="mt-6 flex items-center justify-end gap-x-6">
+                  <button
+                    type="button"
+                    className="text-sm font-semibold leading-6 text-gray-900"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             )}
@@ -436,6 +467,20 @@ export default function Account() {
                     </div>
                   </fieldset>
                 </div>
+                <div className="mt-6 flex items-center justify-end gap-x-6">
+                  <button
+                    type="button"
+                    className="text-sm font-semibold leading-6 text-gray-900"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    Save
+                  </button>
+                </div>
               </div>
             )}
             <div className="">
@@ -499,20 +544,6 @@ export default function Account() {
                   </div>
                 </div> */}
               </div>
-            </div>
-            <div className="mt-6 flex items-center justify-end gap-x-6">
-              <button
-                type="button"
-                className="text-sm font-semibold leading-6 text-gray-900"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Save
-              </button>
             </div>
           </div>
         </div>

@@ -6,7 +6,8 @@ import '@/styles/tailwind.css'
 
 const inter = Inter({
   subsets: ['latin'],
-  display: 'swap',
+  // display: 'swap', // todo: wtf?
+  display: 'block',
   variable: '--font-inter',
 })
 

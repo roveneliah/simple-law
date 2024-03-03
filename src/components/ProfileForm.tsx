@@ -1,9 +1,8 @@
 'use client'
-import LawyerViewLayout from '@/components/LawyerViewLayout'
+import { getUserAvatarUrlById } from '@/app/app/account/page'
 import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
-import { supabase, supabaseLawyers } from '@/lib/supabaseClient'
+import { supabaseLawyers } from '@/lib/supabaseClient'
 import { useLawyerUser } from '@/lib/useUser'
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export const getLawyerAvatarUrlById = (lawyerId: string) => {
@@ -27,97 +26,11 @@ async function updateLawyerImageUrl(lawyerId: string, fullPath: string) {
   return { data }
 }
 
-export function LawyerProfileHeader({ lawyer, status, view }: any) {
-  return (
-    <div className="flex flex-row justify-between">
-      <div className="w-fit">
-        <h1 className="text-5xl font-bold tracking-tighter">
-          Impossible{' '}
-          <span className="underline decoration-amber-300">Gold</span>
-        </h1>
-
-        <div className="flex flex-row flex-wrap gap-2 gap-y-0 text-4xl font-bold tracking-tighter text-gray-400">
-          <Link href={'/lawyers/perks'}>
-            <p
-              className={`transition-all hover:text-gray-500 ${view === 'perks' && 'text-gray-600'} `}
-            >
-              perks
-            </p>
-          </Link>
-          <Link href={'/lawyers/account'}>
-            <p
-              className={`transition-all hover:text-gray-500 ${view === 'account' && 'text-gray-600'} `}
-            >
-              account settings
-            </p>
-          </Link>
-          {/* <Link href={'/lawyers/verification'}>
-            <p
-              className={`transition-all hover:text-gray-500 ${view === 'verification' && 'text-gray-600'} `}
-            >
-              verification
-            </p>
-          </Link> */}
-
-          <Link href={'/lawyers/membership'}>
-            <p
-              className={`transition-all hover:text-gray-500 ${view === 'membership' && 'text-gray-600'} `}
-            >
-              membership
-            </p>
-          </Link>
-          <Link href={'/lawyers/account/billing'}>
-            <p
-              className={`transition-all hover:text-gray-500 ${view === 'billing' && 'text-gray-600'} `}
-            >
-              billing
-            </p>
-          </Link>
-        </div>
-      </div>
-      <div className=" h-48 w-96 rounded-md border border-slate-900 bg-slate-600 shadow-sm shadow-black/50">
-        <div className="px-4 py-4">
-          <div className="flex w-full flex-row justify-between gap-2">
-            <p className="font-bold tracking-tighter text-gray-100">
-              {lawyer.first} {lawyer.last}
-            </p>
-            {lawyer.verified ? (
-              <p className="w-fit bg-amber-400 px-1 text-sm font-bold capitalize tracking-tighter text-black">
-                {status}
-              </p>
-            ) : (
-              <Link
-                href="/lawyers/verification"
-                className="w-fit bg-slate-900 px-1 text-sm font-bold capitalize tracking-tighter text-black text-white"
-              >
-                Unverified
-              </Link>
-            )}
-          </div>
-          <p className="text-sm font-bold tracking-tighter text-gray-400">
-            Member Since '24
-          </p>
-          <p className="text-sm font-bold tracking-tighter text-gray-400">
-            4 Cases
-          </p>
-          <p className="text-sm font-bold tracking-tighter text-gray-400">
-            12 Clients
-          </p>
-          <p className="text-sm font-bold tracking-tighter text-gray-400">
-            $50000 Earned
-          </p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export default function Profile() {
+export default function ProfileForm() {
   const lawyer = useLawyerUser()
-
   const [avatarUrl, setAvatarUrl] = useState<string>('')
   useEffect(() => {
-    setAvatarUrl(getLawyerAvatarUrlById(lawyer.id))
+    setAvatarUrl(getUserAvatarUrlById(lawyer.id))
   }, [lawyer.id])
 
   const handleFileChange = (e) => {
@@ -159,9 +72,6 @@ export default function Profile() {
     }
   }
 
-  console.log(lawyer)
-  console.log(getLawyerAvatarUrlById(lawyer.id))
-  console.log(avatarUrl)
   return (
     <form className="mt-0">
       <h4 className="text-4xl font-bold tracking-tighter">Profile</h4>
@@ -245,39 +155,39 @@ export default function Profile() {
             </div>
 
             {/* <div className="col-span-full">
-                  <label
-                    htmlFor="cover-photo"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Cover photo
-                  </label>
-                  <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                    <div className="text-center">
-                      <PhotoIcon
-                        className="mx-auto h-12 w-12 text-gray-300"
-                        aria-hidden="true"
+              <label
+                htmlFor="cover-photo"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Cover photo
+              </label>
+              <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                <div className="text-center">
+                  <PhotoIcon
+                    className="mx-auto h-12 w-12 text-gray-300"
+                    aria-hidden="true"
+                  />
+                  <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                    <label
+                      htmlFor="file-upload"
+                      className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                    >
+                      <span>Upload a file</span>
+                      <input
+                        id="file-upload"
+                        name="file-upload"
+                        type="file"
+                        className="sr-only"
                       />
-                      <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                        <label
-                          htmlFor="file-upload"
-                          className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                        >
-                          <span>Upload a file</span>
-                          <input
-                            id="file-upload"
-                            name="file-upload"
-                            type="file"
-                            className="sr-only"
-                          />
-                        </label>
-                        <p className="pl-1">or drag and drop</p>
-                      </div>
-                      <p className="text-xs leading-5 text-gray-600">
-                        PNG, JPG, GIF up to 10MB
-                      </p>
-                    </div>
+                    </label>
+                    <p className="pl-1">or drag and drop</p>
                   </div>
-                </div> */}
+                  <p className="text-xs leading-5 text-gray-600">
+                    PNG, JPG, GIF up to 10MB
+                  </p>
+                </div>
+              </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { useLawyerUser, useRedirectLawyerIfSignedIn } from '@/lib/useUser'
 import { useState } from 'react'
 import Link from 'next/link'
-import { LawyerProfileHeader } from '../../profile/page'
+import { LawyerProfileHeader } from '../../../../components/LawyerProfileHeader'
 
 export default function Account() {
   const user = useLawyerUser()
