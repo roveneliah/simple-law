@@ -107,8 +107,6 @@ export const useFiles = (userId: string, caseId: string) => {
     }
   }, [userId, caseId, nonce])
 
-  console.log(files)
-
   return { files, setFiles, fetchFiles: () => setNonce(Math.random()) }
 }
 

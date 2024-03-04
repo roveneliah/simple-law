@@ -14,7 +14,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
-export default function InfoGatherPage({ params: { caseId } }) {
+export function InfoGatherView({ caseId }: any) {
   const caseData = useCase(caseId)
 
   const [questions, setQuestions] = useState([])
@@ -107,22 +107,14 @@ export default function InfoGatherPage({ params: { caseId } }) {
   }
 
   return (
-    <AppLayout caseId={caseId}>
-      <CaseProgress stageIndex={0} />
-      {/* <CaseProgressVertical stageIndex={0} /> */}
-      <div className="mt-16"></div>
-
-      <div className="mb-8 flex flex-row justify-between">
+    <div>
+      {/* <div className="mb-8 flex flex-row justify-between">
         <div className="flex w-full flex-row justify-between">
           <div className="flex flex-row justify-start gap-2 text-sm">
             <Link href={`/app/cases/lawyers/${caseId}/info`}>
-              {/* <CircleStackIcon className="h-5 w-5" /> */}
-
               <p>Chat</p>
             </Link>
             <Link href={`/app/cases/case/${caseId}/summary`}>
-              {/* <CircleStackIcon className="h-5 w-5" /> */}
-
               <p>Case Summary</p>
             </Link>
           </div>
@@ -140,7 +132,7 @@ export default function InfoGatherPage({ params: { caseId } }) {
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
       {questions.length === 0 && (
         <div className="flex flex-col items-center justify-center">
           <p className="text-lg font-semibold text-gray-700">
@@ -180,6 +172,17 @@ export default function InfoGatherPage({ params: { caseId } }) {
           />
         </div>
       </form>
+    </div>
+  )
+}
+
+export default function InfoGatherPage({ params: { caseId } }) {
+  return (
+    <AppLayout caseId={caseId}>
+      <CaseProgress stageIndex={0} />
+      {/* <CaseProgressVertical stageIndex={0} /> */}
+      <div className="mt-16"></div>
+      <InfoGatherView caseId={caseId} />
     </AppLayout>
   )
 }

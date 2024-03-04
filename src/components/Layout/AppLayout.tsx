@@ -72,25 +72,71 @@ function ChildViewHeader({ email, handleSignOut, userImageUrl, caseId }: any) {
   )
 }
 
-export default function AppLayout({ children, caseId }: any) {
+export default function AppLayout({ children, caseId, loadingManual }: any) {
   const user = useSession()?.user
   const userImageUrl = getUserAvatarUrlById(user?.id)
   // const caseData = useCase(caseId)
 
-  if (!user) {
+  // if (!user) {
+  //   return (
+  //     <div className="relative flex h-[100vh] flex-row">
+  //       {/* Background Image Container */}
+  //       {/* <div className="absolute inset-0 z-0">
+  //     <Image
+  //       src={abstractBackgroundImage}
+  //       alt=""
+  //       layout="fill"
+  //       objectFit="cover"
+  //       className="absolute z-0"
+  //     />
+  //     <div className="absolute inset-0 bg-white/60 backdrop-blur-md"></div>
+  //   </div> */}
+
+  //       {/* Sidebar Placeholder - Uncomment or modify according to your setup */}
+  //       {/* <Sidebar caseId={caseId} /> */}
+
+  //       {/* Main Content Area */}
+  //       <div className="z-10 flex w-full flex-col items-center py-4">
+  //         <div className="flex min-h-96 w-full max-w-3xl flex-col overflow-x-hidden rounded-md">
+  //           <ChildViewHeader
+  //             userImageUrl={userImageUrl}
+  //             // email={user.email}
+  //             caseId={caseId}
+  //             // handleSignOut={handleSignOut}
+  //           />
+  //         </div>
+  //       </div>
+  //     </div>
+  //   )
+  // }
+
+  const handleSignOut = async (e) => {
+    e.preventDefault()
+    supabase.auth.signOut()
+  }
+
+  const loading = !user || loadingManual
+
+  if (loading) {
     return (
       <div className="relative flex h-[100vh] flex-row">
         {/* Background Image Container */}
-        {/* <div className="absolute inset-0 z-0">
-      <Image
+        <div
+          className={`${loading ? 'visible' : 'hidden'} absolute inset-0 z-50 transition-all`}
+        >
+          {/* <Image
         src={abstractBackgroundImage}
         alt=""
         layout="fill"
         objectFit="cover"
         className="absolute z-0"
-      />
-      <div className="absolute inset-0 bg-white/60 backdrop-blur-md"></div>
-    </div> */}
+      /> */}
+          <div className="absolute inset-0 flex flex-col items-center justify-start bg-white/20 backdrop-blur-md">
+            <p className=" mt-96 text-4xl font-bold tracking-tighter">
+              impossible<span className="font-light">law</span>
+            </p>
+          </div>
+        </div>
 
         {/* Sidebar Placeholder - Uncomment or modify according to your setup */}
         {/* <Sidebar caseId={caseId} /> */}
@@ -100,34 +146,36 @@ export default function AppLayout({ children, caseId }: any) {
           <div className="flex min-h-96 w-full max-w-3xl flex-col overflow-x-hidden rounded-md">
             <ChildViewHeader
               userImageUrl={userImageUrl}
-              // email={user.email}
+              email={user?.email}
               caseId={caseId}
-              // handleSignOut={handleSignOut}
+              handleSignOut={handleSignOut}
             />
+            {children}
           </div>
         </div>
       </div>
     )
   }
 
-  const handleSignOut = async (e) => {
-    e.preventDefault()
-    supabase.auth.signOut()
-  }
-
   return (
     <div className="relative flex h-[100vh] flex-row">
       {/* Background Image Container */}
-      {/* <div className="absolute inset-0 z-0">
-        <Image
+      <div
+        className={`${loading ? 'visible' : 'hidden'} absolute inset-0 z-50 transition-all`}
+      >
+        {/* <Image
           src={abstractBackgroundImage}
           alt=""
           layout="fill"
           objectFit="cover"
           className="absolute z-0"
-        />
-        <div className="absolute inset-0 bg-white/60 backdrop-blur-md"></div>
-      </div> */}
+        /> */}
+        <div className="absolute inset-0 flex flex-col items-center justify-start bg-white/20 backdrop-blur-md">
+          <p className=" mt-96 text-4xl font-bold tracking-tighter">
+            impossible<span className="font-light">law</span>
+          </p>
+        </div>
+      </div>
 
       {/* Sidebar Placeholder - Uncomment or modify according to your setup */}
       {/* <Sidebar caseId={caseId} /> */}
@@ -137,7 +185,7 @@ export default function AppLayout({ children, caseId }: any) {
         <div className="flex min-h-96 w-full max-w-3xl flex-col overflow-x-hidden rounded-md">
           <ChildViewHeader
             userImageUrl={userImageUrl}
-            email={user.email}
+            email={user?.email}
             caseId={caseId}
             handleSignOut={handleSignOut}
           />
