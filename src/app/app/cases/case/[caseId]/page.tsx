@@ -11,6 +11,8 @@ import { redirect } from 'next/navigation'
 
 // TODO: should be server component...
 export default function CaseView({ params: { caseId } }) {
+  return redirect(`/app/cases/lawyers/${caseId}`)
+
   // trigger new questions if none already
   const caseData = useCase(caseId)
   const user = useUser()
@@ -36,8 +38,6 @@ export default function CaseView({ params: { caseId } }) {
   }, [caseData?.Question])
 
   // const { files } = useFiles(user.id, caseId)
-
-  return redirect(`/app/cases/lawyers/${caseId}`)
 
   return (
     <AppLayout caseId={caseId}>

@@ -15,7 +15,7 @@ import Loading from '@/app/app/loading'
 
 function ChildViewHeader({ email, handleSignOut, userImageUrl, caseId }: any) {
   return (
-    <div className="mb-4 mt-8 flex w-full flex-row items-center justify-between pb-4">
+    <div className="mb-4 mt-4 flex w-full flex-row items-center justify-between pb-4">
       {/* <div className="w-1/3">
         <Link href={caseId ? `/app/cases/case/${caseId}` : '/app'}>
           <p className="text-xl font-extrabold">
@@ -119,7 +119,7 @@ export default function AppLayout({ children, caseId, loadingManual }: any) {
 
   if (loading) {
     return (
-      <div className="relative flex h-[100vh] flex-row">
+      <div className="no-scrollbar relative flex h-[100vh] flex-row">
         {/* Background Image Container */}
         <div
           className={`${loading ? 'visible' : 'hidden'} absolute inset-0 z-50 transition-all`}
@@ -142,8 +142,8 @@ export default function AppLayout({ children, caseId, loadingManual }: any) {
         {/* <Sidebar caseId={caseId} /> */}
 
         {/* Main Content Area */}
-        <div className="z-10 flex w-full flex-col items-center py-4">
-          <div className="flex min-h-96 w-full max-w-3xl flex-col overflow-x-hidden rounded-md">
+        <div className="no-scrollbar z-10 flex w-full flex-col items-center py-4">
+          <div className="no-scrollbar flex min-h-96 w-full max-w-3xl flex-col overflow-x-hidden rounded-md">
             <ChildViewHeader
               userImageUrl={userImageUrl}
               email={user?.email}

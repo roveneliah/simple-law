@@ -32,8 +32,8 @@ function ReviewInterviewsView({ caseId, caseData }: any) {
   console.log(caseData)
 
   return (
-    <div className="mb-32 mt-16 w-full">
-      <div className="max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
+    <div className="no-scrollbar mb-32 mt-16 w-full">
+      <div className="no-scrollbar max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
         <div className="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
             Here's what we found.
@@ -57,7 +57,7 @@ function ReviewInterviewsView({ caseId, caseData }: any) {
         </div>
       </div>
       <ProductList caseId={caseId} />
-      {/* <LawyersTable caseId={caseId} /> */}
+      <LawyersTable caseId={caseId} />
 
       {/* <div className="mt-8">
         <p className="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
@@ -84,7 +84,7 @@ function ReviewInterviewsView({ caseId, caseData }: any) {
         </p>
       </div> */}
 
-      <div className="flex w-full flex-row justify-between gap-16">
+      {/* <div className="flex w-full flex-row justify-between gap-16">
         <div className="mt-10 flex items-center gap-x-6">
           <button
             onClick={() => {}}
@@ -96,7 +96,7 @@ function ReviewInterviewsView({ caseId, caseData }: any) {
             How it works <span aria-hidden="true">→</span>
           </a>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

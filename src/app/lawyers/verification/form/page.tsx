@@ -1,12 +1,12 @@
 'use client'
 import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import Sidebar from '@/components/Layout/Sidebar'
 import { supabase } from '@/lib/supabaseClient'
 import { useLawyerUser } from '@/lib/useUser'
 import { UserCircleIcon } from '@heroicons/react/24/solid'
-import Link from 'next/link'
 import { FormEvent, useState } from 'react'
 
-export default function Account() {
+export default function VerificationForm() {
   const user = useLawyerUser()
 
   const [loading, setLoading] = useState(false)
@@ -17,36 +17,39 @@ export default function Account() {
     // Gather data from the form
     const formData = new FormData(event.target)
     const updatedData = {
-      id: user?.id,
       first: formData.get('first-name')?.toString().trim(),
       last: formData.get('last-name')?.toString().trim(),
       phone: formData.get('phone')?.toString().trim(),
-      street_address: formData.get('street-address'),
-      jurisdiction: formData.get('jurisdiction'),
+      address: formData.get('street-address'),
       city: formData.get('city'),
-      region: formData.get('region'),
-      postal_code: formData.get('postal-code'),
-      bar_number: formData.get('bar-number'),
+      state: formData.get('region'),
+      zip: formData.get('postal-code'),
+      // jurisdiction: formData.get('jurisdiction'),
+      // bar_number: formData.get('bar-number'),
       // Add more fields as necessary
     }
 
-    const { data, error } = await fetch('/api/lawyers/verification', {
-      method: 'POST',
-      body: JSON.stringify(updatedData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((res) => res.json())
+    supabase
+      .from('Lawyer')
+      .update(updatedData)
+      .eq('id', user?.id)
+      .then(({ data, error }) => {
+        setLoading(false)
 
-    console.log(updatedData)
+        if (error) {
+          alert('Failed to update profile: ' + error.message)
+        } else {
+          alert('Profile updated successfully!')
+        }
+      })
 
-    setLoading(false)
-
-    if (error) {
-      alert('Failed to update profile: ' + error.message)
-    } else {
-      alert('Profile updated successfully!')
-    }
+    // const { data, error } = await fetch('/api/lawyers/verification', {
+    //   method: 'POST',
+    //   body: JSON.stringify(updatedData),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // }).then((res) => res.json())
   }
 
   const [barMemberships, setBarMemberships] = useState([
@@ -56,9 +59,11 @@ export default function Account() {
     },
   ])
 
+  console.log(user.BarMembership)
+
   return (
-    <LawyerAppLayout overrideVerification={true}>
-      <div className="mt-8">
+    <div className="no-scrollbar w-full max-w-2xl overflow-y-auto pb-32">
+      <div className="mt-16">
         <h1 className="text-5xl font-bold tracking-tighter">Verification</h1>
       </div>
 
@@ -148,6 +153,8 @@ export default function Account() {
                     id="street-address"
                     autoComplete="street-address"
                     className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    disabled={!user}
+                    defaultValue={user?.address}
                   />
                 </div>
               </div>
@@ -166,6 +173,8 @@ export default function Account() {
                     id="city"
                     autoComplete="address-level2"
                     className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    disabled={!user}
+                    defaultValue={user?.city}
                   />
                 </div>
               </div>
@@ -184,6 +193,8 @@ export default function Account() {
                     id="region"
                     autoComplete="address-level1"
                     className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    disabled={!user}
+                    defaultValue={user?.state}
                   />
                 </div>
               </div>
@@ -202,6 +213,8 @@ export default function Account() {
                     id="postal-code"
                     autoComplete="postal-code"
                     className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    disabled={!user}
+                    defaultValue={user?.zip}
                   />
                 </div>
               </div>
@@ -396,6 +409,13 @@ export default function Account() {
               </div> */}
 
             <div className="col-span-full">
+              <h2 className="text-base font-semibold leading-7 text-gray-900">
+                Identity Verification
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600">
+                Real lawyers are good for business. We appreciate you taking the
+                time to verify your identity.
+              </p>
               <label
                 htmlFor="photo"
                 className="block text-sm font-medium leading-6 text-gray-900"
@@ -433,6 +453,6 @@ export default function Account() {
           </button>
         </div>
       </form>
-    </LawyerAppLayout>
+    </div>
   )
 }

@@ -161,7 +161,9 @@ export const useLawyerUser = () => {
         // get the user from db given id
         supabase
           .from('Lawyer')
-          .select(`*, Invitation(*, Case(*, User(*))), Agreement(*)`)
+          .select(
+            `*, BarMembership(*), Invitation(*, Case(*, User(*))), Agreement(*)`,
+          )
           .eq('id', session?.user?.id)
           .single()
           .then(({ data, error }) => {

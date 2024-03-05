@@ -39,6 +39,11 @@ model Lawyer {
   services    Service[]
   inquiries   Inquiry[]
 
+  address      String?
+  city         String?
+  state        String?
+  zip          String?
+
   // membership info
   barMemberships BarMembership[]
 

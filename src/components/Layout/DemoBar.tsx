@@ -26,7 +26,7 @@ export default function DemoBar() {
               </p>
               {/* <p className="w-1/3 whitespace-nowrap  text-center text-sm text-white"></p> */}
               <Link
-                href="/lawyers/verification/form"
+                href="/lawyers/verification"
                 className="flex flex-row justify-end"
               >
                 <p className="whitespace-nowrap text-sm font-semibold leading-6 text-white">

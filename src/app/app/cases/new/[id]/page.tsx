@@ -50,8 +50,8 @@ function NewCaseForm({ caseData }) {
   const [nickname, setNickname] = useState(caseData.title)
   const [whatsUp, setWhatsUp] = useState(caseData.whatsUp)
 
-  const [goals, setGoals] = useState('')
-  const [dates, setDates] = useState('')
+  const [goals, setGoals] = useState(caseData?.goals || '')
+  const [dates, setDates] = useState(caseData?.dates || '')
   const [files, setFiles] = useState([])
 
   const [view, setView] = useState('basics')
@@ -148,12 +148,14 @@ function NewCaseForm({ caseData }) {
     }
   }, [view])
 
+  const analysis = caseData.CaseAnalysis[0]
+
   return (
     <div className="mt-8 w-full">
       <div className="flex w-full flex-row items-center justify-between">
         <div className="w-full px-4 sm:px-0">
           <h3 className="text-5xl font-bold leading-7 tracking-tighter text-gray-900">
-            New Case
+            {caseData?.title || 'New Case'}
           </h3>
           {/* <p className="mt-4 max-w-2xl text-lg leading-6 text-gray-500">
             We will use this to interview lawyers on your behalf.
@@ -371,6 +373,12 @@ function NewCaseForm({ caseData }) {
                       <p className="block text-lg font-semibold leading-6 text-gray-900">
                         Review your case details.
                       </p>
+                      <div>
+                        <p>{analysis?.costEstimate}</p>
+                        <p>{analysis?.freeOptions}</p>
+                        <p>{analysis?.strategy}</p>
+                        <p>{analysis?.oddsOfSuccess}</p>
+                      </div>
 
                       <div className="flex w-full flex-row justify-end gap-8">
                         <button

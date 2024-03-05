@@ -55,6 +55,7 @@ export default function InvitationsView({ params: { id } }) {
   const invitationId = id
   const [invitationIds, setInvitationIds] = useState([])
   const router = useRouter()
+  const [view, setView] = useState('invitation')
 
   useEffect(() => {
     const loadInvitations = async () => {
@@ -161,25 +162,95 @@ export default function InvitationsView({ params: { id } }) {
         </div>
       )}
 
-      <div className="mb-64 mt-4 max-w-2xl text-lg font-semibold">
-        <Markdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            p: ({ children }) => <p className="mt-4">{children}</p>,
-            h1: ({ children }) => <h1 className="text-3xl">{children}</h1>,
-            h2: ({ children }) => <h2 className="text-2xl">{children}</h2>,
-            h3: ({ children }) => <h3 className="text-xl">{children}</h3>,
-            li: ({ children }) => <li className="">{children}</li>,
-            ul: ({ children }) => (
-              <ul className="list-disc pl-7">{children}</ul>
-            ),
-            ol: ({ children }) => (
-              <ol className="list-decimal pl-8">{children}</ol>
-            ),
-          }}
-          children={invitation.comment}
-        />
+      <div className="mt-16 flex w-full flex-row justify-start gap-16">
+        <div className="flex flex-col items-start text-left font-semibold">
+          <button
+            type="button"
+            onClick={() => setView('invitation')}
+            className={`mt-1 text-left text-sm leading-6 ${view === 'invitation' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
+          >
+            Invitation
+          </button>
+          <button
+            type="button"
+            onClick={() => setView('analysis')}
+            className={`mt-1 text-left text-sm leading-6 ${view === 'analysis' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
+          >
+            Analysis
+          </button>
+          <button
+            type="button"
+            onClick={() => setView('review')}
+            className={`mt-1 text-left text-sm leading-6 ${view === 'review' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
+          >
+            Review
+          </button>
+        </div>
+        <div className="w-full">
+          {view === 'invitation' && (
+            <div>
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold tracking-tighter text-gray-900">
+                  Invitation
+                </h3>
+                <p className="mt-1 text-sm leading-6 text-gray-600">
+                  asdfasdfsa
+                </p>
+              </div>
+              <Markdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p: ({ children }) => (
+                    <p className="text-md font-medium leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
+                      {children}
+                    </p>
+                  ),
+                  h1: ({ children }) => (
+                    <h1 className="text-3xl">{children}</h1>
+                  ),
+                  h2: ({ children }) => (
+                    <h2 className="text-2xl">{children}</h2>
+                  ),
+                  h3: ({ children }) => <h3 className="text-xl">{children}</h3>,
+                  li: ({ children }) => <li className="">{children}</li>,
+                  ul: ({ children }) => (
+                    <ul className="list-disc pl-7">{children}</ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="list-decimal pl-8">{children}</ol>
+                  ),
+                }}
+                children={invitation.comment}
+              />
+            </div>
+          )}
+          {view === 'analysis' && (
+            <div className="w-full">
+              <div className="mb-8 w-full">
+                <h3 className="text-2xl font-bold tracking-tighter text-gray-900">
+                  Analysis
+                </h3>
+                <p className="mt-1 text-sm leading-6 text-gray-600">
+                  asdfasdfsa
+                </p>
+              </div>
+            </div>
+          )}
+          {view === 'review' && (
+            <div className="w-full">
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold tracking-tighter text-gray-900">
+                  Review
+                </h3>
+                <p className="mt-1 text-sm leading-6 text-gray-600">
+                  asdfasdfsa
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+
       {/* render created at as readable date */}
       {/* <div className="mt-8 flex w-full flex-row justify-center gap-4">
         <button
