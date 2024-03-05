@@ -2,8 +2,16 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseLawyers } from './lib/supabaseClient'
 
+const log = (x: any = '') => {
+  console.log('|| ' + x)
+  return x
+}
+
 export async function middleware(req: NextRequest) {
-  console.log('calling middleware...')
+  console.log('\n-------------------------')
+  log()
+  log('MIDDLEWARE...')
+  log()
   const res = NextResponse.next()
 
   // Create a Supabase client configured to use cookies
@@ -18,34 +26,59 @@ export async function middleware(req: NextRequest) {
   const { data: lawyerUser, error: lawyerUserError } =
     await supabaseLawyers.auth.getUser()
 
-  // If there's no session or user, or if there's an error, block the request
-  if ((!session && !lawyerSession) || sessionError || lawyerSessionError) {
-    // You can customize this response based on your needs
-    // E.g., redirect to login, return a 401 Unauthorized response, etc.
-    console.log('No user auth found.')
-
-    // Define your secret API key (this should be stored securely, e.g., in environment variables)
-    const SECRET_API_KEY = process.env.SECRET_API_KEY
-
-    // Retrieve the API key from the request headers
-    const apiKey = req.headers.get('x-api-key')
-
-    // Check if the API key matches the secret key
-    if (apiKey === SECRET_API_KEY) {
-      console.log('API Key validated. Proceeding with request...')
-      return NextResponse.next() // Proceed with the request
+  if (req.nextUrl.pathname.startsWith('/app')) {
+    if (session && user) {
+      log('USER: AUTHENTICATED')
+      return res
     } else {
-      console.log('Invalid API Key. Blocking request.')
-      // Return a 401 Unauthorized response if the API key is missing or incorrect
-      return new NextResponse('Unauthorized: Invalid API Key', { status: 401 })
+      log('USER: NO SESSION FOUND.')
+      return new NextResponse.redirect('/app/login')
     }
   }
 
-  console.log('Authenticated. Proceeding with request...', res)
-  return res
+  if (req.nextUrl.pathname.startsWith('/lawyers')) {
+    log('Lawyers request detected.')
+    if (lawyerSession && lawyerUser) {
+      log('Authneticated Lawyer Session. Proceeding with request...')
+      return res
+    } else {
+      log('No lawyer session found.')
+      return new NextResponse.redirect('/lawyers/login')
+    }
+  }
+
+  if (req.nextUrl.pathname.startsWith('/api')) {
+    // If there's no session or user, or if there's an error, block the request
+    if ((!session && !lawyerSession) || sessionError || lawyerSessionError) {
+      // You can customize this response based on your needs
+      // E.g., redirect to login, return a 401 Unauthorized response, etc.
+      log('No user auth found.')
+
+      // Define your secret API key (this should be stored securely, e.g., in environment variables)
+      const SECRET_API_KEY = process.env.SECRET_API_KEY
+
+      // Retrieve the API key from the request headers
+      const apiKey = req.headers.get('x-api-key')
+
+      // Check if the API key matches the secret key
+      if (apiKey === SECRET_API_KEY) {
+        log('API Key validated. Proceeding with request...')
+        return NextResponse.next() // Proceed with the request
+      } else {
+        log('Invalid API Key. Blocking request.')
+        // Return a 401 Unauthorized response if the API key is missing or incorrect
+        return new NextResponse('Unauthorized: Invalid API Key', {
+          status: 401,
+        })
+      }
+    }
+
+    log('Authenticated. Proceeding with API request...')
+    return res
+  }
 }
 
 // Ensure the middleware is only called for relevant paths.
 export const config = {
-  matcher: '/api/:pathname*',
+  matcher: ['/api/:pathname*', '/app/:pathname*', '/lawyers/:pathname*'],
 }

@@ -16,6 +16,10 @@ model User {
   phone        String?  @unique
   first        String?
   last         String?
+  address      String?
+  city         String?
+  state        String?
+  zip          String?
   imageUrl    String?
   cases        Case[]
   savedLawyers Lawyer[]
@@ -109,13 +113,16 @@ model Case {
   dates     String?
   documents Document[]
 
+  // review
+  review             String?
+  questions          Question[]
+  // Analysis
+  analysisId String?
+  analysis CaseAnalysis?
+
+
   // ai assistance for user
   summary String? // summary to help user understand their case
-
-  // other relevant
-  jurisdiction String?
-
-  // ai generated
   description String?
   interview   String?
 
@@ -124,8 +131,6 @@ model Case {
   interviewDueBy    DateTime?
   readyForInvitation Boolean @default(false)
   invitationsSent    Boolean @default(false)
-  review             String?
-  questions          Question[]
 
   // invitations
   recommendedServiceIds String[]     @db.VarChar(255) // Array of Service IDs
@@ -133,6 +138,20 @@ model Case {
 
   // agreements
   agreements Agreement[]
+}
+
+model CaseAnalysis {
+  id        String   @id @default(uuid())
+  case      Case     @relation(fields: [caseId], references: [id])
+  caseId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // analysis fields
+  freeOptions String?
+  oddsOfSuccess String?
+  strategy String?
+  costEstimate String?
 }
 
 model Question {

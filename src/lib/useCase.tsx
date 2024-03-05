@@ -7,7 +7,7 @@ export const getCaseData = (caseId: UUID) => {
   return supabase
     .from('Case')
     .select(
-      '*, Question(*), Document(*), Invitation(*, Lawyer(*), Service(*)), Agreement(*, Lawyer(*))',
+      '*, Question(*), CaseAnalysis(*), Document(*), Invitation(*, Lawyer(*), Service(*)), Agreement(*, Lawyer(*))',
     )
     .eq('id', caseId)
     .single()

@@ -40,10 +40,10 @@ export default function Account() {
       first: formData.get('first-name')?.toString().trim(),
       last: formData.get('last-name')?.toString().trim(),
       phone: formData.get('phone')?.toString().trim(),
-      // street_address: formData.get('street-address'),
-      // city: formData.get('city'),
-      // region: formData.get('region'),
-      // postal_code: formData.get('postal-code'),
+      address: formData.get('street-address')?.toString().trim(),
+      city: formData.get('city')?.toString().trim(),
+      state: formData.get('region')?.toString().trim(),
+      zip: formData.get('postal-code')?.toString().trim(),
       // Add more fields as necessary
     }
 
@@ -255,7 +255,9 @@ export default function Account() {
                         name="street-address"
                         id="street-address"
                         autoComplete="street-address"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        disabled={!user}
+                        defaultValue={user?.address}
                       />
                     </div>
                   </div>
@@ -273,7 +275,9 @@ export default function Account() {
                         name="city"
                         id="city"
                         autoComplete="address-level2"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        disabled={!user}
+                        defaultValue={user?.city}
                       />
                     </div>
                   </div>
@@ -291,7 +295,9 @@ export default function Account() {
                         name="region"
                         id="region"
                         autoComplete="address-level1"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        disabled={!user}
+                        defaultValue={user?.state}
                       />
                     </div>
                   </div>
@@ -309,7 +315,9 @@ export default function Account() {
                         name="postal-code"
                         id="postal-code"
                         autoComplete="postal-code"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        disabled={!user}
+                        defaultValue={user?.zip}
                       />
                     </div>
                   </div>
@@ -481,6 +489,29 @@ export default function Account() {
                     Save
                   </button>
                 </div>
+              </div>
+            )}
+            {view === 'help' && (
+              <div className=" border-gray-900/10 ">
+                <h2 className="text-3xl font-bold leading-7 tracking-tighter text-gray-900">
+                  Help
+                </h2>
+                <p className="mt-1 text-sm leading-6 text-gray-600">
+                  Reach out to{' '}
+                  <button
+                    className="font-medium"
+                    type="button"
+                    onClick={() => {
+                      // copy to clipboard
+                      navigator.clipboard.writeText(
+                        process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
+                      )
+                    }}
+                  >
+                    {process.env.NEXT_PUBLIC_SUPPORT_EMAIL}
+                  </button>{' '}
+                  if you need any assistance.
+                </p>
               </div>
             )}
             <div className="">

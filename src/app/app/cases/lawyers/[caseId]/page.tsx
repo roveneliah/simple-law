@@ -8,8 +8,9 @@ import Link from 'next/link'
 import CaseProgress from '@/components/CaseProgress'
 import { hoursLeft, hoursLeftStr } from '@/app/lawyers/invitations/page'
 import CaseProgressVertical from '@/components/CaseProgressVertical'
+import ProductList from '@/components/ProductList'
 
-export const useRecommendations = (caseId:string) => {
+export const useRecommendations = (caseId: string) => {
   // /api/cases/service/recommend?caseId=caseId
   const [recommendations, setRecommendations] = useState([])
   useEffect(() => {
@@ -27,10 +28,12 @@ export const useRecommendations = (caseId:string) => {
   return recommendations
 }
 
-function ReviewInterviewsView({ caseId }:any) {
+function ReviewInterviewsView({ caseId, caseData }: any) {
+  console.log(caseData)
+
   return (
     <div className="mb-32 mt-16 w-full">
-      <div className="mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
+      <div className="max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
         <div className="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
             Here's what we found.
@@ -53,71 +56,52 @@ function ReviewInterviewsView({ caseId }:any) {
               </div> */}
         </div>
       </div>
-      <div className='flex flex-row w-full gap-16 justify-between'>
-        {/* <div className='mt-16 w-1/3'>
+      <ProductList caseId={caseId} />
+      {/* <LawyersTable caseId={caseId} /> */}
 
-      <CaseProgressVertical stageIndex={3} />
-        </div> */}
-      <div>
-      <div className="mt-16">
-        <h1 className="flex flex-row items-center gap-2 text-3xl  font-bold leading-6 text-gray-900">
-          What to watch out for...
-        </h1>
-        <p className="mt-2 text-lg text-gray-700">
-          A lot of personal injury lawyers take on too many clients. We looked
-          for lawyers who are selective about the cases they take on. We also
-          looked for lawyers who have over 50 wins, and who have experience in
-          negotiations.
+      {/* <div className="mt-8">
+        <p className="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
+          <span className="font-bold">If you're looking for free options.</span>{' '}
+          {caseData.CaseAnalysis[0].freeOptions}
         </p>
       </div>
-      <div className="mt-16">
-        <h1 className="flex flex-row items-center gap-2 text-3xl  font-bold leading-6 text-gray-900">
-          How we did it...
-        </h1>
-        <p className="mt-2 text-lg text-gray-700">
-          A lot of personal injury lawyers take on too many clients. We looked
-          for lawyers who are selective about the cases they take on. We also
-          looked for lawyers who have over 50 wins, and who have experience in
-          negotiations.
+      <div className="mt-8">
+        <p className="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
+          <span className="font-bold">
+            If you're looking for advice on your situation...
+          </span>{' '}
+          We built a custom interview given your case, and narrowed down a few
+          top candidates. We'll walk you through our picks and what you might
+          like about each.
         </p>
       </div>
-      <div className="mt-16" />
-      <LawyersTable caseId={caseId} />
-
-      {/* <div className="mt-8 rounded-lg border px-6 py-4">
-        <ul role="list" className="divide-y divide-gray-100">
-          <div className="mb-4 sm:flex sm:items-center">
-            <div className="sm:flex-auto">
-              <h1 className="flex flex-row items-center gap-2 text-base font-semibold leading-6 text-gray-900">
-                Other Options
-                <div className="flex items-center">
-                  <SparklesIcon className="h-5 w-5" aria-hidden="true" />
-                </div>
-              </h1>
-              <p className="mt-2 text-sm text-gray-700">
-                Before jumping into it with a lawyer, consider these
-                lighter-touch options.
-              </p>
-            </div>
-
-            <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-              <button
-                type="button"
-                className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Add user
-              </button>
-            </div>
-          </div>
-        </ul>
+      <div className="mt-8">
+        <p className="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
+          <span className="font-bold">If you know you want a lawyer.</span> We
+          built a custom interview given your case, and narrowed down a few top
+          candidates. We'll walk you through our picks and what you might like
+          about each.
+        </p>
       </div> */}
-    </div>
-    </div>
+
+      <div className="flex w-full flex-row justify-between gap-16">
+        <div className="mt-10 flex items-center gap-x-6">
+          <button
+            onClick={() => {}}
+            className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            View Our Picks
+          </button>
+          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+            How it works <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
     </div>
   )
 }
 
-function ServiceView({ params: { caseId } }) {
+function ServiceView({ params: { caseId } }: any) {
   // const user = useUser()
   const caseData = useCase(caseId)
 
@@ -275,8 +259,7 @@ function ServiceView({ params: { caseId } }) {
         </div>
       )} */}
       {stageIndex === 2 && (
-        <div className="mt-16 w-full flex flex-row overflow-x-hidden gap-x-14 pb-32 lg:mx-1 lg:flex">
-        
+        <div className="mt-16 flex w-full flex-row gap-x-14 overflow-x-hidden pb-32 lg:mx-1 lg:flex">
           <div className="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
               Interviewing lawyers now.
@@ -297,24 +280,22 @@ function ServiceView({ params: { caseId } }) {
               </div>
             </div> */}
             <div className="mt-10 flex items-center gap-x-6">
-              {/* <button className="rounded-md bg-gray-500/50 px-3.5 py-2.5 text-sm font-semibold text-white/85 shadow-sm ring-1 ring-gray-900/20 transition-all hover:bg-gray-500/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
-                Learn more
-              </button> */}
-              <Link
+              <a
                 href="#"
-                className="text-sm flex flex-row items-center font-semibold leading-6 text-gray-900"
+                className="flex flex-row items-center text-sm font-semibold leading-6 text-gray-900"
               >
-                <span aria-hidden="true" className="text-2xl">
-                  -—>
-                  {/* → */}
-                </span>{' '}
-                <span className='ml-4 text-lgs -mb-1'>HOW IT WORKS</span>
-              </Link>
+                How it works{' '}
+                <span aria-hidden="true" className="ml-1">
+                  →
+                </span>
+              </a>
             </div>
           </div>
         </div>
       )}
-      {stageIndex === 3 && <ReviewInterviewsView caseId={caseId} />}
+      {stageIndex === 3 && (
+        <ReviewInterviewsView caseId={caseId} caseData={caseData} />
+      )}
     </AppLayout>
   )
 }
