@@ -3,11 +3,11 @@ import AutoFlipComponent from '@/components/AutoFlip'
 import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
 import { supabase } from '@/lib/supabaseClient'
 import { useLawyerUser } from '@/lib/useUser'
-import { CheckBadgeIcon } from '@heroicons/react/24/outline'
+import { CheckBadgeIcon, CheckIcon } from '@heroicons/react/24/outline'
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 import { useState } from 'react'
-import VerificationForm from './form/page'
+import VerificationForm, { BarMembership } from './form/page'
 import InvitationsView from '../invitations/[id]/page'
 import LawyerViewLayout from '@/components/LawyerViewLayout'
 import { Lawyer } from '@prisma/client'
@@ -18,13 +18,13 @@ const LAWYER_DEMO_URL = '/lawyers/demo'
 
 function VerificationSidebar({ view, setView }) {
   return (
-    <div className="w-81 border-r bg-slate-100 px-8 pt-8">
+    <div className="w-80 border-r bg-slate-100 px-8 pt-8">
       <div className="items-left flex flex-col">
         <h2 className="mt-6 text-2xl font-semibold leading-6 text-gray-900">
-          Verification
+          Onboarding
         </h2>
         <p className="mt-2 text-sm text-gray-500">
-          Get verified to start receiving free inbound.
+          Let's get to know each other.
         </p>
       </div>
       <div>
@@ -35,6 +35,15 @@ function VerificationSidebar({ view, setView }) {
             </div>
 
             <p className="text-sm font-medium">Who we are.</p>
+          </div>
+        </button>
+      </div>
+      <div>
+        <button onClick={() => setView('memberships')}>
+          <div className="mt-4 flex flex-row gap-2">
+            <CheckIcon className="h-5 w-5" />
+
+            <p className="text-sm font-medium">Memberships</p>
           </div>
         </button>
       </div>
@@ -60,6 +69,7 @@ function VerificationSidebar({ view, setView }) {
           </div>
         </button>
       </div>
+
       <div>
         <button onClick={() => setView('bar')}>
           <div className="mt-4 flex flex-row gap-2">
@@ -80,9 +90,11 @@ function VerificationLayout({}) {
   return (
     <div className="flex h-[100vh] w-full flex-row">
       <VerificationSidebar view={view} setView={setView} />
-      <div className="flex w-full flex-row justify-center">
+      <div className="lg-px-0 flex w-full flex-row justify-center px-4">
         {view === 'start' && <StartView setView={setView} />}
         {view === 'verification' && <VerificationForm />}
+        {view === 'bar' && <BarMembership />}
+        {view === 'memberships' && <MembershipsView />}
       </div>
     </div>
   )
@@ -91,10 +103,107 @@ export default function VerificationPage2() {
   return <VerificationLayout view="start" />
 }
 
+function MembershipsView() {
+  return (
+    <div className="mt-16 flex w-full max-w-3xl flex-col items-center">
+      <div className="w-full">
+        <h3 className="w-fit bg-yellow-300 text-4xl font-bold tracking-tighter text-gray-900">
+          Memberships
+        </h3>
+      </div>
+
+      <div className="mt-16 w-full">
+        <h3 className="w-fit text-4xl font-bold tracking-tighter text-gray-900">
+          Our Commitment
+        </h3>
+      </div>
+      <div className="flex w-full flex-row gap-4 pt-8">
+        <div className="flex w-full flex-col justify-between bg-slate-50 px-6 py-4">
+          <div>
+            <p className="text-2xl font-bold tracking-tighter">ImpossibleLaw</p>
+            {/* <p className="mt-2">
+              We're picky, so we're happy to pass on big value to the lawyers
+              that make this possible.
+            </p> */}
+            {/* <p className="mt-4">Free leads. Match for $250.</p> */}
+            <div className="mt-4 flex flex-row items-start gap-2">
+              <div className="mt-0.5 h-fit">
+                <CheckBadgeIcon className="h-5 w-5" />
+              </div>
+              <p className="">
+                <span className="font-bold text-gray-900">FREE.</span> Access
+                leads for free, and only pay when you match with a client.
+              </p>
+            </div>
+            <div className="mt-4 flex flex-row items-start gap-2">
+              <div className="mt-0.5 h-fit">
+                <CheckBadgeIcon className="h-5 w-5" />
+              </div>
+              <p className="">
+                <span className="font-bold text-gray-900">
+                  Flat rate $250 per match.
+                </span>{' '}
+                No hidden fees. No monthly fees. No matter the size of the case.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 flex w-full flex-row justify-center gap-4">
+            <a
+              href={LAWYER_DEMO_URL}
+              target="_blank"
+              className="h-fit text-nowrap rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+            >
+              Try the Demo
+            </a>
+          </div>
+        </div>
+        <div className="flex w-full flex-col justify-between bg-slate-50 px-6 py-4">
+          <div>
+            <p className="text-2xl font-bold tracking-tighter">Pro</p>
+            {/* <p className="mt-2">Pays off in 1 match.</p> */}
+            {/* <p className="mt-4">Free leads. Match for $250.</p> */}
+            <div className="mt-4 flex flex-row items-start gap-2">
+              <div className="mt-0.5 h-fit">
+                <CheckBadgeIcon className="h-5 w-5" />
+              </div>
+              <p className="">
+                <span className="font-bold text-gray-900">
+                  Flat rate $99 per match.
+                </span>{' '}
+                No hidden fees. No monthly fees. No matter the size of the case.
+              </p>
+            </div>
+            <div className="mt-4 flex flex-row items-start gap-2">
+              <div className="mt-0.5 h-fit">
+                <CheckBadgeIcon className="h-5 w-5" />
+              </div>
+              <p className="">
+                <span className="font-bold text-gray-900">$50 month.</span> Pays
+                off in 1 match!
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 flex w-full flex-row justify-center gap-4">
+            <a
+              href={LAWYER_DEMO_URL}
+              target="_blank"
+              className="h-fit text-nowrap rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+            >
+              Try the Demo
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function StartView({ setView }) {
   return (
     <div className="no-scrollbar flex w-full flex-row justify-center overflow-y-auto pb-32">
-      <div className="mt-16 max-w-3xl">
+      <div className="mt-16 w-full max-w-3xl">
         <h3 className="w-fit bg-yellow-300 text-4xl font-bold tracking-tighter text-gray-900">
           Your incentive-aligned leads partner.
         </h3>
@@ -137,89 +246,6 @@ function StartView({ setView }) {
               </a>
             </div>
           </div> */}
-        </div>
-        <div className="-mt-4 flex w-full flex-row bg-slate-50 px-6 pt-8">
-          <div className="flex w-full flex-col justify-between bg-slate-50">
-            <div>
-              <p className="text-2xl font-bold tracking-tighter">
-                ImpossibleLaw
-              </p>
-              {/* <p className="mt-2">
-              We're picky, so we're happy to pass on big value to the lawyers
-              that make this possible.
-            </p> */}
-              {/* <p className="mt-4">Free leads. Match for $250.</p> */}
-              <div className="mt-4 flex flex-row items-start gap-2">
-                <div className="mt-0.5 h-fit">
-                  <CheckBadgeIcon className="h-5 w-5" />
-                </div>
-                <p className="">
-                  <span className="font-bold text-gray-900">FREE.</span> Access
-                  leads for free, and only pay when you match with a client.
-                </p>
-              </div>
-              <div className="mt-4 flex flex-row items-start gap-2">
-                <div className="mt-0.5 h-fit">
-                  <CheckBadgeIcon className="h-5 w-5" />
-                </div>
-                <p className="">
-                  <span className="font-bold text-gray-900">
-                    Flat rate $250 per match.
-                  </span>{' '}
-                  No hidden fees. No monthly fees. No matter the size of the
-                  case.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-8 flex w-full flex-row justify-center gap-4">
-              <a
-                href={LAWYER_DEMO_URL}
-                target="_blank"
-                className="h-fit text-nowrap rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
-              >
-                Try the Demo
-              </a>
-            </div>
-          </div>
-          <div className="flex w-full flex-col justify-between bg-slate-50">
-            <div>
-              <p className="text-2xl font-bold tracking-tighter">Pro</p>
-              {/* <p className="mt-2">Pays off in 1 match.</p> */}
-              {/* <p className="mt-4">Free leads. Match for $250.</p> */}
-              <div className="mt-4 flex flex-row items-start gap-2">
-                <div className="mt-0.5 h-fit">
-                  <CheckBadgeIcon className="h-5 w-5" />
-                </div>
-                <p className="">
-                  <span className="font-bold text-gray-900">
-                    Flat rate $99 per match.
-                  </span>{' '}
-                  No hidden fees. No monthly fees. No matter the size of the
-                  case.
-                </p>
-              </div>
-              <div className="mt-4 flex flex-row items-start gap-2">
-                <div className="mt-0.5 h-fit">
-                  <CheckBadgeIcon className="h-5 w-5" />
-                </div>
-                <p className="">
-                  <span className="font-bold text-gray-900">$50 month.</span>{' '}
-                  Pays off in 1 match!
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-8 flex w-full flex-row justify-center gap-4">
-              <a
-                href={LAWYER_DEMO_URL}
-                target="_blank"
-                className="h-fit text-nowrap rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
-              >
-                Try the Demo
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </div>

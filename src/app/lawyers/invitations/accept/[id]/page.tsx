@@ -1,26 +1,10 @@
 'use client'
 import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
 import { supabase } from '@/lib/supabaseClient'
-import {
-  FaceSmileIcon,
-  InformationCircleIcon,
-  PhotoIcon,
-  UserCircleIcon,
-} from '@heroicons/react/24/outline'
-import { UUID } from 'crypto'
-import Link from 'next/link'
-
-import { usePathname, useRouter } from 'next/navigation'
+import { FaceSmileIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { hoursLeftStr } from '../../page'
-import { v4 as uuidv4 } from 'uuid'
-import { openai } from '@/app/api/invitations/create/utils/createNoteForLawyer'
-import {
-  analyzeLawyerCaseFit,
-  reviewStrategy,
-} from '@/app/api/invitations/review/route'
-import AppLayout from '@/components/Layout/AppLayout'
-import LawyerViewLayout from '@/components/LawyerViewLayout'
 
 const agreements = [
   {
@@ -55,9 +39,15 @@ const services = [
   },
 ]
 
-export default function OffersView() {
-  const invitationId = usePathname().split('/').pop()
+export default function AcceptOfferPage({ params: { id } }) {
+  return (
+    <LawyerAppLayout>
+      <AcceptOfferForm invitationId={id} />
+    </LawyerAppLayout>
+  )
+}
 
+export function AcceptOfferForm({ invitationId }) {
   // get invitation from supabase db
   const [invitation, setInvitation] = useState()
   useEffect(() => {
@@ -176,7 +166,6 @@ export default function OffersView() {
     //     })),
     //   )
     //   .select()
-    // console.log('offered', insertedServices, insertError)
 
     router.push(`/lawyers/invitations/${invitationId}`)
   }
@@ -188,97 +177,63 @@ export default function OffersView() {
 
   if (loading) {
     return (
-      <LawyerAppLayout>
-        {/* <LawyerViewLayout viewName="Questions" /> */}
-
-        <div className="mt-8 flex flex-col items-center">
-          <FaceSmileIcon
-            className="h-12 w-12 text-gray-400"
-            aria-hidden="true"
-          />
-          <h2 className="mt-6 text-2xl font-semibold leading-6 text-gray-900">
-            Loading...
-          </h2>
-          <p className="mt-2 text-sm text-gray-500">
-            Our robots must be sleeping on the job.
-          </p>
-        </div>
-      </LawyerAppLayout>
+      <div className="mt-8 flex flex-col items-center">
+        <FaceSmileIcon className="h-12 w-12 text-gray-400" aria-hidden="true" />
+        <h2 className="mt-6 text-2xl font-semibold leading-6 text-gray-900">
+          Loading...
+        </h2>
+        <p className="mt-2 text-sm text-gray-500">
+          Our robots must be sleeping on the job.
+        </p>
+      </div>
     )
   }
 
   return (
-    <LawyerAppLayout>
-      <div className="flex flex-row gap-1">
-        <p className="text-xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
-          Litigation
-        </p>
-        <p className="font-bold">.</p>
-        <p className="text-xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
-          $50,000 Dispute
-        </p>
-        <p className="font-bold">.</p>
-        <p className="text-xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
-          $5,000 Estimate
-        </p>
-      </div>
-      <h3 className="text-3xl font-bold tracking-tighter">
-        {invitation.Case.title}
-      </h3>
-      <p className="font-semibold tracking-tighter">
-        Client — {invitation?.Case?.User?.first} {invitation?.Case?.User?.last}
-      </p>
+    <div>
       <div className="mb-32">
         {invitation?.status !== 'accepted' ? (
           <form onSubmit={handleSendOffer}>
             <div className="">
-              {/* <div className="border-b border-gray-900/10 pb-12">
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              Due in {hoursLeftStr(invitation.dueBy)}.
-            </p>
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
-              {invitation?.Case?.title || 'Missing Title'}
-            </h2>
-            <p className="mt-4 text-base text-gray-600">
-              {invitation?.Case?.description}
-            </p>
-          </div> */}
-              {/* <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
-              Services
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              What services would you like to offer this lead?
-            </p>
+              <div className="mt-0 border-gray-900/10">
+                <h2 className="text-3xl font-bold leading-7 tracking-tighter text-gray-900">
+                  Services
+                </h2>
+                <p className="mt-1 text-sm leading-6 text-gray-600">
+                  What services would you like to offer this lead?
+                </p>
 
-            <div className="space-y-10">
-              <fieldset>
-                <div className="mt-6 space-y-6">
-                  {services.map((service, index) => (
-                    <div key={index} className="relative flex gap-x-3">
-                      <div className="flex h-6 items-center">
-                        <input
-                          id={`service-${index}`}
-                          name={`service-${index}`}
-                          type="checkbox"
-                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                        />
-                      </div>
-                      <div className="text-sm leading-6">
-                        <label
-                          htmlFor={`service-${index}`}
-                          className="font-medium text-gray-900"
-                        >
-                          {service.label}
-                        </label>
-                        <p className="text-gray-500">{service.description}</p>
-                      </div>
+                <div className="space-y-10">
+                  <fieldset>
+                    <div className="mt-6 space-y-6">
+                      {services.map((service, index) => (
+                        <div key={index} className="relative flex gap-x-3">
+                          <div className="flex h-6 items-center">
+                            <input
+                              id={`service-${index}`}
+                              name={`service-${index}`}
+                              type="checkbox"
+                              defaultChecked={true}
+                              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            />
+                          </div>
+                          <div className="text-sm leading-6">
+                            <label
+                              htmlFor={`service-${index}`}
+                              className="font-medium text-gray-900"
+                            >
+                              {service.label}
+                            </label>
+                            <p className="text-gray-500">
+                              {service.description}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </fieldset>
                 </div>
-              </fieldset>
-            </div>
-          </div> */}
+              </div>
 
               <div className="mt-16">
                 <h2 className="text-2xl font-bold leading-7 tracking-tighter text-gray-900">
@@ -401,6 +356,6 @@ export default function OffersView() {
           </div>
         )}
       </div>
-    </LawyerAppLayout>
+    </div>
   )
 }

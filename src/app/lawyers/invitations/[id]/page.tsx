@@ -12,6 +12,7 @@ import { hoursLeft, hoursLeftStr } from '../page'
 import remarkGfm from 'remark-gfm'
 import rehypeReact from 'rehype-react'
 import SyntaxHighlighter from 'react-syntax-highlighter'
+import { AcceptOfferForm } from '../accept/[id]/page'
 
 function formatDateToMMDDYY(inputDate) {
   // Create a Date object from the input
@@ -121,16 +122,16 @@ export default function InvitationsView({ params: { id } }) {
         </p>
       )} */}
       {/* <p>{invitation.status}</p> */}
-      <div className="flex flex-row gap-1">
-        <p className="text-xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
+      <div className="flex w-fit flex-row gap-1 bg-yellow-300">
+        <p className="text-xl font-bold tracking-tighter text-gray-900 transition-all hover:text-gray-700">
           Litigation
         </p>
         <p className="font-bold">.</p>
-        <p className="text-xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
+        <p className="text-xl font-bold tracking-tighter text-gray-900 transition-all hover:text-gray-700">
           $50,000 Dispute
         </p>
         <p className="font-bold">.</p>
-        <p className="text-xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
+        <p className="text-xl font-bold tracking-tighter text-gray-900 transition-all hover:text-gray-700">
           $5,000 Estimate
         </p>
       </div>
@@ -140,12 +141,12 @@ export default function InvitationsView({ params: { id } }) {
 
       {invitation.status === 'pending' && (
         <div className="flex flex-row gap-2 text-4xl">
-          <Link
-            href={`/lawyers/invitations/accept/${invitationId}`}
+          <button
+            onClick={() => setView('review')}
             className="font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700"
           >
             Accept
-          </Link>
+          </button>
 
           <p
             onClick={() => declineInvitation(invitationId)}
@@ -163,7 +164,7 @@ export default function InvitationsView({ params: { id } }) {
       )}
 
       <div className="mt-16 flex w-full flex-row justify-start gap-16">
-        <div className="flex flex-col items-start text-left font-semibold">
+        <div className="flex w-32 flex-col items-start text-left font-semibold">
           <button
             type="button"
             onClick={() => setView('invitation')}
@@ -171,13 +172,13 @@ export default function InvitationsView({ params: { id } }) {
           >
             Invitation
           </button>
-          <button
+          {/* <button
             type="button"
             onClick={() => setView('analysis')}
             className={`mt-1 text-left text-sm leading-6 ${view === 'analysis' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
           >
             Analysis
-          </button>
+          </button> */}
           <button
             type="button"
             onClick={() => setView('review')}
@@ -193,9 +194,14 @@ export default function InvitationsView({ params: { id } }) {
                 <h3 className="text-2xl font-bold tracking-tighter text-gray-900">
                   Invitation
                 </h3>
-                <p className="mt-1 text-sm leading-6 text-gray-600">
-                  asdfasdfsa
-                </p>
+                <div className="border-gray-900/10 pb-12">
+                  <p className="mt-1 text-sm leading-6 text-gray-600">
+                    Due in {hoursLeftStr(invitation.dueBy)}.
+                  </p>
+                  <p className="mt-2 text-base text-gray-600">
+                    {invitation?.Case?.description}
+                  </p>
+                </div>
               </div>
               <Markdown
                 remarkPlugins={[remarkGfm]}
@@ -236,18 +242,7 @@ export default function InvitationsView({ params: { id } }) {
               </div>
             </div>
           )}
-          {view === 'review' && (
-            <div className="w-full">
-              <div className="mb-8">
-                <h3 className="text-2xl font-bold tracking-tighter text-gray-900">
-                  Review
-                </h3>
-                <p className="mt-1 text-sm leading-6 text-gray-600">
-                  asdfasdfsa
-                </p>
-              </div>
-            </div>
-          )}
+          {view === 'review' && <AcceptOfferForm invitationId={invitationId} />}
         </div>
       </div>
 

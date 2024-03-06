@@ -3,6 +3,8 @@ import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
 import AutoFlipComponent from '@/components/AutoFlip'
 import { useState } from 'react'
 import { useLawyerUser } from '@/lib/useUser'
+import Link from 'next/link'
+import { Agreement, User } from '@prisma/client'
 
 export const CLIENTS = [
   {
@@ -23,14 +25,21 @@ export const CLIENTS = [
   },
 ]
 
-const useLawyerClients = (id) => {
-  return CLIENTS
-}
-
 export default function LawyersHome() {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const { id } = useLawyerUser()
-  const clients = useLawyerClients(id)
+  const lawyer = useLawyerUser()
+
+  // reduce agreements to unique clients, avoiding overlap
+  const clients = lawyer.Agreement?.reduce((acc, agreement: Agreement) => {
+    if (!acc.find((client: User) => client.id === agreement.Case.User.id)) {
+      acc.push({
+        id: agreement.Case.User.id,
+        name: [agreement.Case.User.first, agreement.Case.User.last].join(' '),
+        summary: agreement.Case.summary,
+      })
+    }
+    return acc
+  }, [])
 
   return (
     <LawyerAppLayout>
@@ -70,14 +79,14 @@ export default function LawyersHome() {
         className="flex w-full flex-col items-center"
       >
         <div className="w-full px-0">
-          {clients.map((client, i) => (
-            <div key={i} className="">
-              <div className="px-0 py-5">
-                <h3 className="text-base font-semibold leading-6 text-gray-900">
+          {clients?.map((client, i) => (
+            <Link href={`/lawyers/clients/${client.id}`} key={i} className="">
+              <div className="group px-0 py-5">
+                <h3 className="w-fit text-base font-semibold leading-6 text-gray-900 transition-all group-hover:bg-yellow-300">
                   {client.name}
                 </h3>
-                <div className="mt-2 max-w-xl text-sm text-gray-500">
-                  <p>{client.status}</p>
+                <div className="mt-1 max-w-xl text-sm text-gray-500 transition-all group-hover:text-gray-900">
+                  <p>{client.summary}</p>
                 </div>
                 {/* {invitation.action && (
                   <div className="mt-3 text-sm leading-6">
@@ -91,7 +100,7 @@ export default function LawyersHome() {
                   </div>
                 )} */}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         {/* <div className="mt-8 flex flex-row justify-start gap-4">

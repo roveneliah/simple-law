@@ -133,11 +133,11 @@ export const useStripePolice = (user: any) => {
             })
         }
 
-        console.log(data)
+        // console.log(data)
         if (data.error) {
           console.error(data.error)
         } else {
-          console.log('got stripe user:', data.data)
+          // console.log('got stripe user:', data.data)
         }
       })
     }
@@ -162,7 +162,7 @@ export const useLawyerUser = () => {
         supabase
           .from('Lawyer')
           .select(
-            `*, BarMembership(*), Invitation(*, Case(*, User(*))), Agreement(*)`,
+            `*, BarMembership(*), Invitation(*, Case(*, User(*))), Agreement(*, Case(*, User(*)))`,
           )
           .eq('id', session?.user?.id)
           .single()

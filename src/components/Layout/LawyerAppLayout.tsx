@@ -166,7 +166,7 @@ export default function LawyerAppLayout({
       <div className="flex h-screen flex-row">
         {/* <Sidebar /> */}
         <div className="flex w-full flex-col items-center overflow-auto py-4">
-          <div className="flex w-full max-w-4xl flex-col px-8 lg:px-0">
+          <div className="flex w-full max-w-3xl flex-col px-8 lg:px-0">
             <div className="mb-4 mt-4 flex w-full flex-row items-center justify-between pb-4">
               {/* <div className="w-1/3">
               <Link href="/lawyers">
