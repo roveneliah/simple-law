@@ -226,14 +226,7 @@ export default function LawyerAppLayout({
                       tasks
                     </Link>
                   </div>
-                  <div>
-                    <Link
-                      href="/lawyers/tools"
-                      className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
-                    >
-                      tools
-                    </Link>
-                  </div>
+
                   <div>
                     <Link
                       href="/lawyers/account"

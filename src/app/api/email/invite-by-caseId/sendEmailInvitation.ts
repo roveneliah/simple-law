@@ -17,8 +17,9 @@ export default async function sendEmailInvitation({
   comment,
 }: InvitationTemplateParams) {
   const data = await mailgunClient.messages
-    .create('sandbox1ab646035ab642f5b65ee458f327380a.mailgun.org', {
-      from: 'ImpossibleLaw <postmaster@sandbox1ab646035ab642f5b65ee458f327380a.mailgun.org>',
+    // .create('sandbox1ab646035ab642f5b65ee458f327380a.mailgun.org', {
+    .create('mail.impossiblelaw.com', {
+      from: 'ImpossibleLaw <santa@mail.impossiblelaw.com>',
       to,
       subject,
       // text,

@@ -4,7 +4,7 @@ import prisma from '@/lib/prismaClient'
 import { supabase } from '@/lib/supabaseClient'
 import { useUser } from '@/lib/useUser'
 import { v4 as uuidv4 } from 'uuid'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { NewFiles } from '@/components/CaseViews/NewFiles'
 import { useCase } from '@/lib/useCase'
@@ -42,13 +42,14 @@ const createDocumentEntries = async (uploadedDocs) => {
   return documentEntries
 }
 
-function NewCaseForm({ caseData }) {
+export function NewCaseForm({ caseData }) {
   const router = useRouter()
+  const user = useUser()
   const [currentIndex, setCurrentIndex] = useState(0)
 
   // basics
-  const [nickname, setNickname] = useState(caseData.title)
-  const [whatsUp, setWhatsUp] = useState(caseData.whatsUp)
+  const [nickname, setNickname] = useState(caseData?.title)
+  const [whatsUp, setWhatsUp] = useState(caseData?.whatsUp)
 
   const [goals, setGoals] = useState(caseData?.goals || '')
   const [dates, setDates] = useState(caseData?.dates || '')
@@ -58,15 +59,42 @@ function NewCaseForm({ caseData }) {
 
   const [loading, setLoading] = useState(false)
 
-  if (!caseData?.title)
-    return (
-      <div>
-        <h1>Loading...</h1>
-      </div>
-    )
+  // make sure there is userid??
+  const handleCreateCase = async (e) => {
+    // get form elements
+    e.preventDefault()
 
-  const submitCaseForReview = async () => {
-    console.log('submitting case for review')
+    if (caseData) {
+      handleUpdateBasics(e)
+      return
+    }
+
+    console.log('Create case')
+    supabase
+      .from('Case')
+      .insert([
+        {
+          // generate id
+          id: uuidv4(),
+          userId: user.id,
+          title: nickname,
+          whatsUp,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ])
+      .select()
+      .then(({ data, error }) => {
+        if (error?.code === '23503') {
+          console.error('User not found')
+          return { data, error }
+        }
+
+        console.log(data, error)
+        router.push(`/app/cases/new/${data[0].id}`)
+      })
+
+    // then upload docs
   }
 
   const handleUpdateBasics = async (e) => {
@@ -129,8 +157,6 @@ function NewCaseForm({ caseData }) {
     setView('docs')
   }
 
-  console.log(caseData)
-
   useEffect(() => {
     if (view !== 'review') return
 
@@ -148,7 +174,19 @@ function NewCaseForm({ caseData }) {
     }
   }, [view])
 
-  const analysis = caseData.CaseAnalysis[0]
+  const analysis = caseData?.CaseAnalysis?.[0]
+
+  const handleOpenReview = (e) => {
+    e.preventDefault()
+
+    setView('review')
+  }
+
+  // useEffect(() => {
+  //   if (caseData?.readyForInvitation) {
+  //     return redirect(`/app/cases/lawyers/${caseData.id}`)
+  //   }
+  // }, [caseData])
 
   return (
     <div className="mt-8 w-full">
@@ -166,6 +204,7 @@ function NewCaseForm({ caseData }) {
         <div className="flex w-2/5 flex-col items-start text-left font-semibold">
           <button
             type="button"
+            disabled={!caseData ? true : false}
             onClick={() => setView('basics')}
             className={`mt-1 text-left text-sm leading-6 ${view === 'basics' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
           >
@@ -173,6 +212,7 @@ function NewCaseForm({ caseData }) {
           </button>
           <button
             type="button"
+            disabled={!caseData ? true : false}
             onClick={() => setView('goals')}
             className={`mt-1 text-left text-sm leading-6 ${view === 'goals' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
           >
@@ -180,6 +220,7 @@ function NewCaseForm({ caseData }) {
           </button>{' '}
           <button
             type="button"
+            disabled={!caseData ? true : false}
             onClick={() => setView('dates')}
             className={`mt-1 text-left text-sm leading-6 ${view === 'dates' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
           >
@@ -187,6 +228,7 @@ function NewCaseForm({ caseData }) {
           </button>
           <button
             type="button"
+            disabled={!caseData ? true : false}
             onClick={() => setView('docs')}
             className={`mt-1 text-left text-sm leading-6 ${view === 'docs' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
           >
@@ -194,6 +236,7 @@ function NewCaseForm({ caseData }) {
           </button>
           <button
             type="button"
+            disabled={!caseData ? true : false}
             onClick={() => setView('review')}
             className={`mt-1 text-left text-sm leading-6 ${view === 'review' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
           >
@@ -205,7 +248,7 @@ function NewCaseForm({ caseData }) {
             <div className={''}>
               {view === 'basics' && (
                 <form
-                  onSubmit={handleUpdateBasics}
+                  onSubmit={handleCreateCase}
                   className="relative col-span-full rounded-md"
                 >
                   <label
@@ -244,19 +287,29 @@ function NewCaseForm({ caseData }) {
                     />
                   </div>
                   <div className="mt-8 flex w-full flex-row justify-end gap-8">
-                    <button
+                    {/* <button
                       type="button"
-                      onClick={() => setCurrentIndex(currentIndex - 1)}
+                      onClick={() => setView('goals')}
                       className="text-sm font-semibold leading-6 text-gray-900"
                     >
                       Back
-                    </button>
-                    <button
-                      type="submit"
-                      className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    >
-                      Next
-                    </button>
+                    </button> */}
+                    {caseData ? (
+                      <button
+                        type="button"
+                        onClick={handleUpdateBasics}
+                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      >
+                        Next
+                      </button>
+                    ) : (
+                      <button
+                        type="submit"
+                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      >
+                        Create Case
+                      </button>
+                    )}
                   </div>
                 </form>
               )}
@@ -265,10 +318,13 @@ function NewCaseForm({ caseData }) {
                 <form onSubmit={handleUpdateGoals} className="col-span-full">
                   <label
                     htmlFor="about"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block w-fit bg-yellow-300 text-3xl font-bold leading-6 tracking-tighter text-gray-900"
                   >
-                    What are your goals?
+                    What are your priorities?
                   </label>
+                  <p className="mt-2 text-lg font-bold leading-6 tracking-tighter text-gray-600">
+                    Speed? Cost? Lawyer Experience?
+                  </p>
                   <div className="mt-2">
                     <textarea
                       id="about"
@@ -280,10 +336,6 @@ function NewCaseForm({ caseData }) {
                       onChange={(e) => setGoals(e.target.value)}
                     />
                   </div>
-                  <p className="mt-3 text-sm leading-6 text-gray-600">
-                    Let's make sure you and your attorney get each other from
-                    Day 1.
-                  </p>
                   <div className="mt-8 flex w-full flex-row justify-end gap-8">
                     <button
                       type="button"
@@ -294,6 +346,7 @@ function NewCaseForm({ caseData }) {
                     </button>
                     <button
                       type="submit"
+                      onClick={() => setView('dates')}
                       className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                       Next
@@ -306,10 +359,13 @@ function NewCaseForm({ caseData }) {
                 <form onSubmit={handleUpdateDates} className="col-span-full">
                   <label
                     htmlFor="about"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block w-fit bg-yellow-300 text-3xl font-bold leading-6 tracking-tighter text-gray-900"
                   >
-                    Any dates or deadlines we should know about?
+                    Any dates we should know about?
                   </label>
+                  <p className="mt-2 text-lg font-bold leading-6 tracking-tighter text-gray-600">
+                    Timelines, urgency, deadlines?
+                  </p>
                   <div className="mt-2">
                     <textarea
                       id="about"
@@ -328,13 +384,14 @@ function NewCaseForm({ caseData }) {
                   <div className="mt-8 flex w-full flex-row justify-end gap-8">
                     <button
                       type="button"
-                      onClick={() => setView('goals)')}
+                      onClick={() => setView('goals')}
                       className="text-sm font-semibold leading-6 text-gray-900"
                     >
                       Back
                     </button>
                     <button
                       type="submit"
+                      onClick={() => setView('docs')}
                       className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                       Next
@@ -358,7 +415,7 @@ function NewCaseForm({ caseData }) {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setView('review')}
+                      onClick={handleOpenReview}
                       className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                       Review

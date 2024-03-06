@@ -76,7 +76,7 @@ export default function LawyersHome() {
       <AutoFlipComponent
         currentIndex={currentIndex}
         setCurrentIndex={setCurrentIndex}
-        className="flex w-full flex-col items-center"
+        className="mt-4 flex w-full flex-col items-center"
       >
         <div className="w-full px-0">
           {clients?.map((client, i) => (

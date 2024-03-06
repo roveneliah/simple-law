@@ -3,6 +3,7 @@ import { Case, Invitation, Lawyer } from '@prisma/client'
 import sendEmailInvitation from '../../email/invite-by-caseId/sendEmailInvitation'
 import { createInvitationsForLawyers } from './utils/createInvitationsForLawyers'
 import { getCaseData } from '../../cases/review/parse/route'
+import { dispatchInvitationsForCase } from '../../email/invite-by-caseId/route'
 
 // Get lawyers to Interview
 async function fetchCuratedList(caseData: Case) {

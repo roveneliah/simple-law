@@ -201,7 +201,7 @@ export default function DummyProduct2({ params: { caseId } }) {
                 {/* Size selector */}
                 <RadioGroup value={selectedSize} onChange={setSelectedSize}>
                   <RadioGroup.Label className="block text-sm font-medium text-gray-700">
-                    Count
+                    Lawyer
                   </RadioGroup.Label>
                   <div className="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {product.sizes.map((size) => (

@@ -1,10 +1,12 @@
 'use client'
+import { getUserAvatarUrlById } from '@/app/app/account/page'
 import CaseProgress from '@/components/CaseProgress'
 import CaseProgressVertical from '@/components/CaseProgressVertical'
 import AppLayout from '@/components/Layout/AppLayout'
 import { AVATARS, FALLBACK_AVATAR } from '@/data/dummy'
 import { supabase } from '@/lib/supabaseClient'
 import { useCase } from '@/lib/useCase'
+import { useUser } from '@/lib/useUser'
 import {
   CircleStackIcon,
   PaperAirplaneIcon,
@@ -14,25 +16,59 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
-export function InfoGatherView({ caseId }: any) {
-  const caseData = useCase(caseId)
-
+export const useQuestions = (caseId) => {
   const [questions, setQuestions] = useState([])
+
+  // subscribe to realtime case data channel
   useEffect(() => {
-    console.log(caseData)
-    if (!caseData?.Question) return
-    try {
-      setQuestions(
-        caseData.Question.map((q) => ({ ...q, answer: q.answer || '' })),
+    const channel = supabase
+      .channel('case-questions-channel')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'Questions',
+          filter: `caseId=eq.${caseId}`,
+        },
+        (payload) => {
+          console.log('New questions!', payload)
+          setQuestions(payload.new)
+        },
       )
-    } catch (error) {
-      console.log("Couldn't parse questions...")
-      console.log(error)
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
     }
-  }, [caseData?.Question])
+  }, [caseId])
+
+  useEffect(() => {
+    supabase
+      .from('Question')
+      .select('*')
+      .eq('caseId', caseId)
+      .then(({ data, error }) => {
+        setQuestions(data)
+      })
+  }, [caseId])
+
+  return questions
+}
+
+export function InfoGatherView({ caseId }: any) {
+  const user = useUser()
+  // const caseData = useCase(caseId)
+  const questions = useQuestions(caseId)
+  const [filteredQuestions, setFilteredQuestions] = useState([])
+  useEffect(() => {
+    setFilteredQuestions(questions.filter((q) => !q.answer))
+  }, [questions])
+
+  console.log(filteredQuestions)
 
   const [index, setIndex] = useState(0)
-  const { id, question, subQuestion, answer } = questions?.[index] || {}
+  const { id, question, subQuestion, answer } = filteredQuestions?.[index] || {}
 
   const inputRef = useRef(null)
   useEffect(() => {
@@ -70,15 +106,15 @@ export function InfoGatherView({ caseId }: any) {
     console.log({ question, answer })
     console.log(e.target)
 
-    const updatedQuestions = questions.map((q, i) =>
+    const updatedQuestions = filteredQuestions.map((q, i) =>
       i === index ? { ...q, answer } : q,
     )
     console.log(updatedQuestions)
 
     // update the answer
     // submit question to the server
-    if (questions[index].answer !== answer) {
-      console.log(answer, questions[index].answer)
+    if (filteredQuestions[index].answer !== answer) {
+      console.log(answer, filteredQuestions[index].answer)
       console.log('updating case with this new information')
       supabase
         .from('Question')
@@ -90,12 +126,13 @@ export function InfoGatherView({ caseId }: any) {
         .then(console.log)
     }
 
-    if (index + 1 < questions.length) {
+    console.log(filteredQuestions.length, index)
+    if (index + 1 < filteredQuestions.length) {
       setIndex(index + 1)
-      inputElement.value = questions[index + 1].answer
+      inputElement.value = filteredQuestions[index + 1].answer
     } else {
       console.log('triggering a new review')
-      setQuestions([])
+      // setQuestions([])
       fetch(`/api/cases/review/parse`, {
         method: 'POST',
         body: JSON.stringify({ caseId }),
@@ -105,6 +142,23 @@ export function InfoGatherView({ caseId }: any) {
       router.push(`/app/cases/lawyers/${caseId}`)
     }
   }
+
+  // TODO: trigger review if all questions are answered
+  useEffect(() => {
+    if (questions.length > 0 && filteredQuestions.length === 0) {
+      console.log('triggering a new review')
+      // setQuestions([])
+      fetch(`/api/cases/review/parse`, {
+        method: 'POST',
+        body: JSON.stringify({ caseId }),
+      })
+
+      // // then refresh questions
+      // router.push(`/app/cases/lawyers/${caseId}`)
+    }
+  }, [filteredQuestions])
+
+  const userImageUrl = getUserAvatarUrlById(user?.id)
 
   return (
     <div>
@@ -133,7 +187,7 @@ export function InfoGatherView({ caseId }: any) {
           </div>
         </div>
       </div> */}
-      {questions.length === 0 && (
+      {filteredQuestions.length === 0 ? (
         <div className="flex flex-col items-center justify-center">
           <p className="text-lg font-semibold text-gray-700">
             No questions to answer
@@ -142,36 +196,41 @@ export function InfoGatherView({ caseId }: any) {
             You've answered all the questions
           </p>
         </div>
-      )}
-
-      <form key={id} className="mt-0" onSubmit={handleSubmit}>
-        <div className="flex flex-row items-start justify-start gap-4">
-          <img
-            src={AVATARS[2]}
-            className="mt-1 h-6 w-6 rounded-full bg-gray-800"
-            alt="avatar"
-          />
-          <div>
-            <p name="question" className="text-xl font-bold tracking-tight">
-              {question}
-            </p>
-            <p className="text-md">{subQuestion}</p>
+      ) : (
+        <form key={id} className="mt-0" onSubmit={handleSubmit}>
+          <div className="flex flex-row items-start justify-start gap-4">
+            {/* <img
+              src={AVATARS[2]}
+              className="mt-1 h-10 w-10 rounded-full bg-gray-800"
+              alt="avatar"
+            /> */}
+            <div>
+              <p name="question" className="text-xl font-bold tracking-tight">
+                {question}
+              </p>
+              <p className="text-md">{subQuestion}</p>
+            </div>
           </div>
-        </div>
-        <div className="mt-4 flex flex-row items-start justify-start gap-4">
-          <img
+          <div className="mt-8 flex flex-row items-start justify-start gap-4">
+            {/* <img
             src={FALLBACK_AVATAR}
-            className="mt-1 h-6 w-6 rounded-full bg-gray-800"
+            className="mt-1 h-10 w-10 rounded-full bg-gray-800"
             alt="avatar"
-          />
-          <input
-            ref={inputRef}
-            name="answer"
-            className="w-full bg-transparent text-xl outline-none"
-            defaultValue={answer}
-          />
-        </div>
-      </form>
+          /> */}
+            {/* <img
+              src={userImageUrl}
+              alt=""
+              className="mt-0 h-10 w-10 rounded-full"
+            /> */}
+            <input
+              ref={inputRef}
+              name="answer"
+              className="mt-1 w-full bg-transparent text-xl outline-none"
+              defaultValue={answer}
+            />
+          </div>
+        </form>
+      )}
     </div>
   )
 }

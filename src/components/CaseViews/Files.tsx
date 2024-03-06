@@ -217,9 +217,17 @@ export function Files({ caseId }) {
 
       <div className="col-span-full">
         <div className="flex flex-row justify-between">
-          <p className="block text-lg font-semibold leading-6 text-gray-900">
-            Upload any relevant documents.
-          </p>
+          <div>
+            <label
+              htmlFor="about"
+              className="block w-fit bg-yellow-300 text-3xl font-bold leading-6 tracking-tighter text-gray-900"
+            >
+              Upload any relevant documents or evidence.
+            </label>
+            <p className="mt-2 text-lg font-bold leading-6 tracking-tighter text-gray-600">
+              You can always do this later.
+            </p>
+          </div>
           {/* <label
             htmlFor="file-upload"
             className="relative cursor-pointer rounded-md font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"

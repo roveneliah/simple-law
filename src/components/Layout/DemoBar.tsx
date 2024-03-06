@@ -14,7 +14,7 @@ export default function DemoBar() {
             <div className="flex w-full flex-row justify-between">
               <p className="whitespace-nowrap text-sm leading-6 text-white">
                 <strong className="font-semibold">
-                  Welcome to ImpossibleLaw's Demo
+                  Welcome to ImpossibleLaw
                 </strong>
                 {/* <svg
                   viewBox="0 0 2 2"

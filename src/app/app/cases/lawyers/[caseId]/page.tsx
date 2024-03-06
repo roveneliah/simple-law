@@ -9,6 +9,7 @@ import CaseProgress from '@/components/CaseProgress'
 import { hoursLeft, hoursLeftStr } from '@/app/lawyers/invitations/page'
 import CaseProgressVertical from '@/components/CaseProgressVertical'
 import ProductList from '@/components/ProductList'
+import { redirect } from 'next/navigation'
 
 export const useRecommendations = (caseId: string) => {
   // /api/cases/service/recommend?caseId=caseId
@@ -33,7 +34,7 @@ function ReviewInterviewsView({ caseId, caseData }: any) {
 
   return (
     <div className="no-scrollbar mb-32 mt-16 w-full">
-      <div className="no-scrollbar max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
+      <div className="no-scrollbar gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
         <div className="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
             Here's what we found.
@@ -114,7 +115,9 @@ function ServiceView({ params: { caseId } }: any) {
 
   const [stageIndex, setStageIndex] = useState<null | number>(null)
 
-  const hrsLeft = hoursLeft(new Date(caseData?.interviewDueBy))
+  const hrsLeft = caseData?.interviewDueBy
+    ? hoursLeft(new Date(caseData?.interviewDueBy))
+    : 48
   const timeLeftStr =
     hrsLeft > 36 ? '2 days' : hrsLeft > 24 ? '1 day' : `${hrsLeft} hours`
   useEffect(() => {
@@ -158,12 +161,25 @@ function ServiceView({ params: { caseId } }: any) {
       body: JSON.stringify({ caseId }),
     })
 
+    const res2 = await fetch(`/api/email/invite-by-caseId`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ caseId }),
+    })
+    console.log(res2)
+
     const { data, error } = await res.json()
     if (error) {
       console.error(error)
     }
 
     console.log(data)
+  }
+
+  if (caseData && !caseData?.readyForInvitation) {
+    return redirect('/app/cases/new/' + caseId)
   }
 
   if (loading) {
@@ -193,7 +209,7 @@ function ServiceView({ params: { caseId } }: any) {
       {/* <CaseLayout viewName="Lawyers" caseId={caseId}/> */}
       {stageIndex === 0 && (
         <div className="mt-16 gap-x-14 pb-32 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
-          <div className="mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
+          <div className="mx-auto gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
             <div className="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
                 Tell us what's going on.
@@ -205,7 +221,7 @@ function ServiceView({ params: { caseId } }: any) {
               </p>
               <div className="mt-10 flex items-center gap-x-6">
                 <Link
-                  href={caseId + '/info'}
+                  href={'/app/cases/new/' + caseId}
                   className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Get started
@@ -223,7 +239,7 @@ function ServiceView({ params: { caseId } }: any) {
       )}
       {stageIndex === 1 && (
         <div className="mt-16 gap-x-14 pb-32 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
-          <div className="mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
+          <div className="mx-auto gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
             <div className="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
                 We'll take it from here.
