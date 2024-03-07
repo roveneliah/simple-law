@@ -10,6 +10,7 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useRouter } from 'next/navigation'
 import DemoBar from './DemoBar'
 import { getLawyerAvatarUrlById } from '../ProfileForm'
+import { useIsVerified } from '@/app/lawyers/verification/useIsVerified'
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
@@ -156,13 +157,15 @@ export default function LawyerAppLayout({
     supabaseLawyers.auth.signOut()
   }
 
-  const loading = user?.email
+  const loading = !user?.email
 
   const lawyerImageUrl = getLawyerAvatarUrlById(user?.id)
 
+  if (loading) return <div>Loading...</div>
+
   return (
     <>
-      {!user?.verified && <DemoBar />}
+      {/* {!verified && <DemoBar />} */}
       <div className="flex h-screen flex-row">
         {/* <Sidebar /> */}
         <div className="flex w-full flex-col items-center overflow-auto py-4">

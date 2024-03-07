@@ -40,8 +40,26 @@ const services = [
 ]
 
 export default function AcceptOfferPage({ params: { id } }) {
+  const [invitation, setInvitation] = useState()
+  useEffect(() => {
+    supabase
+      .from('Invitation')
+      .select('*, Case(*, User(*)), Lawyer(*)')
+      .eq('id', id)
+      .single()
+      .then(({ data, error }) => {
+        console.log('invitation', data)
+        setInvitation(data)
+      })
+  }, [])
+
   return (
     <LawyerAppLayout>
+      <div className="mb-16">
+        <h3 className="text-4xl font-bold leading-6 tracking-tighter text-gray-900">
+          {invitation?.Case?.title}
+        </h3>
+      </div>
       <AcceptOfferForm invitationId={id} />
     </LawyerAppLayout>
   )

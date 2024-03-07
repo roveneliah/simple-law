@@ -122,17 +122,21 @@ export default function InvitationsView({ params: { id } }) {
         </p>
       )} */}
       {/* <p>{invitation.status}</p> */}
-      <div className="flex w-fit flex-row gap-1 bg-yellow-300">
+      <div className="flex w-fit flex-row gap-1">
         <p className="text-xl font-bold tracking-tighter text-gray-900 transition-all hover:text-gray-700">
-          Litigation
+          Response due in {hoursLeftStr(invitation.dueBy)}
         </p>
         <p className="font-bold">.</p>
         <p className="text-xl font-bold tracking-tighter text-gray-900 transition-all hover:text-gray-700">
+          Sanity Check
+        </p>
+        {/* <p className="font-bold">.</p> */}
+        {/* <p className="text-xl font-bold tracking-tighter text-gray-900 transition-all hover:text-gray-700">
           $50,000 Dispute
-        </p>
+        </p> */}
         <p className="font-bold">.</p>
         <p className="text-xl font-bold tracking-tighter text-gray-900 transition-all hover:text-gray-700">
-          $5,000 Estimate
+          $100
         </p>
       </div>
       <h3 className="text-5xl font-bold tracking-tighter">
@@ -141,12 +145,12 @@ export default function InvitationsView({ params: { id } }) {
 
       {invitation.status === 'pending' && (
         <div className="flex flex-row gap-2 text-4xl">
-          <button
-            onClick={() => setView('review')}
+          <Link
+            href={`/lawyers/invitations/accept/${invitationId}`}
             className="font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700"
           >
             Accept
-          </button>
+          </Link>
 
           <p
             onClick={() => declineInvitation(invitationId)}
@@ -154,7 +158,6 @@ export default function InvitationsView({ params: { id } }) {
           >
             Decline
           </p>
-
           <Link href={nextIndexLink}>
             <p className="font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-700">
               Skip
@@ -163,86 +166,54 @@ export default function InvitationsView({ params: { id } }) {
         </div>
       )}
 
-      <div className="mt-16 flex w-full flex-row justify-start gap-16">
-        <div className="flex w-32 flex-col items-start text-left font-semibold">
-          <button
-            type="button"
-            onClick={() => setView('invitation')}
-            className={`mt-1 text-left text-sm leading-6 ${view === 'invitation' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
-          >
-            Invitation
-          </button>
-          {/* <button
-            type="button"
-            onClick={() => setView('analysis')}
-            className={`mt-1 text-left text-sm leading-6 ${view === 'analysis' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
-          >
-            Analysis
-          </button> */}
-          <button
-            type="button"
-            onClick={() => setView('review')}
-            className={`mt-1 text-left text-sm leading-6 ${view === 'review' ? 'text-gray-900' : 'font-medium text-gray-600'}`}
-          >
-            Review
-          </button>
-        </div>
+      <div className="mt-8 flex w-full flex-row justify-start gap-16">
         <div className="w-full">
-          {view === 'invitation' && (
-            <div>
-              <div className="mb-8">
-                <h3 className="text-2xl font-bold tracking-tighter text-gray-900">
-                  Invitation
-                </h3>
-                <div className="border-gray-900/10 pb-12">
-                  <p className="mt-1 text-sm leading-6 text-gray-600">
-                    Due in {hoursLeftStr(invitation.dueBy)}.
-                  </p>
-                  <p className="mt-2 text-base text-gray-600">
-                    {invitation?.Case?.description}
-                  </p>
-                </div>
-              </div>
-              <Markdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  p: ({ children }) => (
-                    <p className="text-md font-medium leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
-                      {children}
-                    </p>
-                  ),
-                  h1: ({ children }) => (
-                    <h1 className="text-3xl">{children}</h1>
-                  ),
-                  h2: ({ children }) => (
-                    <h2 className="text-2xl">{children}</h2>
-                  ),
-                  h3: ({ children }) => <h3 className="text-xl">{children}</h3>,
-                  li: ({ children }) => <li className="">{children}</li>,
-                  ul: ({ children }) => (
-                    <ul className="list-disc pl-7">{children}</ul>
-                  ),
-                  ol: ({ children }) => (
-                    <ol className="list-decimal pl-8">{children}</ol>
-                  ),
-                }}
-                children={invitation.comment}
-              />
-            </div>
-          )}
-          {view === 'analysis' && (
-            <div className="w-full">
-              <div className="mb-8 w-full">
-                <h3 className="text-2xl font-bold tracking-tighter text-gray-900">
-                  Analysis
-                </h3>
-                <p className="mt-1 text-sm leading-6 text-gray-600">
-                  asdfasdfsa
+          <div>
+            <div className="mb-0">
+              <div className="">
+                <p className="mt-2 text-base text-gray-600">
+                  {invitation?.Case?.description}
                 </p>
               </div>
             </div>
-          )}
-          {view === 'review' && <AcceptOfferForm invitationId={invitationId} />}
+            <Markdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                p: ({ children }) => (
+                  <p className="text-md mb-4 font-medium leading-8 text-gray-600">
+                    {children}
+                  </p>
+                ),
+                h1: ({ children }) => (
+                  <h1 className="mb-4 text-3xl font-medium leading-8 text-gray-900">
+                    {children}
+                  </h1>
+                ),
+                h2: ({ children }) => (
+                  <h2 className="mb-4 text-2xl font-medium leading-8 text-gray-900">
+                    {children}
+                  </h2>
+                ),
+                h3: ({ children }) => (
+                  <h3 className="mb-4 text-xl font-medium leading-8 text-gray-900">
+                    {children}
+                  </h3>
+                ),
+                li: ({ children }) => (
+                  <li className="text-md mb-4 font-medium leading-8 text-gray-600">
+                    {children}
+                  </li>
+                ),
+                ul: ({ children }) => (
+                  <ul className="list-disc pl-7">{children}</ul>
+                ),
+                ol: ({ children }) => (
+                  <ol className="list-decimal pl-8">{children}</ol>
+                ),
+              }}
+              children={invitation.comment}
+            />
+          </div>
         </div>
       </div>
 

@@ -12,6 +12,7 @@ import { getUserAvatarUrlById } from '@/app/app/account/page'
 import AppMenu from './AppMenu'
 import CaseSwitcherDropdown from './CaseSwitcherDropdown'
 import Loading from '@/app/app/loading'
+import { useIsVerified } from '@/app/lawyers/verification/useIsVerified'
 
 function ChildViewHeader({ email, handleSignOut, userImageUrl, caseId }: any) {
   return (

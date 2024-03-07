@@ -1,3 +1,5 @@
+'use client'
+import { LinkButton } from '@/app/lawyers/verification/PlaidLinkButton'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 
@@ -25,6 +27,7 @@ export default function DemoBar() {
                 </svg> */}
               </p>
               {/* <p className="w-1/3 whitespace-nowrap  text-center text-sm text-white"></p> */}
+              <LinkButton />
               <Link
                 href="/lawyers/verification"
                 className="flex flex-row justify-end"

@@ -4,10 +4,13 @@ import { supabase } from '@/lib/supabaseClient'
 import { useLawyerUser, useRedirectLawyerIfSignedIn } from '@/lib/useUser'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react'
-import { ProfileForm } from '../profile/[id]/page'
+
 import { LawyerProfileHeader } from '../../../components/LawyerProfileHeader'
 import Profile from '../../../components/ProfileForm'
 import Verification from '../verification/page'
+import { LinkButton } from '../verification/PlaidLinkButton'
+import { useIsVerified } from '../verification/useIsVerified'
+import ProfileForm from '../../../components/ProfileForm'
 
 export default function Account() {
   const user = useLawyerUser()
@@ -52,6 +55,8 @@ export default function Account() {
 
   const [subview, setSubview] = useState('notifications')
 
+  const verified = useIsVerified(user?.plaidVerificationId)
+
   return (
     <LawyerAppLayout>
       <div className="mt-16" />
@@ -72,26 +77,31 @@ export default function Account() {
           >
             Notifications
           </button>
-          <button
-            type="button"
-            onClick={() => setSubview('verification')}
-            className={`text-base font-semibold leading-7 ${subview === 'verification' ? 'text-bold text-gray-900' : 'text-gray-500'}`}
-          >
-            Verification
-          </button>
+          {!verified && (
+            <button
+              type="button"
+              onClick={() => setSubview('verification')}
+              className={`text-base font-semibold leading-7 ${subview === 'verification' ? 'text-bold text-gray-900' : 'text-gray-500'}`}
+            >
+              Verification
+            </button>
+          )}
         </div>
         {subview === 'account' && <ProfileForm />}
         {subview === 'verification' && (
           <div>
-            {user?.verified ? (
+            {verified ? (
               <div>
-                <p>You're veritified.</p>
+                <p className="text-2xl font-bold tracking-tighter">
+                  You're verified.
+                </p>
               </div>
             ) : (
               <div>
                 <p className="text-2xl font-bold tracking-tighter">
-                  You're not verified.
+                  Verify your identity to start taking clients.
                 </p>
+                <LinkButton>Verify Identity</LinkButton>
               </div>
             )}
           </div>

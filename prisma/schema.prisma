@@ -50,6 +50,11 @@ model Lawyer {
   // stripe info
   stripeCustomerId String?
 
+  // plaid verification
+  plaidVerificationId String?
+  plaidVerified Boolean @default(false)
+  lastVerifiedAt DateTime?
+
   agreements Agreement[]
 
   verification LawyerVerificationRequest[]
