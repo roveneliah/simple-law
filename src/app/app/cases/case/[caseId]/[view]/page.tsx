@@ -1,7 +1,7 @@
 'use client'
 import CaseLayout from '@/components/CaseLayout'
 import { Files } from '@/components/CaseViews/Files'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import { useEffect, useState } from 'react'
 import {
   redirect,

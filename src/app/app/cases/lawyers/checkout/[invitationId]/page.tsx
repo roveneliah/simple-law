@@ -1,11 +1,11 @@
 'use client'
 import CaseLayout from '@/components/CaseLayout'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import { useInvitation } from '../../../recommendations/[invitationId]/page'
 import { ShieldCheckIcon } from '@heroicons/react/24/outline'
 import { supabase } from '@/lib/supabaseClient'
 import { v4 as uuidv4 } from 'uuid'
-import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout'
 
 const agreements = [
   // {

@@ -2,7 +2,7 @@
 import { getUserAvatarUrlById } from '@/app/app/account/page'
 import CaseProgress from '@/components/CaseProgress'
 import CaseProgressVertical from '@/components/CaseProgressVertical'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import { AVATARS, FALLBACK_AVATAR } from '@/data/dummy'
 import { supabase } from '@/lib/supabaseClient'
 import { useCase } from '@/lib/useCase'

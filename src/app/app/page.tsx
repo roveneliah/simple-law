@@ -1,4 +1,4 @@
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import Link from 'next/link'
 
 export default function App() {

@@ -1,6 +1,6 @@
 'use client'
 import CaseLayout from '@/components/CaseLayout'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import MagicText from '@/components/vibes/MagicText'
 import { withCaseData } from '@/components/withCaseData'
 import { useCase } from '@/lib/useCase'

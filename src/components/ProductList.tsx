@@ -34,8 +34,7 @@ const products = (caseId) => [
   {
     id: 2,
     name: '"4-Eyes" Review',
-    description:
-      "Get a review of your current plan.  Useful if you've already hired a lawyer, and want extra confidence.",
+    description: 'Build a relationship with a legal strategist.',
     href: `/app/cases/services/${caseId ? `${caseId}/` : ''}/sanity`,
     price: '$35',
     imageSrc: lawyers2,

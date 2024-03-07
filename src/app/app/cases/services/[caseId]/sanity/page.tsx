@@ -14,7 +14,7 @@ import {
   QuestionMarkCircleIcon,
   StarIcon,
 } from '@heroicons/react/20/solid'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 
 const product = {
   name: 'Sanity Check',

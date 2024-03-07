@@ -2,7 +2,7 @@
 import AutoFlipComponent from '@/components/AutoFlip'
 import CaseLayout from '@/components/CaseLayout'
 import CaseProgress from '@/components/CaseProgress'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import { withCaseData } from '@/components/withCaseData'
 import { CANDIDATES, FALLBACK_AVATAR } from '@/data/dummy'
 import { BookmarkIcon, StarIcon, XMarkIcon } from '@heroicons/react/24/outline'

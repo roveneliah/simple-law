@@ -6,7 +6,7 @@ import {
   StarIcon,
 } from '@heroicons/react/24/outline'
 import { classNames } from '@/components/LawyerViewLayout'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import Link from 'next/link'
 import CaseLayout from '@/components/CaseLayout'
 import { supabase } from '@/lib/supabaseClient'
@@ -107,7 +107,7 @@ export default function LawyerViewModal({
   const lawyerImageUrl = getLawyerAvatarUrlById(invitation.Lawyer?.id)
 
   return (
-    <div className="lg:mx-6 lg:mt-8">
+    <div className="max-w-xl">
       {/* <CaseLayout viewName="Lawyers" caseId={invitation?.caseId} /> */}
       <div className="w-full">
         <div className="mx-auto flex w-full flex-col lg:gap-x-8">
@@ -141,7 +141,7 @@ export default function LawyerViewModal({
             </nav> */}
 
             <div className="mt-4 flex flex-row items-center justify-start gap-4">
-              <div>
+              {/* <div>
                 <Link
                   href="/lawyers/account"
                   className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
@@ -152,12 +152,12 @@ export default function LawyerViewModal({
                     className="mt-2 h-16 w-16 rounded-full bg-amber-300 p-0.5"
                   />
                 </Link>
-              </div>
+              </div> */}
               <div>
                 <h1 className="text-xl font-bold tracking-tight text-gray-900">
                   {invitation?.Lawyer.first} {invitation?.Lawyer.last}
                 </h1>
-                <p>lasdkjfsalkdjf</p>
+                <p>{invitation?.Lawyer?.firm || 'Law Firm LLC'}</p>
               </div>
             </div>
 
@@ -406,8 +406,7 @@ export default function LawyerViewModal({
         </div>
       </div>
 
-      <div className="mx-auto mt-32 max-w-2xl lg:max-w-7xl">
-        {/* Details section */}
+      {/* <div className="mx-auto mt-32 max-w-2xl lg:max-w-7xl">
         <section aria-labelledby="details-heading">
           <div className="flex flex-col items-center text-center">
             <h2
@@ -452,7 +451,7 @@ export default function LawyerViewModal({
               </p>
             </div>
           </div>
-          {/* <div className="mt-16 grid grid-cols-1 gap-y-16 lg:grid-cols-2 lg:gap-x-8">
+          <div className="mt-16 grid grid-cols-1 gap-y-16 lg:grid-cols-2 lg:gap-x-8">
             <div>
               <div className="aspect-h-2 aspect-w-3 w-full overflow-hidden rounded-lg">
                 <Image
@@ -483,11 +482,10 @@ export default function LawyerViewModal({
                 make sure they do.
               </p>
             </div>
-          </div> */}
+          </div>
         </section>
 
-        {/* Policies section */}
-        {/* <section aria-labelledby="policy-heading" className="mt-16 lg:mt-24">
+        <section aria-labelledby="policy-heading" className="mt-16 lg:mt-24">
           <h2 id="policy-heading" className="sr-only">
             Our policies
           </h2>
@@ -504,9 +502,9 @@ export default function LawyerViewModal({
               </div>
             ))}
           </div>
-        </section> */}
-      </div>
-
+        </section>
+      </div> */}
+      {/* 
       <div aria-labelledby="reviews-heading" className="mt-32">
         <div className="mx-auto flex w-full flex-col lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8">
           <div className="lg:col-span-4">
@@ -586,7 +584,7 @@ export default function LawyerViewModal({
               </dl>
             </div>
 
-            {/* <div className="mt-10">
+            <div className="mt-10">
               <h3 className="text-lg font-medium text-gray-900">
                 Share your thoughts
               </h3>
@@ -601,7 +599,7 @@ export default function LawyerViewModal({
               >
                 Write a review
               </a>
-            </div> */}
+            </div>
           </div>
 
           <div className="mt-16 lg:mt-16">
@@ -651,7 +649,7 @@ export default function LawyerViewModal({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* <div>
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
           <CheckIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
@@ -681,12 +679,18 @@ export default function LawyerViewModal({
         >
           Skip
         </button>
-        <Link
+        {/* <Link
           className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
           href={`/app/cases/lawyers/checkout/${invitation.id}`}
         >
           Book
-        </Link>
+        </Link> */}
+        <button
+          onClick={closeModal}
+          className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
+        >
+          Book
+        </button>
       </div>
     </div>
   )

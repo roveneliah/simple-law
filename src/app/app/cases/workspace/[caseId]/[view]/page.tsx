@@ -1,6 +1,6 @@
 'use client'
 import CaseLayout from '@/components/CaseLayout'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import WeeklyUpdates from '@/components/WeeklyUpdates'
 import { useCase } from '@/lib/useCase'
 import { FaceSmileIcon } from '@heroicons/react/24/outline'

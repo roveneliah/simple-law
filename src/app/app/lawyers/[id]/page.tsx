@@ -1,5 +1,5 @@
 import { LawyerProfile } from '@/app/lawyers/profile/[id]/page'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 
 const getLawyerById = async (id: string) => {
   const { data, error } = await fetch(

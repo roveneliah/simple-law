@@ -9,7 +9,7 @@ import { Fragment, useEffect } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useRouter } from 'next/navigation'
 import DemoBar from './DemoBar'
-import { getLawyerAvatarUrlById } from '../ProfileForm'
+import { getLawyerAvatarUrlById } from '../../ProfileForm'
 import { useIsVerified } from '@/app/lawyers/verification/useIsVerified'
 
 function classNames(...classes: any[]) {

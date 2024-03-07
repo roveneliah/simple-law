@@ -1,7 +1,7 @@
 'use client'
 import AutoFlipComponent from '@/components/AutoFlip'
 import CaseLayout from '@/components/CaseLayout'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import { CANDIDATES, FALLBACK_AVATAR, dummyLawyers } from '@/data/dummy'
 import { supabase } from '@/lib/supabaseClient'
 import { UUID } from 'crypto'

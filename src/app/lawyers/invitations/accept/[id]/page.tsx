@@ -1,10 +1,10 @@
 'use client'
-import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout'
 import { supabase } from '@/lib/supabaseClient'
 import { FaceSmileIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { hoursLeftStr } from '../../page'
+import { hoursLeftStr } from '../../hoursLeftStr'
 
 const agreements = [
   {

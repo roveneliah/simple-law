@@ -1,4 +1,4 @@
-import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout'
 
 export default function ClientPage({ params: { clientId } }) {
   return (

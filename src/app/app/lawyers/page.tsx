@@ -1,4 +1,4 @@
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 
 // browse lawyers, view top awardees
 export default function LawyersPage() {

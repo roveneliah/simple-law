@@ -1,6 +1,6 @@
 'use client'
 import LawyerViewLayout from '@/components/LawyerViewLayout'
-import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout'
 import { supabase } from '@/lib/supabaseClient'
 import { useLawyerUser } from '@/lib/useUser'
 import { cn } from '@/lib/utils'

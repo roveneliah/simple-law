@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useCase } from '@/lib/useCase'
-import CaseList from '../CaseList'
+import CaseList from '../../CaseList'
 import { usePathname } from 'next/navigation'
 import {
   DocumentDuplicateIcon,

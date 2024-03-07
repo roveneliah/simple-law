@@ -1,5 +1,5 @@
 'use client'
-import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout'
 import { supabase } from '@/lib/supabaseClient'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'

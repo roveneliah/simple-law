@@ -12,7 +12,7 @@ import { CheckIcon } from '@/components/CheckIcon'
 
 import { useEffect, useState } from 'react'
 import { RadioGroup } from '@headlessui/react'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import Link from 'next/link'
 import CaseLayout from '@/components/CaseLayout'
 import { supabase } from '@/lib/supabaseClient'

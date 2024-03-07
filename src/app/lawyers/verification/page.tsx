@@ -1,19 +1,12 @@
 'use client'
 import AutoFlipComponent from '@/components/AutoFlip'
-import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout'
 import { supabase } from '@/lib/supabaseClient'
 import { useLawyerUser } from '@/lib/useUser'
 import { CheckBadgeIcon, CheckIcon } from '@heroicons/react/24/outline'
-import { UserCircleIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import VerificationForm, { BarMembership } from './form/page'
-import InvitationsView from '../invitations/[id]/page'
-import LawyerViewLayout from '@/components/LawyerViewLayout'
-import { Lawyer } from '@prisma/client'
-import Image from 'next/image'
-import charlie from '@/images/resources/charlie.png'
-import { LinkButton } from './PlaidLinkButton'
 
 const LAWYER_DEMO_URL = '/lawyers/demo'
 
@@ -101,7 +94,15 @@ function VerificationLayout({}) {
   )
 }
 export default function VerificationPage2() {
-  return <VerificationLayout view="start" />
+  const [currentIndex, setCurrentIndex] = useState(0)
+  return (
+    <AutoFlipComponent
+      currentIndex={currentIndex}
+      setCurrentIndex={setCurrentIndex}
+    >
+      <VerificationLayout view="start" />
+    </AutoFlipComponent>
+  )
 }
 
 function MembershipsView() {

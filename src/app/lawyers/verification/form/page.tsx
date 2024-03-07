@@ -1,6 +1,6 @@
 'use client'
-import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
-import Sidebar from '@/components/Layout/Sidebar'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout'
+import Sidebar from '@/components/Layout/LawyerAppLayout/Sidebar'
 import { supabase } from '@/lib/supabaseClient'
 import { useLawyerUser } from '@/lib/useUser'
 import { UserCircleIcon } from '@heroicons/react/24/solid'

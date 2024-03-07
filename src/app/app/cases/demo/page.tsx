@@ -1,7 +1,7 @@
 'use client'
 import CaseTeamTable from '@/components/CaseTeam'
 import { Files, useFiles } from '@/components/CaseViews/Files'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import { useCase } from '@/lib/useCase'
 import { useUser } from '@/lib/useUser'
 import Link from 'next/link'

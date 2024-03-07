@@ -1,6 +1,6 @@
 'use client'
 import { getUserAvatarUrlById } from '@/app/app/account/page'
-import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout'
 import { supabaseLawyers } from '@/lib/supabaseClient'
 import { useLawyerUser } from '@/lib/useUser'
 import { useEffect, useState } from 'react'

@@ -67,7 +67,7 @@ export default function LawyersTable({ caseId }) {
   return (
     <div className="">
       <ul role="list" className="divide-y divide-gray-100">
-        <div className="mb-4 sm:flex sm:items-center">
+        {/* <div className="mb-4 sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <h1 className="flex flex-row items-center gap-2 text-3xl  font-bold leading-6 text-gray-900">
               Our Choices for You
@@ -83,16 +83,7 @@ export default function LawyersTable({ caseId }) {
               </p>
             )}
           </div>
-
-          {/* <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <button
-            type="button"
-            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Add user
-          </button>
         </div> */}
-        </div>
         {!invitations && (
           <div>
             <div className="h-24 w-full animate-pulse rounded-md bg-gray-300"></div>
@@ -136,7 +127,7 @@ export default function LawyersTable({ caseId }) {
                         : ''}
                   </p>
                 </div>
-                <p className="mt-1 line-clamp-4 text-sm leading-6 text-gray-600">
+                <p className="line-clamp-4 text-left text-sm leading-6 text-gray-600">
                   {invitation.lawyerComment}
                 </p>
               </div>

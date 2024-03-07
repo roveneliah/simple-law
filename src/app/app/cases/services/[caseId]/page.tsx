@@ -1,7 +1,7 @@
 'use client'
 import CaseLayout from '@/components/CaseLayout'
 import LawyersTable from '@/components/LawyersTable'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useInvitation } from '../../recommendations/[invitationId]/page'

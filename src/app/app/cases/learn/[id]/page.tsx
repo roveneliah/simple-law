@@ -1,6 +1,6 @@
 'use client'
 import CaseLayout from '@/components/CaseLayout'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import { withCaseData } from '@/components/withCaseData'
 
 function LearnView() {

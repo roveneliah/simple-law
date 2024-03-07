@@ -1,5 +1,5 @@
 'use client'
-import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout'
 import AutoFlipComponent from '@/components/AutoFlip'
 import { useState } from 'react'
 import { useLawyerUser } from '@/lib/useUser'

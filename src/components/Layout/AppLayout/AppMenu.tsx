@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
-import { classNames } from './Sidebar'
+import { classNames } from '../LawyerAppLayout/Sidebar'
 import { Bars4Icon, ChevronDownIcon } from '@heroicons/react/24/outline'
 
 export default function AppMenu({}) {

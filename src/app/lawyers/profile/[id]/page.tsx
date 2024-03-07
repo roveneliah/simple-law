@@ -1,4 +1,4 @@
-import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout'
 import { supabase } from '@/lib/supabaseClient'
 
 export function LawyerProfile({ lawyer }) {

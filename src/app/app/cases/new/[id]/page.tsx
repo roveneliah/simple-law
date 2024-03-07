@@ -1,5 +1,5 @@
 'use client'
-import AppLayout from '@/components/Layout/AppLayout'
+import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 import prisma from '@/lib/prismaClient'
 import { supabase } from '@/lib/supabaseClient'
 import { useUser } from '@/lib/useUser'

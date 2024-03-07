@@ -1,5 +1,5 @@
 'use client'
-import LawyerAppLayout from '@/components/Layout/LawyerAppLayout'
+import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout'
 import { supabase } from '@/lib/supabaseClient'
 import { useLawyerUser, useRedirectLawyerIfSignedIn } from '@/lib/useUser'
 import { useState } from 'react'
