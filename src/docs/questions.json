@@ -1,0 +1,161 @@
+[
+  {
+    "question": "What legal products does ImpossibleLaw offer to customers?",
+    "tags": [
+      "ImpossibleLaw"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What is the shotgun strategy package offered by ImpossibleLaw?",
+    "tags": [
+      "ImpossibleLaw"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What services are used by ImpossibleLaw for authentication, database storage, payment processing, and email services?",
+    "tags": [
+      "ImpossibleLaw"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "How is the routing handled in the ImpossibleLaw app for user and lawyer sides?",
+    "tags": [
+      "ImpossibleLaw"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What database schema does ImpossibleLaw use and how do they interact with it in the codebase?",
+    "tags": [
+      "ImpossibleLaw"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What is the target market for ImpossibleLaw's legal services platform?",
+    "tags": [
+      "target market",
+      "legal services",
+      "platform"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "How does ImpossibleLaw differentiate its business model from traditional legal service providers?",
+    "tags": [
+      "business model",
+      "differentiation",
+      "legal services"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What technology stack does ImpossibleLaw use for its platform development?",
+    "tags": [
+      "technology stack",
+      "platform development"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "How does ImpossibleLaw handle authentication and database storage for users and lawyers?",
+    "tags": [
+      "authentication",
+      "database storage",
+      "users",
+      "lawyers"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What payment processing solution does ImpossibleLaw utilize?",
+    "tags": [
+      "payment processing",
+      "solution"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What is the user acquisition strategy for ImpossibleLaw?",
+    "tags": [
+      "strategy",
+      "user acquisition"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "How does ImpossibleLaw differentiate itself from other online legal service platforms?",
+    "tags": [
+      "differentiation",
+      "competition"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What metrics does ImpossibleLaw track to measure the success of the platform?",
+    "tags": [
+      "metrics",
+      "success measurement"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "How does ImpossibleLaw handle disputes between users and lawyers on the platform?",
+    "tags": [
+      "dispute resolution",
+      "customer service"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What is the revenue model of ImpossibleLaw?",
+    "tags": [
+      "business model",
+      "revenue"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "How does ImpossibleLaw differentiate itself from other legal service marketplaces?",
+    "tags": [
+      "unique selling proposition",
+      "competition"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What is the technology stack used by ImpossibleLaw?",
+    "tags": [
+      "technology",
+      "stack"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "How does ImpossibleLaw handle user and lawyer authentication?",
+    "tags": [
+      "authentication",
+      "security"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "Can you explain the role of Prisma in the ImpossibleLaw platform?",
+    "tags": [
+      "Prisma",
+      "database"
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What are the main products offered by ImpossibleLaw?",
+    "tags": [
+      "products",
+      "services"
+    ],
+    "answer": ""
+  }
+]

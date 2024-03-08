@@ -29,6 +29,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/lib/useUser.js",
+    "src/lib/useKeystrokeStateIndex.js",
   ],
   "exclude": ["node_modules"],
 }

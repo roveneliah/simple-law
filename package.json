@@ -8,7 +8,14 @@
     "start": "next start",
     "lint": "next lint",
     "docs": "jsdoc -c jsdoc.conf.json",
-    "prompt": "node ./scripts/constructPrompt.js"
+    "prompt": "yarn docs; node ./scripts/constructPrompt.js",
+    "charlie": "yarn docs; node ./scripts/constructPrompt.js --prompt=charlie",
+    "steve": "yarn docs; node ./scripts/constructPrompt.js --prompt=steve",
+    "legal": "yarn docs; node ./scripts/constructPrompt.js --prompt=legal",
+    "crit:lawyer": "yarn docs; node ./scripts/constructPrompt.js --prompt=crit",
+    "email:legal": "yarn docs; node ./scripts/emailLegal.js",
+    "email:mentors": "yarn docs; node ./scripts/emailMentors.js",
+    "questions": "yarn docs; node ./scripts/constructQuestions.js --question='What questions do you have as an investor?'"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
