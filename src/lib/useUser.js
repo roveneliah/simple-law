@@ -2,8 +2,12 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase, supabaseLawyers } from '@/lib/supabaseClient'
-import { Session } from '@supabase/supabase-js'
 
+/**
+ * useUser listens for changes in the user's session and fetches the user from the database
+ *
+ * @returns user object from database
+ */
 export function useUser() {
   const [user, setUser] = useState(null)
   const router = useRouter()
@@ -42,12 +46,19 @@ export function useUser() {
   return {
     first: '',
     last: '',
+    name: user?.first && user?.last ? `${user.first} ${user.last}` : '',
     ...user,
   }
 }
 
-export const useSession = (): Session | null => {
-  const [session, setSession] = useState<Session | null>(null)
+/**
+ *
+ * useSession listens for changes in the user's session
+ *
+ * @returns supabase session
+ */
+export const useSession = () => {
+  const [session, setSession] = useState(null)
   const router = useRouter()
   useEffect(() => {
     supabase.auth.getSession().then(({ data, error }) => {
@@ -75,10 +86,18 @@ export const useSession = (): Session | null => {
   return session
 }
 
-export const useStripePolice = (user: any) => {
+/**
+ *
+ *  useStripePolice creates a stripe user if it doesn't exist and checks if the stripeCustomerId is real
+ *
+ * @param {Object} user
+ */
+export const useStripePolice = (user) => {
   // create stripe user if doesn't exist
   useEffect(() => {
-    if (!user?.stripeCustomerId && user?.email && user?.first && user?.last) {
+    const loadedButNoStripeId =
+      !user?.stripeCustomerId && user?.email && user?.first && user?.last
+    if (loadedButNoStripeId) {
       console.log('creating stripe user...')
       fetch('/api/stripe/customer/create', {
         method: 'POST',
@@ -144,8 +163,14 @@ export const useStripePolice = (user: any) => {
   }, [user?.stripeCustomerId])
 }
 
+/**
+ *
+ * useLawyerUser listens for changes in the lawyer's session and fetches the lawyer from supabase
+ *
+ * @returns lawyer user object from database
+ */
 export const useLawyerUser = () => {
-  const [session, setSession] = useState<Session | null>(null)
+  const [session, setSession] = useState(null)
   const [user, setUser] = useState(null)
   const router = useRouter()
   useStripePolice(user)
@@ -183,7 +208,7 @@ export const useLawyerUser = () => {
                 })
             } else return { data, error }
           })
-          .then(({ data, error }: any) => {
+          .then(({ data, error }) => {
             setUser(data || null)
           })
       })
@@ -212,6 +237,9 @@ export const useLawyerUser = () => {
   }
 }
 
+/**
+ * useRedirectIfSignedIn redirects to /app if user is signed in, to be used in login page contexts
+ */
 export function useRedirectIfSignedIn() {
   const router = useRouter()
   useEffect(() => {
@@ -230,6 +258,9 @@ export function useRedirectIfSignedIn() {
   }, [router])
 }
 
+/**
+ * useRedirectLawyerIfSignedIn redirects to /lawyers if user is signed in, to be used in login page contexts
+ */
 export function useRedirectLawyerIfSignedIn() {
   const router = useRouter()
   useEffect(() => {

@@ -7,6 +7,11 @@ const log = (x: any = '') => {
   return x
 }
 
+/**
+ * Middleware function to handle authentication and authorization for different routes.  This function is called for all requests to the API and the /app and /lawyers paths.  It checks for a valid session and user, and blocks the request if none is found.  It also checks for a valid API key for requests to the /api path.  If no valid session or user is found, or if there is an error, the request is blocked.  If a valid API key is found, the request is allowed to proceed.  If no valid API key is found, a 401 Unauthorized response is returned.
+ * @param req - The NextRequest object representing the incoming request.
+ * @returns The NextResponse object representing the response to be sent.
+ */
 export async function middleware(req: NextRequest) {
   console.log('\n-------------------------')
   log()

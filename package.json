@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "yarn docs; next dev",
+    "build": "yarn docs; next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docs": "jsdoc -c jsdoc.conf.json",
+    "prompt": "node ./scripts/constructPrompt.js"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
@@ -23,8 +25,11 @@
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.12",
+    "better-docs": "^2.7.3",
     "class-variance-authority": "^0.7.0",
+    "clipboardy": "^4.0.0",
     "clsx": "^2.1.0",
+    "jsdoc": "^4.0.2",
     "lucide-react": "^0.314.0",
     "mailgun.js": "^10.1.0",
     "next": "^14.0.4",
