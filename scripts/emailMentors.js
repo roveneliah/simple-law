@@ -34,11 +34,6 @@ async function magic(prompt) {
         role: 'user',
         content: prompt,
       },
-      {
-        role: 'user',
-        content:
-          'Write a report as the General Counsel for ImpossibleLaw.  You have 40 years of experience working with startups, and have seen it all, and know all the inside baseball and practicalities of the game.',
-      },
     ],
   })
 

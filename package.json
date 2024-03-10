@@ -1,5 +1,5 @@
 {
-  "name": "tailwindui-primer",
+  "name": "impossiblelaw",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,10 +12,13 @@
     "charlie": "yarn docs; node ./scripts/constructPrompt.js --prompt=charlie",
     "steve": "yarn docs; node ./scripts/constructPrompt.js --prompt=steve",
     "legal": "yarn docs; node ./scripts/constructPrompt.js --prompt=legal",
+    "design": "yarn docs; node ./scripts/constructPrompt.js --prompt=design",
+    "pr": "yarn docs; node ./scripts/constructPrompt.js --prompt=pr",
     "crit:lawyer": "yarn docs; node ./scripts/constructPrompt.js --prompt=crit",
     "email:legal": "yarn docs; node ./scripts/emailLegal.js",
-    "email:mentors": "yarn docs; node ./scripts/emailMentors.js",
-    "questions": "yarn docs; node ./scripts/constructQuestions.js --question='What questions do you have as an investor?'"
+    "email:mentors": "yarn steve, yarn charlie; node ./scripts/emailMentors.js",
+    "questions": "yarn docs; node ./scripts/constructQuestions.js --question='What questions do you have as an investor?'",
+    "ooda": "yarn docs; node ./scripts/constructPrompt.js --prompt=ooda"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
