@@ -1,3 +1,3 @@
-1. Scale with Speed
-2. Automate for Efficiency
-3. Prioritize High Impact
+1. Speed up workflows
+2. Automate processes
+3. Scale with context

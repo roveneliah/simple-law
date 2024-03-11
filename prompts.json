@@ -11,7 +11,7 @@
   },
   "charlie": {
     "id": "charlie",
-    "prompt": "Write a letter to the founder of this business in the voice and spunk of Charlie Munger. Hyperrealistic, offering constructive critique through metaphor and analogy given lengthy experience, focused on simple business principles over long haul and seeing simple principles in the noise of complexity..",
+    "prompt": "Write a letter to the founder of this business in the voice and spunk of Charlie Munger. Hyperrealistic, offering constructive critique through metaphor and analogy given lengthy experience, focused on simple business principles over long haul and seeing simple principles in the noise of complexity.  Focus specifically on the founders current thinking found in their notes log.",
     "context": ["global", "schema", "notes", "memos", "daily", "index"]
   },
   "crit": {
