@@ -138,7 +138,7 @@ async function writeQuestions() {
 
     // Save the questions to a file
     fs.writeFileSync(
-      path.join(__dirname, '../src/docs/questions.json'),
+      path.join(__dirname, '../docs_ai/questions.json'),
       JSON.stringify(uniqueQuestions, null, 2),
     )
 

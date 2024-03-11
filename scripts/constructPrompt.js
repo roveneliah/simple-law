@@ -50,14 +50,11 @@ function loadPrompts() {
   return JSON.parse(promptsData)
 }
 
-async function compilePrompt() {
+async function compilePrompt(promptKey = 'default', writeToFile = false) {
   try {
     // Parse command-line arguments
-    const args = process.argv.slice(2)
-    const promptFlag = args.find((arg) => arg.startsWith('--prompt='))
-    const promptKey = promptFlag ? promptFlag.split('=')[1] : 'default'
     const PROMPTS = loadPrompts()
-    const { prompt, context } = PROMPTS.find(({ id }) => id === promptKey)
+    const { prompt, context } = PROMPTS[promptKey]
 
     // Dynamically import the clipboardy module
     const clipboardy = await import('clipboardy')
@@ -93,17 +90,25 @@ async function compilePrompt() {
 
     // Copy the combined content to the clipboard
     await clipboardy.default.write(combinedContent)
+    console.log('Combined documentation copied to clipboard!')
 
     // write the combined content to a file
-    fs.writeFileSync(
-      path.join(__dirname, `../src/docs/${promptKey || 'default'}.txt`),
-      combinedContent,
-    )
+    if (writeToFile) {
+      fs.writeFileSync(
+        path.join(
+          __dirname,
+          `../docs_ai/prompts/${promptKey || 'default'}.txt`,
+        ),
+        combinedContent,
+      )
+    }
 
-    console.log('Combined documentation copied to clipboard!')
+    return combinedContent
   } catch (error) {
     console.error('Error combining documentation:', error)
   }
 }
 
-compilePrompt()
+// compilePrompt()
+
+module.exports = { compilePrompt: compilePrompt, loadPrompts: loadPrompts }
