@@ -85,7 +85,6 @@ async function compilePrompt(promptKey = 'default', writeToFile = false) {
       memos,
       logs,
       prompt,
-      "(Make sure to respond in the context of ImpossibleLaw's operational aspirations, values, and role models.)",
     ].join('\n\n')
 
     // Copy the combined content to the clipboard
