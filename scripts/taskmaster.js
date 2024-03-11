@@ -4,7 +4,7 @@ const path = require('path')
 const { compilePrompt, loadPrompts } = require('./constructPrompt')
 const { OpenAI } = require('openai')
 
-function fulfillPrompt(promptKey) {
+function fulfillPrompt({ promptRaw, promptKey }) {
   return async function (combinedContent) {
     const configuration = new OpenAI({
       apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
@@ -13,9 +13,7 @@ function fulfillPrompt(promptKey) {
 
     const PROMPTS = loadPrompts()
 
-    console.log(PROMPTS.promptKey)
-
-    const prompt = `${combinedContent}\n\n${PROMPTS[promptKey]}`
+    const prompt = `${combinedContent}\n\n${promptRaw || PROMPTS[promptKey]}`
 
     try {
       const completion = await openai.chat.completions.create({
@@ -31,21 +29,26 @@ function fulfillPrompt(promptKey) {
   }
 }
 async function task({ pathOut, workflow }) {
-  console.log('Writing to...', pathOut)
+  console.log('Fetching base context...')
   const combinedContent = await compilePrompt()
 
+  console.log('Executing workflow with context..')
   const data = await workflow(combinedContent)
 
-  fs.writeFileSync(path.join(__dirname, `../docs_ai/tasks/${pathOut}`), data)
+  console.log('Writing to...', pathOut)
+  fs.writeFileSync(path.join(__dirname, `../docs/ai/${pathOut}`), data)
 }
 
 const TASKS = [
   {
-    workflow: fulfillPrompt('legal'),
-    pathOut: `legal_${new Date().toISOString().split('T')[0]}.md`,
+    workflow: fulfillPrompt({
+      promptRaw:
+        'Write a 3 x 3-word call to action that distills today\ns priorities.',
+    }),
+    pathOut: `priorities-${new Date().toISOString().split('T')[0]}.md`,
   },
   {
-    workflow: fulfillPrompt('steve'),
+    workflow: fulfillPrompt({ promptKey: 'steve' }),
     pathOut: `steve_${new Date().toISOString().split('T')[0]}.md`,
   },
 ]

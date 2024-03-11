@@ -97,7 +97,7 @@ async function compilePrompt(promptKey = 'default', writeToFile = false) {
       fs.writeFileSync(
         path.join(
           __dirname,
-          `../docs_ai/prompts/${promptKey || 'default'}.txt`,
+          `../docs/ai/prompts/${promptKey || 'default'}.txt`,
         ),
         combinedContent,
       )
