@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 import CaseList from '@/components/CaseList'
 import AppLayout from '@/components/Layout/AppLayout/AppLayout'
 

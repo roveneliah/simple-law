@@ -5,7 +5,7 @@ import { Fragment } from 'react'
 import { classNames } from '../LawyerAppLayout/Sidebar'
 import { Bars4Icon, ChevronDownIcon } from '@heroicons/react/24/outline'
 
-export default function AppMenu({}) {
+export default function AppMenu({ caseId }) {
   return (
     <Menu as="div" className="relative z-50 inline-block text-left">
       <div className="flex flex-col justify-center">
@@ -48,6 +48,48 @@ export default function AppMenu({}) {
                 >
                   <div className="h-5 w-5 rounded-sm bg-black" />
                   Find Lawyer
+                </Link>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <Link
+                  href={`/app/cases/workspace/${caseId}`}
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'flex flex-row items-center gap-2 px-4 py-2 text-sm font-semibold tracking-tighter',
+                  )}
+                >
+                  <div className="h-5 w-5 rounded-sm bg-black" />
+                  Workspace
+                </Link>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <Link
+                  href={`/app/cases/new/${caseId}`}
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'flex flex-row items-center gap-2 px-4 py-2 text-sm font-semibold tracking-tighter',
+                  )}
+                >
+                  <div className="h-5 w-5 rounded-sm bg-black" />
+                  Case Details
+                </Link>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <Link
+                  href={`/app/team/${caseId}`}
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'flex flex-row items-center gap-2 px-4 py-2 text-sm font-semibold tracking-tighter',
+                  )}
+                >
+                  <div className="h-5 w-5 rounded-sm bg-black" />
+                  My Team
                 </Link>
               )}
             </Menu.Item>

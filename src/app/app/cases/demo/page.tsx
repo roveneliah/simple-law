@@ -6,7 +6,7 @@ import { useCase } from '@/lib/useCase'
 import { useUser } from '@/lib/useUser'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { CaseSummary } from '../case/[caseId]/[view]/page'
+import { CaseSummary } from '../case/[caseId]/[view]/CaseSummary'
 
 const DEMO_CASE = {
   id: '1',

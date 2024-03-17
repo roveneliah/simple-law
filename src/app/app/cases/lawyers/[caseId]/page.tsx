@@ -58,7 +58,7 @@ function ReviewInterviewsView({ caseId, caseData }: any) {
               </div> */}
         </div>
       </div>
-      <ProductList caseId={caseId} />
+      {/* <ProductList caseId={caseId} /> */}
       <LawyersTable caseId={caseId} />
 
       {/* <div className="mt-8">

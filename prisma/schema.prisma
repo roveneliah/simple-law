@@ -23,6 +23,7 @@ model User {
   imageUrl    String?
   cases        Case[]
   savedLawyers Lawyer[]
+  agreement   Agreement[]
 
 }
 
@@ -246,6 +247,8 @@ model Agreement {
   caseId    String
   lawyer    Lawyer   @relation(fields: [lawyerId], references: [id])
   lawyerId  String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
   invitationId String?
 
   contractUrl String

@@ -24,6 +24,7 @@ We believe in the power of subtraction. We believe that the best way to solve a 
 
 It's critical we're able to communicate to clients and lawyers who we are and what we stand for. This is a testing ground for talking points, memes, key metaphors, analogies, and symbolism.
 
+- Step by step by step by step. Playing for the long haul involves putting our heads down over a very long period of time. Most people can't stay sane and focused for that long. We can. We're the tortoise. This is a different way of doing things—consistency, patience, and a focus on the long term. Don't burn out, don't wear yourself out.
 - "THAT GOOD" (For Lawyers, we want to give them that feeling that they're getting such insane value that we don't even need to do marketing—and that we WON'T do marketing because we're THAT GOOD.)
 - (Ultimately we want to rebrand law as something cool, making everyone feel like a boss, like they're the main character, like they're in control, like they're not the prey.)
 - (Focusing on addition via subtraction)

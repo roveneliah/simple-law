@@ -1,15 +1,17 @@
 'use client'
 import Link from 'next/link'
 import CaseSwitcherDropdown from './CaseSwitcherDropdown'
+import AppMenu from './AppMenu'
 
 export function ChildViewHeader({
   email,
   handleSignOut,
   userImageUrl,
   caseId,
+  caseTitle,
 }: any) {
   return (
-    <div className="mb-4 mt-4 flex w-full flex-row items-center justify-between pb-4">
+    <div className="mb-8 flex w-full flex-row items-center justify-between">
       {/* <div className="w-1/3">
               <Link href={caseId ? `/app/cases/case/${caseId}` : '/app'}>
                 <p className="text-xl font-extrabold">
@@ -23,25 +25,30 @@ export function ChildViewHeader({
           <p className="text-xl font-bold tracking-tighter">impossible.</p>
         </Link>
       </div>
-      <div className="flex flex-row items-center justify-end gap-4 tracking-tighter">
-        {/* <div>
-              <Link
-                href="/app/cases"
-                className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
-              >
-                cases
-              </Link>
-            </div> */}
-        {/* <div>
-              <Link
-                href="/app/advisors"
-                className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
-              >
-                advisors
-              </Link>
-            </div> */}
-        <CaseSwitcherDropdown caseId={caseId} />
-        {/* <AppMenu /> */}
+      {/* <div className="h-min w-full">
+        <p className="text-md text-center font-medium tracking-tighter text-gray-500">
+          {caseTitle}
+        </p>
+      </div> */}
+      <div className="flex w-1/3 flex-row items-center justify-end gap-4 tracking-tighter">
+        <div>
+          <Link
+            href="/app/cases"
+            className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
+          >
+            cases
+          </Link>
+        </div>
+        <div>
+          <Link
+            href="/app/team"
+            className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
+          >
+            team
+          </Link>
+        </div>
+        {/* <CaseSwitcherDropdown caseId={caseId} /> */}
+        <AppMenu caseId={caseId} />
         <div>
           <Link
             href="/app/account"
@@ -54,6 +61,7 @@ export function ChildViewHeader({
             />
           </Link>
         </div>
+
         {/* <div>
               <AccountMenu
                 userImageUrl={userImageUrl}

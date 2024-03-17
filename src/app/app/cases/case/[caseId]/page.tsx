@@ -6,12 +6,14 @@ import { useCase } from '@/lib/useCase'
 import { useUser } from '@/lib/useUser'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { CaseSummary } from './[view]/page'
+import { CaseSummary } from './[view]/CaseSummary'
+import { CaseHeader } from './[view]/CaseHeader'
 import { redirect } from 'next/navigation'
+import { NewCaseForm } from '../../new/[id]/page'
 
 // TODO: should be server component...
 export default function CaseView({ params: { caseId } }) {
-  return redirect(`/app/cases/lawyers/${caseId}`)
+  // return redirect(`/app/cases/lawyers/${caseId}`)
 
   // trigger new questions if none already
   const caseData = useCase(caseId)
@@ -41,29 +43,8 @@ export default function CaseView({ params: { caseId } }) {
 
   return (
     <AppLayout caseId={caseId}>
-      <div className="">
-        {/* <button className="text-md font-bold tracking-tighter text-gray-500 transition-colors hover:text-gray-600">
-          Back to Cases
-        </button> */}
-
-        <h1 className="text-5xl font-bold tracking-tighter text-gray-900">
-          {caseData?.title}
-        </h1>
-        {/* <button className="text-left">
-          <p className="line-clamp-3 text-xl font-semibold tracking-tighter text-gray-600 transition-all">
-            {caseData?.summary}
-          </p>
-        </button> */}
-      </div>
-      <div className="flex w-full flex-row gap-1">
-        <Link
-          href={`/app/cases/lawyers/${caseId}`}
-          className="text-2xl font-bold tracking-tighter text-gray-500 transition-all hover:text-gray-600"
-        >
-          Find a Lawyer
-        </Link>
-      </div>
-      <CaseSummary caseData={caseData} />
+      <CaseHeader caseId={caseId} view={'details'} title={caseData?.title} />
+      {caseData && <NewCaseForm caseData={caseData} />}
       {/* <div className="mt-16">
         <h3 className="text-4xl font-bold tracking-tighter text-gray-900">
           Your Team
@@ -115,9 +96,7 @@ export default function CaseView({ params: { caseId } }) {
           </div>
         </div>
       </div> */}
-      <div className="mb-32 mt-16">
-        <CaseTeamTable agreements={caseData?.Agreement} />
-      </div>
+
       {/* <div className="mb-32 mt-16">
         <h3 className="text-4xl font-bold tracking-tighter text-gray-900">
           Documents

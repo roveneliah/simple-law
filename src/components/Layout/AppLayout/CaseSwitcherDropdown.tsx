@@ -25,7 +25,7 @@ export default function CaseSwitcherDropdown({ caseId }: any) {
   useEffect(() => {
     // set selected to the entry in cases with matching id
     if (!caseId || !cases.length) return
-    const selectedCase = cases.find((c) => c.id === caseId)
+    const selectedCase = cases.find(({ id }) => id === caseId)
     setSelected(selectedCase)
   }, [caseId, cases.length])
 

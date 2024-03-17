@@ -21,7 +21,7 @@ export function useUser() {
       // get the user from db given id
       supabase
         .from('User')
-        .select('*')
+        .select('*, Agreement(*, Lawyer(*), Case(*))')
         .eq('id', session?.user?.id)
         .single()
         .then(({ data, error }) => {

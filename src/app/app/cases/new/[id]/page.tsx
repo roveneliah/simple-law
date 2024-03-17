@@ -6,41 +6,10 @@ import { useUser } from '@/lib/useUser'
 import { v4 as uuidv4 } from 'uuid'
 import { redirect, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { NewFiles } from '@/components/CaseViews/NewFiles'
 import { useCase } from '@/lib/useCase'
 import { Files } from '@/components/CaseViews/Files'
-import { InfoGatherView } from '../../lawyers/[caseId]/info/page'
-
-const uploadDocuments = async (files) => {
-  const uploadedDocs = await Promise.all(
-    files.map(async (file) => {
-      const formData = new FormData()
-      formData.append('file', file)
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-      const data = await res.json()
-      return data
-    }),
-  )
-  return uploadedDocs
-}
-
-const createDocumentEntries = async (uploadedDocs) => {
-  const documentEntries = await Promise.all(
-    uploadedDocs.map(async (doc) => {
-      const document = await prisma.document.create({
-        data: {
-          name: doc.name,
-          url: doc.url,
-        },
-      })
-      return document.id
-    }),
-  )
-  return documentEntries
-}
+import CaseProgress from '@/components/CaseProgress'
+import InfoGatherView from './InfoGatherView'
 
 export function NewCaseForm({ caseData }) {
   const router = useRouter()
@@ -189,17 +158,35 @@ export function NewCaseForm({ caseData }) {
   // }, [caseData])
 
   return (
-    <div className="mt-8 w-full">
-      <div className="flex w-full flex-row items-center justify-between">
-        <div className="w-full px-4 sm:px-0">
-          <h3 className="text-5xl font-bold leading-7 tracking-tighter text-gray-900">
-            {caseData?.title || 'New Case'}
-          </h3>
-          {/* <p className="mt-4 max-w-2xl text-lg leading-6 text-gray-500">
-            We will use this to interview lawyers on your behalf.
-          </p> */}
+    <div className="w-full">
+      {view === 'basics' && !caseData?.id && (
+        <div className="">
+          <div
+            style={{
+              overflow: 'hidden',
+              paddingBottom: '56.25%',
+              position: 'relative',
+              height: 0,
+            }}
+            className="rounded-lg"
+          >
+            <iframe
+              style={{
+                left: 0,
+                top: 0,
+                height: '100%',
+                width: '100%',
+                position: 'absolute',
+              }}
+              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
         </div>
-      </div>
+      )}
+
       <div className="mt-16 flex w-full flex-row">
         <div className="flex w-2/5 flex-col items-start text-left font-semibold">
           <button
@@ -253,7 +240,7 @@ export function NewCaseForm({ caseData }) {
                 >
                   <label
                     htmlFor="about"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block w-fit  bg-yellow-300 text-2xl font-bold leading-6 tracking-tighter text-gray-900"
                   >
                     Tell us what's going on in your own words.
                   </label>
@@ -552,7 +539,20 @@ export default function NewCase({ params: { id } }) {
   const loading = !caseData
 
   return (
-    <AppLayout loading={loading}>
+    <AppLayout caseId={id} loading={loading}>
+      <div className="mb-8">
+        <CaseProgress stageIndex={0} />
+      </div>
+      <div className="mt-16 flex w-full flex-row items-center justify-between">
+        <div className="w-full px-4 sm:px-0">
+          <h3 className="text-5xl font-bold leading-7 tracking-tighter text-gray-900">
+            {caseData?.title || 'New Case'}
+          </h3>
+          {/* <p className="mt-4 max-w-2xl text-lg leading-6 text-gray-500">
+            We will use this to interview lawyers on your behalf.
+          </p> */}
+        </div>
+      </div>
       {!loading && <NewCaseForm caseData={caseData} />}
     </AppLayout>
   )

@@ -5,6 +5,8 @@ import { getUserAvatarUrlById } from '@/app/app/account/page'
 import { ChildViewHeader } from './ChildViewHeader'
 import Image from 'next/image'
 import abstractBackgroundImage from '@/images/resources/abstract-background.png'
+import Sidebar from '../LawyerAppLayout/Sidebar'
+import { useCase } from '@/lib/useCase'
 
 export default function AppLayout({ children, caseId, loadingManual }: any) {
   const user = useSession()?.user
@@ -14,6 +16,8 @@ export default function AppLayout({ children, caseId, loadingManual }: any) {
     e.preventDefault()
     supabase.auth.signOut()
   }
+
+  const caseData = useCase(caseId)
 
   const loading = !user || loadingManual
 
@@ -42,15 +46,15 @@ export default function AppLayout({ children, caseId, loadingManual }: any) {
         {/* <Sidebar caseId={caseId} /> */}
 
         {/* Main Content Area */}
-        <div className="no-scrollbar z-10 flex w-full flex-col items-center py-4">
-          <div className="no-scrollbar flex min-h-96 w-full max-w-3xl flex-col overflow-x-hidden rounded-md">
+        <div className="no-scrollbar z-10 flex h-full w-full flex-col items-center py-4">
+          <div className="no-scrollbar flex h-full w-full flex-col overflow-x-hidden rounded-md">
             <ChildViewHeader
               userImageUrl={userImageUrl}
               email={user?.email}
               caseId={caseId}
               handleSignOut={handleSignOut}
             />
-            {children}
+            <div className="w-full max-w-3xl">{children}</div>
           </div>
         </div>
       </div>
@@ -65,15 +69,16 @@ export default function AppLayout({ children, caseId, loadingManual }: any) {
       {/* <Sidebar caseId={caseId} /> */}
 
       {/* Main Content Area */}
-      <div className="z-10 flex w-full flex-col items-center overflow-y-auto py-4">
-        <div className="no-scrollbar flex min-h-96 w-full max-w-3xl flex-col overflow-x-hidden rounded-md">
+      <div className="z-10 flex w-full flex-col items-center overflow-y-auto px-8 pt-4">
+        <div className="no-scrollbar flex w-full max-w-3xl flex-col overflow-x-hidden rounded-md">
           <ChildViewHeader
             userImageUrl={userImageUrl}
             email={user?.email}
             caseId={caseId}
             handleSignOut={handleSignOut}
+            caseTitle={caseData?.title}
           />
-          {children}
+          <div className="w-full max-w-3xl">{children}</div>
         </div>
       </div>
     </div>

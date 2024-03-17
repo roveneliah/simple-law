@@ -10,39 +10,47 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { POST } from '@/app/api/cases/refine/route'
 import { NewFiles } from '@/components/CaseViews/NewFiles'
-import InfoGatherPage from '../lawyers/[caseId]/info/page'
+
 import { NewCaseForm } from './[id]/page'
 
-const uploadDocuments = async (files) => {
-  const uploadedDocs = await Promise.all(
-    files.map(async (file) => {
-      const formData = new FormData()
-      formData.append('file', file)
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-      const data = await res.json()
-      return data
-    }),
+export default function NewCase() {
+  return (
+    <AppLayout>
+      <NewCaseForm caseData={null} />
+    </AppLayout>
   )
-  return uploadedDocs
 }
 
-const createDocumentEntries = async (uploadedDocs) => {
-  const documentEntries = await Promise.all(
-    uploadedDocs.map(async (doc) => {
-      const document = await prisma.document.create({
-        data: {
-          name: doc.name,
-          url: doc.url,
-        },
-      })
-      return document.id
-    }),
-  )
-  return documentEntries
-}
+// const uploadDocuments = async (files) => {
+//   const uploadedDocs = await Promise.all(
+//     files.map(async (file) => {
+//       const formData = new FormData()
+//       formData.append('file', file)
+//       const res = await fetch('/api/upload', {
+//         method: 'POST',
+//         body: formData,
+//       })
+//       const data = await res.json()
+//       return data
+//     }),
+//   )
+//   return uploadedDocs
+// }
+
+// const createDocumentEntries = async (uploadedDocs) => {
+//   const documentEntries = await Promise.all(
+//     uploadedDocs.map(async (doc) => {
+//       const document = await prisma.document.create({
+//         data: {
+//           name: doc.name,
+//           url: doc.url,
+//         },
+//       })
+//       return document.id
+//     }),
+//   )
+//   return documentEntries
+// }
 
 // function NewCaseForm() {
 //   const router = useRouter()
@@ -476,11 +484,3 @@ const createDocumentEntries = async (uploadedDocs) => {
 //     </div>
 //   )
 // }
-
-export default function NewCase() {
-  return (
-    <AppLayout>
-      <NewCaseForm caseData={null} />
-    </AppLayout>
-  )
-}

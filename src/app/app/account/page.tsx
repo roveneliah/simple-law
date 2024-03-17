@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 
 export const getUserAvatarUrlById = (userId: string) => {
   const timestamp = new Date().getTime() // Current timestamp as cache buster
+  if (!userId) return null
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/user-avatars/${userId}/avatar?cacheBust=${timestamp}`
 }
 

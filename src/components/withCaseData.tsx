@@ -1,15 +1,19 @@
 // 'use client'
 
-import { CASES } from '@/data/dummy'
 import { supabase } from '@/lib/supabaseClient'
-import { usePathname } from 'next/navigation'
 
 export const withCaseData = (WrappedComponent: any) => {
-  return (props: any) => {
-    const id = usePathname().split('/').pop()
+  return async (props) => {
+    console.log(props.params)
+    const caseId = props.params.caseId
+    const { data: cases, error } = await supabase
+      .from('Case')
+      .select('*')
+      .eq('id', caseId)
+    console.log(cases, error)
+    const caseData = cases.find((caseItem) => caseItem?.id?.toString() === id)
+    console.log(caseData)
 
-    const caseData = CASES.find((caseItem) => caseItem?.id?.toString() === id)
-
-    return <WrappedComponent {...props} caseData={caseData} caseId={id} />
+    return <WrappedComponent {...props} caseData={caseData} caseId={caseId} />
   }
 }

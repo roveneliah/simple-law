@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getLawyerAvatarUrlById } from './ProfileForm'
+import { CaseHeader } from '@/app/app/cases/case/[caseId]/[view]/CaseHeader'
 
 const people = [
   {
@@ -36,7 +37,7 @@ export default function CaseTeamTable({ agreements }) {
   console.log(agreements)
   return (
     <div className="">
-      <div className="sm:flex sm:items-center">
+      {/* <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-4xl font-bold leading-6 tracking-tighter text-gray-900">
             Your Team
@@ -54,7 +55,7 @@ export default function CaseTeamTable({ agreements }) {
             Search
           </Link>
         </div>
-      </div>
+      </div> */}
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">

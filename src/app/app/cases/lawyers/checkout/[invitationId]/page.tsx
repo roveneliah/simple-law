@@ -6,6 +6,7 @@ import { ShieldCheckIcon } from '@heroicons/react/24/outline'
 import { supabase } from '@/lib/supabaseClient'
 import { v4 as uuidv4 } from 'uuid'
 import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout'
+import { useRouter } from 'next/navigation'
 
 const agreements = [
   // {
@@ -22,6 +23,7 @@ const agreements = [
 export default function Page({ params: { invitationId } }) {
   console.log(invitationId)
   const invitation = useInvitation(invitationId)
+  const router = useRouter()
   console.log(invitation)
 
   const handleCreateAgreement = async (e) => {
@@ -41,13 +43,23 @@ export default function Page({ params: { invitationId } }) {
         invitationId,
         caseId: invitation.caseId,
         lawyerId: invitation.lawyerId,
+        userId: invitation.Case.userId,
         contractUrl: 'https://www.google.com',
         createdAt: new Date(),
         updatedAt: new Date(),
       })
       .single()
 
-    console.log('creating charge for invitationId', invitationId)
+    // TODO: real error handling modal / flows
+    console.log(data, error)
+    if (error) {
+      alert('Error creating agreement')
+      return
+    }
+
+    router.push(`/app/cases/lawyers/checkout/${invitationId}/done`)
+
+    console.log('creating charge for invitationId...', invitationId)
   }
 
   return (
@@ -55,10 +67,8 @@ export default function Page({ params: { invitationId } }) {
       {/* <CaseLayout viewName="Lawyers" caseId={invitation?.caseId}/> */}
       <form onSubmit={handleCreateAgreement}>
         <div className="border-gray-900/10 pb-12">
-          <h2 className="text-5xl font-bold font-semibold text-gray-900">
-            Book
-          </h2>
-          <p className="font-bold leading-6 tracking-tighter">
+          <h2 className="h1">Book</h2>
+          <p className="p">
             We're glad you found a match. Once you match,{' '}
             {invitation?.Lawyer?.first} will reach out.
           </p>

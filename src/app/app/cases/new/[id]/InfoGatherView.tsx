@@ -1,62 +1,12 @@
 'use client'
 import { getUserAvatarUrlById } from '@/app/app/account/page'
-import CaseProgress from '@/components/CaseProgress'
-import CaseProgressVertical from '@/components/CaseProgressVertical'
-import AppLayout from '@/components/Layout/AppLayout/AppLayout'
-import { AVATARS, FALLBACK_AVATAR } from '@/data/dummy'
 import { supabase } from '@/lib/supabaseClient'
-import { useCase } from '@/lib/useCase'
 import { useUser } from '@/lib/useUser'
-import {
-  CircleStackIcon,
-  PaperAirplaneIcon,
-  PaperClipIcon,
-} from '@heroicons/react/24/outline'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
+import { useQuestions } from './useQuestions'
 
-export const useQuestions = (caseId) => {
-  const [questions, setQuestions] = useState([])
-
-  // subscribe to realtime case data channel
-  useEffect(() => {
-    const channel = supabase
-      .channel('case-questions-channel')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'Questions',
-          filter: `caseId=eq.${caseId}`,
-        },
-        (payload) => {
-          console.log('New questions!', payload)
-          setQuestions(payload.new)
-        },
-      )
-      .subscribe()
-
-    return () => {
-      supabase.removeChannel(channel)
-    }
-  }, [caseId])
-
-  useEffect(() => {
-    supabase
-      .from('Question')
-      .select('*')
-      .eq('caseId', caseId)
-      .then(({ data, error }) => {
-        setQuestions(data)
-      })
-  }, [caseId])
-
-  return questions
-}
-
-export function InfoGatherView({ caseId }: any) {
+export default function InfoGatherView({ caseId }: any) {
   const user = useUser()
   // const caseData = useCase(caseId)
   const questions = useQuestions(caseId)
@@ -163,30 +113,30 @@ export function InfoGatherView({ caseId }: any) {
   return (
     <div>
       {/* <div className="mb-8 flex flex-row justify-between">
-        <div className="flex w-full flex-row justify-between">
-          <div className="flex flex-row justify-start gap-2 text-sm">
-            <Link href={`/app/cases/lawyers/${caseId}/info`}>
-              <p>Chat</p>
-            </Link>
-            <Link href={`/app/cases/case/${caseId}/summary`}>
-              <p>Case Summary</p>
-            </Link>
-          </div>
-          <div className="flex flex-row justify-end gap-4 text-sm">
-            <button className="flex flex-row items-center gap-2">
-              <PaperClipIcon className="h-5 w-5" />
-
-              <p>Upload File</p>
-            </button>
-            <Link href={`/app/cases/case/${caseId}/documents`}>
-              <div className="flex flex-row items-center gap-1">
-                <CircleStackIcon className="h-5 w-5" />
-                <p>Documents</p>
+              <div className="flex w-full flex-row justify-between">
+                <div className="flex flex-row justify-start gap-2 text-sm">
+                  <Link href={`/app/cases/lawyers/${caseId}/info`}>
+                    <p>Chat</p>
+                  </Link>
+                  <Link href={`/app/cases/case/${caseId}/summary`}>
+                    <p>Case Summary</p>
+                  </Link>
+                </div>
+                <div className="flex flex-row justify-end gap-4 text-sm">
+                  <button className="flex flex-row items-center gap-2">
+                    <PaperClipIcon className="h-5 w-5" />
+      
+                    <p>Upload File</p>
+                  </button>
+                  <Link href={`/app/cases/case/${caseId}/documents`}>
+                    <div className="flex flex-row items-center gap-1">
+                      <CircleStackIcon className="h-5 w-5" />
+                      <p>Documents</p>
+                    </div>
+                  </Link>
+                </div>
               </div>
-            </Link>
-          </div>
-        </div>
-      </div> */}
+            </div> */}
       {filteredQuestions.length === 0 ? (
         <div className="flex flex-col items-center justify-center">
           <p className="text-lg font-semibold text-gray-700">
@@ -198,14 +148,25 @@ export function InfoGatherView({ caseId }: any) {
         </div>
       ) : (
         <form key={id} className="mt-0" onSubmit={handleSubmit}>
+          <div className="mb-4 h-1.5 w-full rounded-full bg-gray-200">
+            <div
+              className="h-1.5 rounded-full bg-blue-600"
+              style={{
+                width:
+                  questions.length > 0
+                    ? `${(index / questions.length) * 100}%`
+                    : '0%',
+              }}
+            />
+          </div>
           <div className="flex flex-row items-start justify-start gap-4">
             {/* <img
-              src={AVATARS[2]}
-              className="mt-1 h-10 w-10 rounded-full bg-gray-800"
-              alt="avatar"
-            /> */}
+                      src={AVATARS[2]}
+                      className="mt-1 h-10 w-10 rounded-full bg-gray-800"
+                      alt="avatar"
+                    /> */}
             <div>
-              <p name="question" className="text-xl font-bold tracking-tight">
+              <p className="w-fit bg-yellow-300 text-2xl font-bold tracking-tighter">
                 {question}
               </p>
               <p className="text-md">{subQuestion}</p>
@@ -213,15 +174,15 @@ export function InfoGatherView({ caseId }: any) {
           </div>
           <div className="mt-8 flex flex-row items-start justify-start gap-4">
             {/* <img
-            src={FALLBACK_AVATAR}
-            className="mt-1 h-10 w-10 rounded-full bg-gray-800"
-            alt="avatar"
-          /> */}
+                    src={FALLBACK_AVATAR}
+                    className="mt-1 h-10 w-10 rounded-full bg-gray-800"
+                    alt="avatar"
+                  /> */}
             {/* <img
-              src={userImageUrl}
-              alt=""
-              className="mt-0 h-10 w-10 rounded-full"
-            /> */}
+                      src={userImageUrl}
+                      alt=""
+                      className="mt-0 h-10 w-10 rounded-full"
+                    /> */}
             <input
               ref={inputRef}
               name="answer"
@@ -232,16 +193,5 @@ export function InfoGatherView({ caseId }: any) {
         </form>
       )}
     </div>
-  )
-}
-
-export default function InfoGatherPage({ params: { caseId } }) {
-  return (
-    <AppLayout caseId={caseId}>
-      <CaseProgress stageIndex={0} />
-      {/* <CaseProgressVertical stageIndex={0} /> */}
-      <div className="mt-16"></div>
-      <InfoGatherView caseId={caseId} />
-    </AppLayout>
   )
 }

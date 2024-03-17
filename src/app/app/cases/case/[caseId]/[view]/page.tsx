@@ -12,10 +12,12 @@ import {
 } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 import { useUser } from '@/lib/useUser'
-import Link from 'next/link'
 import { useCase } from '@/lib/useCase'
 import CaseInfoHeader from '@/components/CaseInfoHeader'
 import ReviewDialogue from '@/components/ReviewDialogue'
+import CaseProgress from '@/components/CaseProgress'
+import { CaseHeader } from './CaseHeader'
+import { CaseSummary } from './CaseSummary'
 
 function InfoForm({ caseId, view }) {
   const user = useUser()
@@ -301,87 +303,12 @@ function InfoForm({ caseId, view }) {
   )
 }
 
-export function CaseSummary({ caseData }) {
-  return (
-    <div className="col-span-full py-4">
-      <div className="mb-8">
-        <label
-          htmlFor="about"
-          className="block text-sm font-medium leading-6 text-gray-900"
-        >
-          Ready for Invitations
-        </label>
-        <div className="mt-2">
-          <p>{caseData?.readyForInvitation ? 'True' : 'False'}</p>
-        </div>
-      </div>
-      <div className="mb-8">
-        <label
-          htmlFor="about"
-          className="block text-sm font-medium leading-6 text-gray-900"
-        >
-          Summary
-        </label>
-        <div className="mt-2">
-          <p>{caseData?.summary}</p>
-        </div>
-      </div>
-      <div className="mb-8">
-        <label
-          htmlFor="about"
-          className="block text-sm font-medium leading-6 text-gray-900"
-        >
-          Timeline
-        </label>
-        <div className="mt-2">
-          <p>{caseData?.dates}</p>
-        </div>
-      </div>
-      <div className="mb-8">
-        <label
-          htmlFor="about"
-          className="block text-sm font-medium leading-6 text-gray-900"
-        >
-          What's up?
-        </label>
-        <div className="mt-2">
-          <p>{caseData?.whatsUp}</p>
-        </div>
-      </div>
-      <div className="mb-8">
-        <label
-          htmlFor="about"
-          className="block text-sm font-medium leading-6 text-gray-900"
-        >
-          Goals
-        </label>
-        <div className="mt-2">
-          <p>{caseData?.goals}</p>
-        </div>
-      </div>
-      <div className="mb-8">
-        <label
-          htmlFor="about"
-          className="block text-sm font-medium leading-6 text-gray-900"
-        >
-          Our Questions for You
-        </label>
-        <div className="mt-2">
-          {caseData?.Question?.map((q) => (
-            <div key={q.id} className="mt-2">
-              <p>{q.question}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export default function DocumentsView({ params: { caseId, view } }) {
+  const caseData = useCase(caseId)
   return (
     <AppLayout caseId={caseId}>
       {/* <CaseLayout viewName="Case" caseId={id}> */}
+      <CaseHeader title={caseData?.title} caseId={caseId} view={view} />
       <InfoForm view={view} caseId={caseId} />
       {/* </CaseLayout> */}
     </AppLayout>
