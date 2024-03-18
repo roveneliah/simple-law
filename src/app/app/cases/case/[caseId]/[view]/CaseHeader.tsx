@@ -1,14 +1,12 @@
 'use client'
 import Link from 'next/link'
 import clsx from 'clsx'
+import AppMenu from '@/components/Layout/AppLayout/AppMenu'
 
 export function CaseHeader({ title, caseId, view }) {
   return (
-    <div className="">
-      <div className="">
-        {/* <button className="text-md font-bold tracking-tighter text-gray-500 transition-colors hover:text-gray-600">
-           Back to Cases
-          </button> */}
+    <div className="w-full">
+      <div className="flex w-full flex-row">
         <h1 className="text-5xl font-bold tracking-tighter text-gray-900">
           {title}
         </h1>

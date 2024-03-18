@@ -4,11 +4,19 @@ import { useCase } from '@/lib/useCase'
 import CaseList from '../../CaseList'
 import { usePathname } from 'next/navigation'
 import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ClockIcon,
+  Cog6ToothIcon,
   DocumentDuplicateIcon,
   InformationCircleIcon,
   ShoppingBagIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline'
+import CaseSwitcherDropdown from '../AppLayout/CaseSwitcherDropdown'
+import { useUser } from '@/lib/useUser'
+import clsx from 'clsx'
+import AppMenu from '../AppLayout/AppMenu'
 
 export const navigation = (caseId, view) => [
   // {
@@ -31,23 +39,29 @@ export const navigation = (caseId, view) => [
     current: view === 'Documents' ? true : false,
   },
   {
-    name: 'Services',
-    href: '/app/cases/services/' + caseId,
-    icon: ShoppingBagIcon,
-    current: view === 'Services' ? true : false,
+    name: 'Timeline',
+    href: '/app/cases/case/' + caseId,
+    icon: ClockIcon,
+    current: view === 'Documents' ? true : false,
   },
-  {
-    name: 'Lawyer',
-    href: '/app/cases/lawyers/' + caseId,
-    icon: UsersIcon,
-    current: view === 'Lawyer' ? true : false,
-  },
-  {
-    name: 'Workspace',
-    href: '/app/cases/workspace/' + caseId,
-    icon: UsersIcon,
-    current: view === 'Workspace' ? true : false,
-  },
+  // {
+  //   name: 'Services',
+  //   href: '/app/cases/store/' + caseId,
+  //   icon: ShoppingBagIcon,
+  //   current: view === 'Services' ? true : false,
+  // },
+  // {
+  //   name: 'Lawyers',
+  //   href: '/app/cases/lawyers/' + caseId,
+  //   icon: UsersIcon,
+  //   current: view === 'Lawyer' ? true : false,
+  // },
+  // {
+  //   name: 'Workspace',
+  //   href: '/app/cases/workspace/' + caseId,
+  //   icon: UsersIcon,
+  //   current: view === 'Workspace' ? true : false,
+  // },
   // {
   //   name: 'Questions',
   //   href: '#',
@@ -56,13 +70,13 @@ export const navigation = (caseId, view) => [
   //   current: false,
   // },
   // { name: 'Notes', href: '#', icon: ChartPieIcon, current: false },
-  {
-    name: 'Lawyers',
-    href: '/app/lawyers',
-    icon: UsersIcon,
-    count: '20+',
-    current: false,
-  },
+  // {
+  //   name: 'Lawyers',
+  //   href: '/app/lawyers/' + caseId,
+  //   icon: UsersIcon,
+  //   count: '20+',
+  //   current: false,
+  // },
   // {
   //   name: 'Help',
   //   href: '#',
@@ -75,8 +89,37 @@ export function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
 }
 
+const teams = [
+  {
+    id: 3,
+    name: 'Find a Lawyer',
+    href: '/app/store/v1/interview',
+    initial: 'Ai',
+    current: false,
+  },
+  {
+    id: 1,
+    name: 'Sanity Check',
+    href: '/app/store/v1/sanity',
+    initial: 'Sa',
+    current: false,
+  },
+  {
+    id: 2,
+    name: 'Shotgun Strategy',
+    href: '/app/store/v1/shotgun',
+    initial: 'Sh',
+    current: false,
+  },
+]
+
 export default function Sidebar({ caseId }) {
   const caseData = useCase(caseId)
+  const user = useUser()
+  const caseList = user?.Case
+
+  console.log(user, caseList)
+
   const [showCases, setShowCases] = useState(true)
 
   useEffect(() => {
@@ -97,21 +140,30 @@ export default function Sidebar({ caseId }) {
             ? 'Case'
             : ''
 
-  if (showCases)
-    return (
-      <div className="flex min-w-64 max-w-xl flex-col gap-y-5 overflow-y-auto border-r border-purple-100 bg-gray-50 px-6">
-        <div className="mt-8">
-          <p className="text-lg font-extrabold">
-            IMPOSSIBLE<span className="font-light text-gray-600">Law</span>
-          </p>
-        </div>
-        <CaseList />
-      </div>
-    )
+  const [isOpen, setIsOpen] = useState(true)
+  const handleToggleSidebar = () => {
+    console.log('toggle sidebar')
+    setIsOpen(!isOpen)
+  }
 
   return (
-    <div className="flex min-w-64 max-w-xl flex-col gap-y-5 overflow-y-auto border-r border-purple-100 bg-gray-50">
-      {/* <div className="mt-8 px-6">
+    <>
+      <div
+        className={`absolute ${isOpen ? 'left-56' : 'left-4'} top-1/2 z-40 pl-4 transition-all`}
+      >
+        <button onClick={handleToggleSidebar}>
+          {!isOpen ? (
+            <ChevronRightIcon className="h-5 w-4" />
+          ) : (
+            <ChevronLeftIcon className="h-5 w-4" />
+          )}
+        </button>
+      </div>
+
+      <div
+        className={`min-w-56 max-w-xl ${isOpen ? 'flex' : 'hidden'}  flex-col gap-y-5 overflow-y-auto border-r border-purple-100 bg-gray-50`}
+      >
+        {/* <div className="mt-8 px-6">
               <Link href={'/app/cases'}>
                 <p className="text-lg font-extrabold">
                   IMPOSSIBLE<span className="font-light text-gray-600">Law</span>
@@ -119,59 +171,128 @@ export default function Sidebar({ caseId }) {
               </Link>
             </div> */}
 
-      <nav className="flex flex-1 flex-col px-6">
-        <div className="-mx-2 mt-8 flex w-full flex-row items-center justify-between rounded-lg border px-4 py-2 text-gray-600 transition-all hover:bg-gray-100 hover:text-black">
-          <h3 className="mb-0 w-full text-center text-sm font-medium">
-            {caseData?.title}
-          </h3>
-          {/* <Link
-              href={`/app/cases/case/${caseId}/settings`}
-              className="rounded-lg p-1.5 hover:bg-gray-200"
-            >
-              <Cog6ToothIcon
-                className={classNames(' ', 'h-4 w-4 shrink-0')}
-                aria-hidden="true"
-              />
-            </Link> */}
-        </div>
-        <div className="mt-8" />
-        <ul role="list" className="flex flex-1 flex-col gap-y-7">
-          <li>
-            <ul role="list" className="-mx-2 space-y-1">
-              {navigation(caseId, view).map((item, i) => (
-                <li key={i}>
-                  <Link
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? 'bg-gray-100 font-semibold text-black'
-                        : 'font-medium text-gray-600 hover:bg-gray-100 hover:text-black',
-                      'group flex items-center justify-start gap-x-3 rounded-md p-2 text-sm leading-6',
-                    )}
-                  >
-                    <item.icon
+        <nav className="w-full flex-1 flex-col px-6">
+          {/* {caseId && (
+            <div className="mt-4 flex w-full flex-row gap-2">
+              <div className="w-full">
+                <CaseSwitcherDropdown caseId={caseId} />
+              </div>
+            </div>
+          )} */}
+          <div className="mt-8" />
+          <ul role="list" className="flex flex-1 flex-col gap-y-7">
+            {/* {caseId && (
+              <li>
+                <div className="text-xs font-semibold leading-6 text-gray-400">
+                  My Case
+                </div>
+                <ul role="list" className="-mx-2 mt-2 space-y-1">
+                  {navigation(caseId, '')?.map((team) => (
+                    <li key={team.name}>
+                      <a
+                        href={team.href}
+                        className={classNames(
+                          team.current
+                            ? 'bg-gray-50 text-indigo-600'
+                            : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600',
+                          'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                        )}
+                      >
+                        <span
+                          className={classNames(
+                            team.current
+                              ? 'border-indigo-600 text-indigo-600'
+                              : 'border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600',
+                            'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium',
+                          )}
+                        >
+                          <team.icon
+                            className={classNames(
+                              team.current
+                                ? 'text-indigo-600'
+                                : 'text-gray-600 group-hover:text-indigo-600',
+                              'h-4 w-4 shrink-0',
+                            )}
+                            aria-hidden="true"
+                          />
+                        </span>
+                        <span className="truncate">{team.name}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            )} */}
+
+            <li>
+              <div className="text-xs font-semibold leading-6 text-gray-400">
+                Get Help
+              </div>
+              <ul role="list" className="-mx-2 mt-2 space-y-1">
+                {teams.map((team) => (
+                  <li key={team.name}>
+                    <a
+                      href={team.href}
                       className={classNames(
-                        item.current ? 'text-black' : 'text-gray-600',
-                        'h-4 w-4 shrink-0',
+                        team.current
+                          ? 'bg-gray-50 text-indigo-600'
+                          : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600',
+                        'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
                       )}
-                      aria-hidden="true"
-                    />
-                    {item.name}
-                    {/* {item.count ? (
-                  <span
-                    className="ml-auto w-9 min-w-max whitespace-nowrap rounded-full bg-gray-900 px-2.5 py-0.5 text-center text-xs font-medium leading-5 text-white ring-1 ring-inset ring-gray-700"
-                    aria-hidden="true"
-                  >
-                    {item.count}
-                  </span>
-                ) : null} */}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </li>
-        </ul>
-      </nav>
-    </div>
+                    >
+                      <span
+                        className={classNames(
+                          team.current
+                            ? 'border-indigo-600 text-indigo-600'
+                            : 'border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600',
+                          'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium',
+                        )}
+                      >
+                        {team.initial}
+                      </span>
+                      <span className="truncate">{team.name}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            {/* {!caseId && ( */}
+            <li>
+              <div className="text-xs font-semibold leading-6 text-gray-400">
+                My Cases
+              </div>
+              <ul role="list" className="-mx-2 mt-2 space-y-1">
+                {caseList?.map((caseData, i) => (
+                  <li key={i}>
+                    <a
+                      href={`/app/cases/case/${caseData.id}`}
+                      className={clsx(
+                        caseData.current
+                          ? 'bg-gray-50 text-indigo-600'
+                          : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600',
+                        'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                      )}
+                    >
+                      <span
+                        className={classNames(
+                          caseData.current
+                            ? 'border-indigo-600 text-indigo-600'
+                            : 'border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600',
+                          'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium',
+                        )}
+                      >
+                        {caseData.title.slice(0, 1)}
+                      </span>
+                      <span className="truncate">{caseData.title}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            {/* )} */}
+          </ul>
+        </nav>
+      </div>
+    </>
   )
 }

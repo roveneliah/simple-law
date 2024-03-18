@@ -59,7 +59,7 @@ const STORE = {
     ],
   },
   interview: {
-    name: 'Lawyer Interviewer',
+    name: 'Interview Guide',
     href: '#',
     price: '$50',
     description: 'Get a custom interview to vet lawyers.',

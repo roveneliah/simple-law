@@ -2,6 +2,9 @@ import LawyerAppLayout from '@/components/Layout/LawyerAppLayout/LawyerAppLayout
 import { supabase } from '@/lib/supabaseClient'
 
 export function LawyerProfile({ lawyer }) {
+  if (!lawyer) {
+    return null
+  }
   return (
     <div>
       <h3 className="text-7xl font-bold tracking-tighter">

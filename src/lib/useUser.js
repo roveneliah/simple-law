@@ -9,6 +9,7 @@ import { supabase, supabaseLawyers } from '@/lib/supabaseClient'
  * @returns user object from database
  */
 export function useUser() {
+  const session = useSession()
   const [user, setUser] = useState(null)
   const router = useRouter()
   useEffect(() => {
@@ -21,27 +22,14 @@ export function useUser() {
       // get the user from db given id
       supabase
         .from('User')
-        .select('*, Agreement(*, Lawyer(*), Case(*))')
+        .select('*, Agreement(*, Lawyer(*), Case(*)), Case(*)')
         .eq('id', session?.user?.id)
         .single()
         .then(({ data, error }) => {
           setUser(data || null)
         })
     })
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        if (!session) {
-          router.push('/app/login')
-        }
-        setUser(session?.user || null)
-      },
-    )
-
-    return () => {
-      authListener?.subscription.unsubscribe()
-    }
-  }, [router])
+  }, [router, session])
 
   return {
     first: '',

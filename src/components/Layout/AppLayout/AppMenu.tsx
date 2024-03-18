@@ -4,8 +4,44 @@ import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { classNames } from '../LawyerAppLayout/Sidebar'
 import { Bars4Icon, ChevronDownIcon } from '@heroicons/react/24/outline'
+import { useUser } from '@/lib/useUser'
+import { getUserAvatarUrlById } from '@/app/app/account/page'
+
+const menuItems = (caseId) => [
+  {
+    name: 'Cases',
+    href: '/app/cases',
+  },
+  // {
+  //   name: 'Find Lawyer',
+  //   href: '/',
+  // },
+  // {
+  //   name: 'Workspace',
+  //   href: `/app/cases/workspace/${caseId}`,
+  // },
+
+  {
+    name: 'My Team',
+    href: `/app/team/${caseId}`,
+  },
+  // {
+  //   name: 'Shop',
+  //   href: '/',
+  // },
+  // {
+  //   name: 'For Business Owners',
+  //   href: '/app/account',
+  // },
+  {
+    name: 'Account',
+    href: '/app/account',
+  },
+]
 
 export default function AppMenu({ caseId }) {
+  const user = useUser()
+  const userImageUrl = getUserAvatarUrlById(user?.id)
   return (
     <Menu as="div" className="relative z-50 inline-block text-left">
       <div className="flex flex-col justify-center">
@@ -15,7 +51,18 @@ export default function AppMenu({ caseId }) {
             className="-mr-1 h-5 w-5 text-gray-400"
             aria-hidden="true"
           /> */}
-          <Bars4Icon className={'h-5 w-5 shrink-0 text-black'} />
+          <div className="inline-flex h-10 w-10 justify-center gap-x-1.5 whitespace-nowrap rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900">
+            {/* <Link
+              href="/app/account"
+              className="inline-flex w-full justify-center gap-x-1.5 rounded-md text-lg font-bold text-gray-500 ring-0 ring-inset ring-gray-300 transition-colors hover:text-gray-900"
+            > */}
+            <img
+              src={userImageUrl}
+              alt=""
+              className="h-10 w-10 rounded-full bg-blue-100 p-0.5"
+            />
+            {/* </Link> */}
+          </div>
           {/* <img
             src={userImageUrl}
             alt=""
@@ -35,106 +82,24 @@ export default function AppMenu({ caseId }) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-1 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="overflow-hidden">
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  href="/"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'flex flex-row items-center gap-2 px-4 py-2 text-sm font-semibold tracking-tighter',
-                  )}
-                >
-                  <div className="h-5 w-5 rounded-sm bg-black" />
-                  Find Lawyer
-                </Link>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  href={`/app/cases/workspace/${caseId}`}
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'flex flex-row items-center gap-2 px-4 py-2 text-sm font-semibold tracking-tighter',
-                  )}
-                >
-                  <div className="h-5 w-5 rounded-sm bg-black" />
-                  Workspace
-                </Link>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  href={`/app/cases/new/${caseId}`}
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'flex flex-row items-center gap-2 px-4 py-2 text-sm font-semibold tracking-tighter',
-                  )}
-                >
-                  <div className="h-5 w-5 rounded-sm bg-black" />
-                  Case Details
-                </Link>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  href={`/app/team/${caseId}`}
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'flex flex-row items-center gap-2 px-4 py-2 text-sm font-semibold tracking-tighter',
-                  )}
-                >
-                  <div className="h-5 w-5 rounded-sm bg-black" />
-                  My Team
-                </Link>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  href="/"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'flex flex-row items-center gap-2 px-4 py-2 text-sm font-semibold tracking-tighter',
-                  )}
-                >
-                  <div className="h-5 w-5 rounded-sm bg-black" />
-                  Shop
-                </Link>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  href="/app/account"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'flex flex-row items-center gap-2 px-4 py-2 text-sm font-semibold tracking-tighter',
-                  )}
-                >
-                  <div className="h-5 w-5 rounded-sm bg-black" />
-                  For Business Owners
-                </Link>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  href="/app/account"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'flex flex-row items-center gap-2 px-4 py-2 text-sm font-semibold tracking-tighter',
-                  )}
-                >
-                  <div className="h-5 w-5 rounded-sm bg-black" />
-                  Resources
-                </Link>
-              )}
-            </Menu.Item>
+            {menuItems(caseId).map((item) => (
+              <Menu.Item key={item.name}>
+                {({ active }) => (
+                  <Link
+                    href={item.href}
+                    className={classNames(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'flex flex-row items-center gap-2 px-4 py-2 text-sm font-semibold tracking-tighter',
+                    )}
+                  >
+                    {/* <div className="h-5 w-5 rounded-sm bg-black" /> */}
+                    {item.name}
+                  </Link>
+                )}
+              </Menu.Item>
+            ))}
           </div>
         </Menu.Items>
       </Transition>

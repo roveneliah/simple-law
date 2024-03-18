@@ -66,19 +66,19 @@ export default function AppLayout({ children, caseId, loadingManual }: any) {
       {/* Background Image Container */}
 
       {/* Sidebar Placeholder - Uncomment or modify according to your setup */}
-      {/* <Sidebar caseId={caseId} /> */}
+      <Sidebar caseId={caseId} />
 
       {/* Main Content Area */}
       <div className="z-10 flex w-full flex-col items-center overflow-y-auto px-8 pt-4">
-        <div className="no-scrollbar flex w-full max-w-3xl flex-col overflow-x-hidden rounded-md">
-          <ChildViewHeader
+        <div className="no-scrollbar flex w-full max-w-4xl flex-col overflow-x-hidden rounded-md">
+          {/* <ChildViewHeader
             userImageUrl={userImageUrl}
             email={user?.email}
             caseId={caseId}
             handleSignOut={handleSignOut}
             caseTitle={caseData?.title}
-          />
-          <div className="w-full max-w-3xl">{children}</div>
+          /> */}
+          <div className="mt-8 w-full">{children}</div>
         </div>
       </div>
     </div>

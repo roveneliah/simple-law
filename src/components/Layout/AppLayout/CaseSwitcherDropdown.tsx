@@ -37,10 +37,10 @@ export default function CaseSwitcherDropdown({ caseId }: any) {
     )
 
   return (
-    <div className="z-50 w-64 tracking-tighter">
+    <div className="z-50 whitespace-nowrap tracking-tighter">
       <Listbox value={selected} onChange={setSelected}>
-        <div className="relative mt-1">
-          <Listbox.Button className="relative w-full cursor-default rounded-lg border bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500  focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+        <div className="mt-0 ">
+          {/* <Listbox.Button className="relative w-full cursor-default rounded-lg border bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500  focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
             <span className="block truncate">
               {selected?.title || 'Select Case'}
             </span>
@@ -50,6 +50,11 @@ export default function CaseSwitcherDropdown({ caseId }: any) {
                 aria-hidden="true"
               />
             </span>
+          </Listbox.Button> */}
+          <Listbox.Button className="w-full cursor-default rounded-lg border py-2 text-left hover:bg-gray-100 focus:outline-none focus-visible:border-indigo-500  focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+            <p className="text-md text-center font-medium tracking-tighter text-gray-500">
+              {selected?.title || 'Select Case'}
+            </p>
           </Listbox.Button>
           <Transition
             as={Fragment}
@@ -57,7 +62,7 @@ export default function CaseSwitcherDropdown({ caseId }: any) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+            <Listbox.Options className="absolute z-50 mt-1 max-h-60 w-64 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
               {cases.map((caseData, i) => (
                 <Listbox.Option
                   key={i}
